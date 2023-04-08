@@ -176,6 +176,7 @@
   doc,
 ) = {
   let partcounter = counter("part")
+  let chaptercounter = counter("chapter")
 
   set page("a4",
     header: locate(loc => {
@@ -233,6 +234,12 @@
   set text(字号.一号, font: 字体.宋体, lang: "cn")
   set align(center + horizon)
   set heading(numbering: chinesenumbering)
+  set figure(
+    numbering: (..nums) => locate(loc => numbering("1.1", chaptercounter.at(loc).at(0), ..nums))
+  )
+  set math.equation(
+    numbering: (..nums) => locate(loc => numbering("(1.1)", chaptercounter.at(loc).at(0), ..nums))
+  )
 
   show heading: it => [
     #let sizedheading(it, size) = [
@@ -255,6 +262,11 @@
           counter(page).update(1)
         }
       })
+      if it.numbering != none {
+        chaptercounter.step()
+      }
+      counter(figure).update(())
+      counter(math.equation).update(())
 
       set align(center)
       v(字号.三号)
@@ -270,6 +282,40 @@
       sizedheading(it, 字号.小四)
     }
   ]
+
+  show figure: it => [
+    #set align(center)
+    #it.body
+    图 #locate(loc => {
+      numbering("1.1", chaptercounter.at(loc).at(0), counter(figure).at(loc).at(0))
+    }) #it.caption
+  ]
+
+  show ref: it => {
+    locate(loc => {
+      let elems = query(it.target, loc)
+      if elems.len() == 0 {
+        it
+      } else {
+        let el = elems.first()
+        let el-loc = el.location()
+        if el.has("block") {
+          // Assume to be an equation
+          link(el-loc, "式 " + numbering("(1.1)", chaptercounter.at(el-loc).at(0), counter(math.equation).at(el-loc).at(0)))
+        } else if el.has("kind") and el.kind == image {
+          // Assume to be a figure
+          link(el-loc, "图 " + numbering("1.1", chaptercounter.at(el-loc).at(0), counter(figure).at(el-loc).at(0)))
+        } else if el.has("level") {
+          // Assume to be a heading
+          if el.level == 1 {
+            link(el-loc, chinesenumbering(..counter(heading).at(el-loc)))
+          } else {
+            link(el-loc, "节 " + numbering("1.1", ..counter(heading).at(el-loc)))
+          }
+        }
+      }
+    })
+  }
 
   box(
     grid(

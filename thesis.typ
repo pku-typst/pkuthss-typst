@@ -15,23 +15,52 @@
   doc,
 )
 
-= 绪论
+= 绪论 <intro>
 
-== 研究背景与意义
+== 图片
 
-=== 研究背景
+#figure(
+  image("1-writing-app.png", width: 100%),
+  caption: "Typst网页版界面",
+) <web>
 
-#math.equation(
-  block: true,
-  numbering: "(1.1)",
-  $ a^b = b^c $
-)
+@web 展示了Typst网页版的界面。
+
+== 公式
+
+$ E = m c^2 $ <eq>
+
+@eq 是一个公式。
+
+$ sum_(k=0)^n k
+    &= 1 + ... + n \
+    &= (n(n+1)) / 2 $ <eq2>
+
+@eq2 是一个多行公式。
+
+$ frac(a^2, 2) $ <eq3>
+$ vec(1, 2, delim: "[") $
+$ mat(1, 2; 3, 4) $
+$ lim_x =
+    op("lim", limits: #true)_x $ <eq6>
+
+@eq3 到 @eq6 中给出了更多的示例。
 
 = 理论
 
-== 理论一
+== 理论一 <theory1>
+
+让我们首先回顾一下 @intro 中的部分公式：
+
+$ frac(a^2, 2) $
+$ vec(1, 2, delim: "[") $
+$ mat(1, 2; 3, 4) $
+$ lim_x =
+    op("lim", limits: #true)_x $
 
 == 理论二
+
+在 @theory1 中，我们回顾了 @intro 中的公式。下面，我们来推导一些新的公式：
 
 #lorem(200)
 
