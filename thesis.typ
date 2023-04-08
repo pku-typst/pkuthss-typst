@@ -11,7 +11,7 @@
   direction: "某个研究方向",
   supervisor: "李四",
   date: "二零二三年六月",
-  abstract: lorem(80),
+  abstract: lorem(300),
   doc,
 )
 
@@ -25,6 +25,25 @@
 ) <web>
 
 @web 展示了Typst网页版的界面。
+
+== 表格
+
+#figure(
+  table(
+    columns: (auto, auto, auto, auto),
+    inset: 10pt,
+    align: horizon,
+      [*姓名*],[*职称*],[*工作单位*],[*职责*],
+      [李四],[教授],[北京大学],[主席],
+      [王五],[教授],[北京大学],[成员],
+      [赵六],[教授],[北京大学],[成员],
+      [钱七],[教授],[北京大学],[成员],
+      [孙八],[教授],[北京大学],[成员],
+  ),
+  caption: "答辩委员会名单",
+) <table>
+
+@table 展示了一个示例表格。
 
 == 公式
 
@@ -46,6 +65,10 @@ $ lim_x =
 
 @eq3 到 @eq6 中给出了更多的示例。
 
+== 参考文献
+
+我们同样可以引用参考文献，例如 @wang2010guide 和 @kopka2004guide。
+
 = 理论
 
 == 理论一 <theory1>
@@ -61,26 +84,6 @@ $ lim_x =
 == 理论二
 
 在 @theory1 中，我们回顾了 @intro 中的公式。下面，我们来推导一些新的公式：
-
-#lorem(200)
-
-= 方法
-
-== 方法一
-
-== 方法二
-
-= 应用
-
-== 应用一
-
-== 应用二
-
-= 结论与展望
-
-@wang2010guide
-
-@kopka2004guide
 
 #pagebreak()
 #bibliography("ref.bib",

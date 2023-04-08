@@ -67,7 +67,7 @@
   numbering("1.1", ..nums)
 }
 
-#let chineseunderline(s, width: 300pt) = {
+#let chineseunderline(s, width: 300pt, bold: false) = {
   let chars = s.split("")
   let n = chars.len()
   style(styles => {
@@ -96,8 +96,12 @@
     }
 
     if now.len() > 0 {
-      ret.push(now)
-      ret.push(v(-1em))
+      if bold {
+        ret.push(textbf(now))
+      } else {
+        ret.push(now)
+      }
+      ret.push(v(-0.9em))
       ret.push(line(length: 100%))
     }
 
@@ -285,10 +289,24 @@
 
   show figure: it => [
     #set align(center)
-    #it.body
-    图 #locate(loc => {
-      numbering("1.1", chaptercounter.at(loc).at(0), counter(figure).at(loc).at(0))
-    }) #it.caption
+    #if not it.has("kind") {
+    } else if it.kind == image {
+      it.body
+      text("图 ")
+      locate(loc => {
+        numbering("1.1", chaptercounter.at(loc).at(0), counter(figure.where(kind: image)).at(loc).at(0))
+      })
+      text("  ")
+      it.caption
+    } else if it.kind == table {
+      text("表 ")
+      locate(loc => {
+        numbering("1.1", chaptercounter.at(loc).at(0), counter(figure.where(kind: table)).at(loc).at(0))
+      })
+      text("  ")
+      it.caption
+      it.body
+    }
   ]
 
   show ref: it => {
@@ -302,9 +320,13 @@
         if el.has("block") {
           // Assume to be an equation
           link(el-loc, "式 " + numbering("(1.1)", chaptercounter.at(el-loc).at(0), counter(math.equation).at(el-loc).at(0)))
-        } else if el.has("kind") and el.kind == image {
+        } else if el.has("kind") {
           // Assume to be a figure
-          link(el-loc, "图 " + numbering("1.1", chaptercounter.at(el-loc).at(0), counter(figure).at(el-loc).at(0)))
+          if el.kind == image {
+            link(el-loc, "图 " + numbering("1.1", chaptercounter.at(el-loc).at(0), counter(figure.where(kind: image)).at(el-loc).at(0)))
+          } else if el.kind == table {
+            link(el-loc, "表 " + numbering("1.1", chaptercounter.at(el-loc).at(0), counter(figure.where(kind: table)).at(el-loc).at(0)))
+          }
         } else if el.has("level") {
           // Assume to be a heading
           if el.level == 1 {
@@ -338,7 +360,7 @@
     ],
     [
       #set align(center + horizon)
-      #chineseunderline(ctitle, width: 300pt)
+      #chineseunderline(ctitle, width: 300pt, bold: true)
     ]
   )
 
