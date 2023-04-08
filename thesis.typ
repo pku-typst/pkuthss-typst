@@ -22,12 +22,12 @@
 )
 
 #let textit(it) = [
-  #set text(font: 字体.仿宋) 
+  #set text(font: 字体.楷体, style: "italic") 
   #it
 ]
 
 #let textbf(it) = [
-  #set text(font: 字体.黑体)
+  #set text(font: 字体.黑体, weight: "semibold")
   #it
 ]
 
@@ -101,12 +101,12 @@
   locate(it => {
     let elements = query(heading, after: it)
 
-    for i, el in elements {
+    for el in elements {
       if depth != none and el.level > depth { continue }
 
       let maybe_number = if el.numbering != none {
         numbering(el.numbering, ..counter(heading).at(el.location()))
-        " "
+        h(0.5em)
       }
       let line = {
         if indent {
@@ -115,50 +115,41 @@
 
         if el.level == 1 {
           v(weak: true, 0.5em)
-          set text(font: 字体.黑体)
-          maybe_number
-          el.body
+          textbf(maybe_number)
+          textbf(el.body)
         } else {
           maybe_number
+          h(0.5em)
           el.body
         }
 
         // Filler dots
         if el.level == 1 {
-          box(width: 1fr, h(3pt) + box(width: 1fr) + h(3pt))
+          box(width: 1fr, h(10pt) + box(width: 1fr) + h(10pt))
         } else {
-          box(width: 1fr, h(3pt) + box(width: 1fr, repeat[.]) + h(3pt))
+          box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
         }
         
         // Page number
-        let page-number = counter(page).at(el.location()).first()
-        str(page-number)
+        let footer = query(<footer>, after: el.location())
+        let page-number = if footer == () {
+          0
+        } else {
+          counter(page).at(footer.at(0).location()).at(0)
+        }
+        if el.level == 1 {
+          textbf(str(page-number))
+        } else {
+          str(page-number)
+        }
 
         linebreak()
+        v(-0.2em)
       }
 
       link(el.location(), line)
     }
   })
-}
-
-#let chapter(title, number: true) = {
-  set align(center)
-  set text(字号.三号, font: 字体.黑体)
-  pagebreak(weak: true)
-  v(1em)
-  heading(level: 1, title)
-  v(1em)
-}
-
-#let section(title) = {
-  set text(字号.五号, font: 字体.黑体)
-  heading(level: 2, title)
-}
-
-#let subsection(title) = {
-  set text(字号.五号, font: 字体.黑体)
-  heading(level: 3, title)
 }
 
 #let conf(
@@ -175,18 +166,12 @@
   abstract: [],
   doc,
 ) = {
+  let partcounter = counter("part")
+
   set page("a4",
     header: locate(loc => {
       [
-        #let elemsbefore = query(heading, before: loc)
-        #let hasheader = false
-        #for i, el in elemsbefore {
-          if el.level == 1 {
-            hasheader = true
-            break
-          }
-        }
-        #if not hasheader {
+        #if partcounter.at(loc).at(0) < 10 {
         } else {
           set text(字号.五号)
           if calc.even(loc.page()) {
@@ -196,24 +181,20 @@
               #line(length: 100%)
             ]
           } else {
-            let elems = query(heading, after: loc)
+            let elems = query(heading.where(level: 1), after: loc)
             if elems == () {
             } else {
-              let i = 0
-              while elems.at(i).level != 1 {
-              i = i + 1
-            }
-            let el = elems.at(i)
-            [
-              #set align(center)
-              #if el.numbering != none {
-                numbering(el.numbering, ..counter(heading).at(el.location()))
-              }
-              #h(0.5em)
-              #elems.at(i).body
-              #v(-1em)
-              #line(length: 100%)
-            ]
+              let el = elems.first()
+              [
+                #set align(center)
+                #if el.numbering != none {
+                  numbering(el.numbering, ..counter(heading).at(el.location()))
+                }
+                #h(0.5em)
+                #el.body
+                #v(-1em)
+                #line(length: 100%)
+              ]
           }
         }
       }]}),
@@ -221,32 +202,61 @@
       [
         #set text(字号.五号)
         #set align(center)
-        #str(loc.page())
-      ]}),
+        #let headers = query(heading, before: loc)
+        #if headers == () {
+        } else {
+          let part = partcounter.at(headers.last().location()).at(0)
+          
+          [
+            #if part < 20 {
+              numbering("I", counter(page).at(loc).at(0))
+            } else {
+              str(counter(page).at(loc).at(0))
+            }
+
+            #label("footer")
+          ]
+        }
+      ]
+    }),
   )
 
   set text(字号.一号, font: 字体.宋体, lang: "cn")
   set align(center + horizon)
   set heading(numbering: chinesenumbering)
 
-  show heading: it => block[
+  show heading: it => [
     #let sizedheading(it, size) = [
       #set text(size)
       #if it.numbering != none {
-        counter(heading).display()
+        textbf(counter(heading).display())
         h(0.5em)
       }
-      #it.body.text
+      #textbf(it.body)
     ]
 
-    #set text(font: 字体.黑体)
     #if it.level == 1 {
+      pagebreak(weak: true)
+      locate(loc => {
+        if it.body.text == "摘要" {
+          partcounter.update(10)
+          counter(page).update(1)
+        } else if it.numbering != none and partcounter.at(loc).at(0) < 20 {
+          partcounter.update(20)
+          counter(page).update(1)
+        }
+      })
+
       set align(center)
-      sizedheading(it, 字号.三号)
+      v(字号.三号)
+      sizedheading(it, 字号.三号)  
+      v(字号.三号)
     } else if it.level == 2 {
       sizedheading(it, 字号.四号)
+      v(字号.四号)
     } else if it.level == 3 {
       sizedheading(it, 字号.中四)
+      v(字号.中四)
     } else {
       sizedheading(it, 字号.小四)
     }
@@ -320,25 +330,22 @@
   v(60pt)
   set text(字号.小二)
   text(date)
-
+  
+  // 封面后的空白页
+  pagebreak()
   pagebreak()
 
+  set align(left + top)
+  set text(字号.小四)
   par(justify: true)[
-    *Abstract* \
+    #heading(numbering: none, "摘要")
     #abstract
   ]
 
-  pagebreak()
-
-  set align(center + top)
-  set text(字号.小三)
-  textbf("目录")
-  set text(字号.小四)
   chineseoutline(
-    title: "",
+    title: "目录",
     indent: true,
   )
-  pagebreak()
 
   set align(left + top)
   par(justify: true)[
@@ -351,33 +358,35 @@
   doc,
 )
 
-#chapter("绪论")
+= 绪论
 
-#section("研究背景与意义")
+== 研究背景与意义
 
-#subsection("研究背景")
+=== 研究背景
 
 $ a^b = b^c $
 
-#chapter("理论")
+= 理论
 
-#section("理论一")
+== 理论一
 
-#section("理论二")
+== 理论二
 
-#chapter("方法")
+#lorem(200)
 
-#section("方法一")
+= 方法
 
-#section("方法二")
+== 方法一
 
-#chapter("应用")
+== 方法二
 
-#section("应用一")
+= 应用
 
-#section("应用二")
+== 应用一
 
-#chapter("结论与展望")
+== 应用二
+
+= 结论与展望
 
 @wang2010guide
 
