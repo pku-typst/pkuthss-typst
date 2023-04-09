@@ -213,9 +213,18 @@
   set page("a4",
     header: locate(loc => {
       [
+        #set text(字号.五号)
+        #set align(center)
         #if partcounter.at(loc).at(0) < 10 {
+          // FIXME: Handle the first page of Chinese abstract specailly
+          if loc.page() == 5 {
+            [
+              摘要
+              #v(-1em)
+              #line(length: 100%)
+            ]
+          }
         } else {
-          set text(字号.五号)
           if calc.even(loc.page()) {
             [
               #align(center, cheader)
@@ -228,7 +237,6 @@
             } else {
               let el = elems.last()
               [
-                #set align(center)
                 #if el.numbering == chinesenumbering {
                   chinesenumbering(..counter(heading).at(el.location()), location: el.location())
                 } else if el.numbering != none {
@@ -247,7 +255,7 @@
         #set text(字号.五号)
         #set align(center)
         #if loc.page() <= 4 {
-          // Skip cover and copyright page
+          // FIXME: Skip cover and copyright page
         } else {
           let headers = query(heading, before: loc)
           let part = partcounter.at(headers.last().location()).at(0)
@@ -461,7 +469,7 @@
   set text(字号.小二)
   text(date)
   
-  // 封面后的空白页
+  // Blank page after cover
   pagebreak()
   pagebreak()
 
@@ -476,7 +484,7 @@
     否则，引起有碍作者著作权之问题，将可能承担法律责任。
   ]
 
-  // 版权声明后的空白页
+  // Blank page after copyright
   pagebreak()
   pagebreak()
 
@@ -504,7 +512,7 @@
     #heading(numbering: none, "Abstract")
     #eabstract
     #v(1fr)
-    *Keywords: "*
+    *Keywords: *
     #ekeywords.join(", ")
     #v(2em)
   ]
