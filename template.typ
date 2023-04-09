@@ -34,6 +34,7 @@
 #let appendixcounter = counter("appendix")
 #let appendix() = {
   appendixcounter.update(10)
+  chaptercounter.update(())
   counter(heading).update(())
 }
 
@@ -268,11 +269,26 @@
   set align(center + horizon)
   set heading(numbering: chinesenumbering)
   set figure(
-    numbering: (..nums) => locate(loc => numbering("1.1", chaptercounter.at(loc).at(0), ..nums))
+    numbering: (..nums) => locate(loc => {
+      if appendixcounter.at(loc).at(0) < 10 { 
+        numbering("1.1", chaptercounter.at(loc).at(0), ..nums)
+      } else {
+        numbering("A.1", chaptercounter.at(loc).at(0), ..nums)
+      }
+    })
   )
   set math.equation(
-    numbering: (..nums) => locate(loc => numbering("(1.1)", chaptercounter.at(loc).at(0), ..nums))
+    numbering: (..nums) => locate(loc => {
+      if appendixcounter.at(loc).at(0) < 10 { 
+        numbering("(1.1)", chaptercounter.at(loc).at(0), ..nums)
+      } else {
+        numbering("(A.1)", chaptercounter.at(loc).at(0), ..nums)
+      }
+    })
   )
+
+  show strong: it => textbf(it)
+  show emph: it => textit(it)
 
   show heading: it => [
     #let sizedheading(it, size) = [
@@ -300,7 +316,8 @@
       if it.numbering != none {
         chaptercounter.step()
       }
-      counter(figure).update(())
+      counter(figure.where(kind: image)).update(())
+      counter(figure.where(kind: table)).update(())
       counter(math.equation).update(())
 
       set align(center)
@@ -325,14 +342,14 @@
       it.body
       text("图 ")
       locate(loc => {
-        numbering("1.1", chaptercounter.at(loc).at(0), counter(figure.where(kind: image)).at(loc).at(0))
+        chinesenumbering(chaptercounter.at(loc).at(0), counter(figure.where(kind: image)).at(loc).at(0), location: loc)
       })
       text("  ")
       it.caption
     } else if it.kind == table {
       text("表 ")
       locate(loc => {
-        numbering("1.1", chaptercounter.at(loc).at(0), counter(figure.where(kind: table)).at(loc).at(0))
+        chinesenumbering(chaptercounter.at(loc).at(0), counter(figure.where(kind: table)).at(loc).at(0), location: loc)
       })
       text("  ")
       it.caption
@@ -340,7 +357,9 @@
     }
   ]
 
-  show ref: it => {
+ show ref: it => {
+    // Remove prefix spacing
+    h(-0.25em)
     locate(loc => {
       let elems = query(it.target, loc)
       if elems.len() == 0 {
@@ -350,25 +369,32 @@
         let el-loc = el.location()
         if el.has("block") {
           // Assume to be an equation
-          link(el-loc, "式 " + numbering("(1.1)", chaptercounter.at(el-loc).at(0), counter(math.equation).at(el-loc).at(0)))
+          link(el-loc, [
+            式
+            #chinesenumbering(chaptercounter.at(el-loc).at(0), counter(math.equation).at(el-loc).at(0), location: el-loc)
+          ])
         } else if el.has("kind") {
           // Assume to be a figure
           if el.kind == image {
-            link(el-loc, "图 " + numbering("1.1", chaptercounter.at(el-loc).at(0), counter(figure.where(kind: image)).at(el-loc).at(0)))
+            link(el-loc, "图 " + chinesenumbering(chaptercounter.at(el-loc).at(0), counter(figure.where(kind: image)).at(el-loc).at(0), location: el-loc))
           } else if el.kind == table {
-            link(el-loc, "表 " + numbering("1.1", chaptercounter.at(el-loc).at(0), counter(figure.where(kind: table)).at(el-loc).at(0)))
+            link(el-loc, "表 " + chinesenumbering(chaptercounter.at(el-loc).at(0), counter(figure.where(kind: table)).at(el-loc).at(0), location: el-loc))
           }
         } else if el.has("level") {
           // Assume to be a heading
           if el.level == 1 {
             link(el-loc, chinesenumbering(..counter(heading).at(el-loc), location: el-loc))
+            if appendixcounter.at(el-loc).at(0) < 10 {
+              // Remove suffix spacing for "第一章"
+              h(-0.25em)
+            }
           } else {
             link(el-loc, "节 " + chinesenumbering(..counter(heading).at(el-loc), location: el-loc))
           }
         }
       }
     })
-  }
+  } 
 
   box(
     grid(
@@ -458,7 +484,7 @@
     #heading(numbering: none, "摘要")
     #cabstract
     #v(1fr)
-    #textbf("关键词：")
+    *关键词：*
     #ckeywords.join("，")
     #v(2em)
   ]
@@ -478,7 +504,7 @@
     #heading(numbering: none, "Abstract")
     #eabstract
     #v(1fr)
-    #textbf("Keywords: ")
+    *Keywords: "*
     #ekeywords.join(", ")
     #v(2em)
   ]

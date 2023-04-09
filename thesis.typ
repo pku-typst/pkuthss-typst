@@ -24,6 +24,10 @@
 
 = 绪论 <intro>
 
+== 粗体与斜体
+
+遵循 PKUTHSS 的惯例，使用 *黑体* 表示粗体，_楷体_ 表示斜体。
+
 == 图片
 
 #figure(
@@ -102,9 +106,28 @@ $ lim_x =
 
 = 关于 Typst <about>
 
-#lorem(1000)
+== 在附录中插入图片和公式等
+
+附录中也可以插入图片，如 @web1。
+
+#figure(
+  image("1-writing-app.png", width: 100%),
+  caption: "Typst 网页版界面",
+) <web1>
+
+附录中也可以插入公式，如 @appendix-eq。
+
+$ S = pi r^2 $ <appendix-eq>
 
 == Typst 的开发者 <developers>
+
+#lorem(1000)
+
+= 关于 PKUTHSS <pkuthss>
+
+#lorem(1000)
+
+= 关于 PKUTHSS-Typst <pkuthss-typst>
 
 #lorem(1000)
 
