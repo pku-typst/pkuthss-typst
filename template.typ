@@ -417,17 +417,17 @@
   grid(
     columns: (80pt, 280pt),
     row-gutter: 1em,
-    fieldname("姓        名："),
+    fieldname(text("姓") + h(2em) + text("名：")),
     fieldvalue(cauthor),
-    fieldname("学        号："),
+    fieldname(text("学") + h(2em) + text("号：")),
     fieldvalue(student-id),
-    fieldname("学        院："),
+    fieldname(text("学") + h(2em) + text("院：")),
     fieldvalue(school),
-    fieldname("专        业："),
+    fieldname(text("专") + h(2em) + text("业：")),
     fieldvalue(cmajor),
     fieldname("研究方向："),
     fieldvalue(direction),
-    fieldname("导        师："),
+    fieldname(text("导") + h(2em) + text("师：")),
     fieldvalue(csupervisor),
   )
 
