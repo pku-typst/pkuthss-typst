@@ -1,17 +1,24 @@
 #import "template.typ": *
 
 #show: doc => conf(
-  author: "张三",
+  cauthor: "张三",
+  eauthor: "San Zhang",
   student-id: "23000xxxxx",
   cthesisname: "博士研究生学位论文",
   cheader: "北京大学博士学位论文",
-  ctitle: "北京大学学位论文Typst模板",
+  ctitle: "北京大学学位论文 Typst 模板",
+  etitle: "Typst Template for Peking University Dissertations",
   school: "某个学院",
-  major: "某个专业",
+  cmajor: "某个专业",
+  emajor: "Some Major",
   direction: "某个研究方向",
-  supervisor: "李四",
+  csupervisor: "李四",
+  esupervisor: "Si Li",
   date: "二零二三年六月",
-  abstract: lorem(300),
+  cabstract: lorem(300),
+  ckeywords: ("Typst", "模板"),
+  eabstract: lorem(300),
+  ekeywords: ("Typst", "Template"),
   doc,
 )
 
@@ -21,10 +28,10 @@
 
 #figure(
   image("1-writing-app.png", width: 100%),
-  caption: "Typst网页版界面",
+  caption: "Typst 网页版界面",
 ) <web>
 
-@web 展示了Typst网页版的界面。
+@web 展示了 Typst 网页版的界面。更多有关内容，可以参考 @about。@developers 中介绍了 Typst 的主要开发者。
 
 == 表格
 
@@ -69,6 +76,10 @@ $ lim_x =
 
 我们同样可以引用参考文献，例如 @wang2010guide 和 @kopka2004guide。
 
+== 其他
+
+#lorem(1000)
+
 = 理论
 
 == 理论一 <theory1>
@@ -84,6 +95,18 @@ $ lim_x =
 == 理论二
 
 在 @theory1 中，我们回顾了 @intro 中的公式。下面，我们来推导一些新的公式：
+
+#lorem(1000)
+
+#appendix()
+
+= 关于 Typst <about>
+
+#lorem(1000)
+
+== Typst 的开发者 <developers>
+
+#lorem(1000)
 
 #pagebreak()
 #bibliography("ref.bib",

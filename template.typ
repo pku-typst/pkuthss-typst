@@ -29,6 +29,14 @@
   #it
 ]
 
+#let partcounter = counter("part")
+#let chaptercounter = counter("chapter")
+#let appendixcounter = counter("appendix")
+#let appendix() = {
+  appendixcounter.update(10)
+  counter(heading).update(())
+}
+
 #let chinesenumber(num, standalone: false) = if num < 11 {
   ("零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十").at(num)
 } else if num < 100 {
@@ -61,11 +69,22 @@
   }
 }
 
-#let chinesenumbering(..nums) = if nums.pos().len() == 1 {
-  "第" + chinesenumber(nums.pos().at(0), standalone: true) + "章"
-} else {
-  numbering("1.1", ..nums)
-}
+#let chinesenumbering(..nums, location: none) = locate(loc => {
+  let actual-loc = if location == none { loc } else { location }
+  if appendixcounter.at(actual-loc).at(0) < 10 {
+    if nums.pos().len() == 1 {
+      "第" + chinesenumber(nums.pos().at(0), standalone: true) + "章"
+    } else {
+      numbering("1.1", ..nums)
+    }
+  } else {
+    if nums.pos().len() == 1 {
+      "附录 " + numbering("A.1", ..nums)
+    } else {
+      numbering("A.1", ..nums)
+    }
+  }
+}) 
 
 #let chineseunderline(s, width: 300pt, bold: false) = {
   let chars = s.split("")
@@ -118,7 +137,11 @@
       if depth != none and el.level > depth { continue }
 
       let maybe_number = if el.numbering != none {
-        numbering(el.numbering, ..counter(heading).at(el.location()))
+        if el.numbering == chinesenumbering {
+          chinesenumbering(..counter(heading).at(el.location()), location: el.location())
+        } else {
+          numbering(el.numbering, ..counter(heading).at(el.location()))
+        }
         h(0.5em)
       }
       let line = {
@@ -166,22 +189,26 @@
 }
 
 #let conf(
-  author: "张三",
+  cauthor: "张三",
+  eauthor: "San Zhang",
   student-id: "23000xxxxx",
   cthesisname: "博士研究生学位论文",
   cheader: "北京大学博士学位论文",
   ctitle: "北京大学学位论文Typst模板",
+  etitle: "Typst Template for Peking University Dissertations",
   school: "某个学院",
-  major: "某个专业",
+  cmajor: "某个专业",
+  emajor: "Some Major",
   direction: "某个研究方向",
-  supervisor: "李四",
+  csupervisor: "李四",
+  esupervisor: "Si Li",
   date: "二零二三年六月",
-  abstract: [],
+  cabstract: [],
+  ckeywords: (),
+  eabstract: [],
+  ekeywords: (),
   doc,
 ) = {
-  let partcounter = counter("part")
-  let chaptercounter = counter("chapter")
-
   set page("a4",
     header: locate(loc => {
       [
@@ -195,13 +222,15 @@
               #line(length: 100%)
             ]
           } else {
-            let elems = query(heading.where(level: 1), after: loc)
+            let elems = query(heading.where(level: 1), before: query(<footer>, after: loc).first().location())
             if elems == () {
             } else {
-              let el = elems.first()
+              let el = elems.last()
               [
                 #set align(center)
-                #if el.numbering != none {
+                #if el.numbering == chinesenumbering {
+                  chinesenumbering(..counter(heading).at(el.location()), location: el.location())
+                } else if el.numbering != none {
                   numbering(el.numbering, ..counter(heading).at(el.location()))
                 }
                 #h(0.5em)
@@ -216,11 +245,11 @@
       [
         #set text(字号.五号)
         #set align(center)
-        #let headers = query(heading, before: loc)
-        #if headers == () {
+        #if loc.page() <= 4 {
+          // Skip cover and copyright page
         } else {
+          let headers = query(heading, before: loc)
           let part = partcounter.at(headers.last().location()).at(0)
-          
           [
             #if part < 20 {
               numbering("I", counter(page).at(loc).at(0))
@@ -256,7 +285,9 @@
     ]
 
     #if it.level == 1 {
-      pagebreak(weak: true)
+      if it.body.text != "Abstract" {
+        pagebreak(weak: true)
+      }
       locate(loc => {
         if it.body.text == "摘要" {
           partcounter.update(10)
@@ -330,9 +361,9 @@
         } else if el.has("level") {
           // Assume to be a heading
           if el.level == 1 {
-            link(el-loc, chinesenumbering(..counter(heading).at(el-loc)))
+            link(el-loc, chinesenumbering(..counter(heading).at(el-loc), location: el-loc))
           } else {
-            link(el-loc, "节 " + numbering("1.1", ..counter(heading).at(el-loc)))
+            link(el-loc, "节 " + chinesenumbering(..counter(heading).at(el-loc), location: el-loc))
           }
         }
       }
@@ -387,17 +418,17 @@
     columns: (80pt, 280pt),
     row-gutter: 1em,
     fieldname("姓        名："),
-    fieldvalue(author),
+    fieldvalue(cauthor),
     fieldname("学        号："),
     fieldvalue(student-id),
     fieldname("学        院："),
     fieldvalue(school),
     fieldname("专        业："),
-    fieldvalue(major),
+    fieldvalue(cmajor),
     fieldname("研究方向："),
     fieldvalue(direction),
     fieldname("导        师："),
-    fieldvalue(supervisor),
+    fieldvalue(csupervisor),
   )
 
   v(60pt)
@@ -410,10 +441,48 @@
 
   set align(left + top)
   set text(字号.小四)
+  heading(numbering: none, "版权声明")
+  [
+    #h(2em)
+    任何收存和保管本论文各种版本的单位和个人，
+    未经本论文作者同意，不得将本论文转借他人，
+    亦不得随意复制、抄录、拍照或以任何方式传播。
+    否则，引起有碍作者著作权之问题，将可能承担法律责任。
+  ]
+
+  // 版权声明后的空白页
+  pagebreak()
+  pagebreak()
+
   par(justify: true)[
     #heading(numbering: none, "摘要")
-    #abstract
+    #cabstract
+    #v(1fr)
+    #textbf("关键词：")
+    #ckeywords.join("，")
+    #v(2em)
   ]
+  pagebreak(weak: true)
+
+  par(justify: true)[
+    #[
+      #set text(字号.小二)
+      #set align(center)
+      #textbf(etitle)
+    ]
+    #[
+      #set align(center)
+      #eauthor \(#emajor\) \
+      Directed by #esupervisor
+    ]
+    #heading(numbering: none, "Abstract")
+    #eabstract
+    #v(1fr)
+    #textbf("Keywords: ")
+    #ekeywords.join(", ")
+    #v(2em)
+  ]
+  pagebreak(weak: true)
 
   chineseoutline(
     title: "目录",
