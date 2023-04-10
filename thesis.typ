@@ -20,6 +20,7 @@
   eabstract: lorem(300),
   ekeywords: ("Typst", "Template"),
   linespacing: 1em,
+  outlinedepth: 3,
   listofimage: true,
   listoftable: true,
   doc,
@@ -39,6 +40,12 @@
 ) <web>
 
 @web 展示了 Typst 网页版的界面。更多有关内容，可以参考 @about。@developers 中介绍了 Typst 的主要开发者。
+
+=== 三级标题
+
+==== 四级标题
+
+目录的默认最大深度为 3，即只有前三级标题会出现在目录中。如果需要更深的目录，可以更改 `outlinedepth` 设置。
 
 == 表格
 

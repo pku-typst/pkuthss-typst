@@ -33,6 +33,14 @@
   #h(0em, weak: true)
 ]
 
+#let lengthceil(len, unit: 字号.小四) = {
+  let start = unit
+  while start < len {
+    start = start + unit
+  }
+  start
+}
+
 #let partcounter = counter("part")
 #let chaptercounter = counter("chapter")
 #let appendixcounter = counter("appendix")
@@ -145,7 +153,7 @@
       // Skip headings that are too deep
       if depth != none and el.level > depth { continue }
 
-      let maybe_number = if el.numbering != none {
+      let maybe-number = if el.numbering != none {
         if el.numbering == chinesenumbering {
           chinesenumbering(..counter(heading).at(el.location()), location: el.location())
         } else {
@@ -160,19 +168,24 @@
 
         if el.level == 1 {
           v(weak: true, 0.5em)
-          if maybe_number != none {
-            box(
-              width: 5em,
-              textbf(maybe_number)
-            )
+          if maybe-number != none {
+            style(styles => {
+              let width = measure(maybe-number, styles).width
+              box(
+                width: lengthceil(width),
+                textbf(maybe-number)
+              )
+            })
           }
           textbf(el.body)
         } else {
-          box(
-            width: 2em,
-            maybe_number
-          )
-          h(0.5em)
+          style(styles => {
+            let width = measure(maybe-number, styles).width
+            box(
+              width: lengthceil(width),
+              maybe-number
+            )
+          })
           el.body
         }
 
@@ -211,17 +224,19 @@
     let elements = query(figure.where(kind: kind), after: it)
 
     for el in elements {
-      let maybe_number = {
+      let maybe-number = {
         let el-loc = el.location()
         chinesenumbering(chaptercounter.at(el-loc).first(), counter(figure.where(kind: kind)).at(el.location()).first(), location: el.location())
         h(0.5em)
       }
       let line = {
-        box(
-          width: 2em,
-          maybe_number
-        )
-        h(0.5em)
+        style(styles => {
+          let width = measure(maybe-number, styles).width
+          box(
+            width: lengthceil(width),
+            maybe-number
+          )
+        })
         el.caption
 
         // Filler dots
@@ -265,6 +280,7 @@
   eabstract: [],
   ekeywords: (),
   linespacing: 1em,
+  outlinedepth: 3,
   listofimage: true,
   listoftable: true,
   doc,
@@ -568,6 +584,7 @@
     #heading(numbering: none, "摘要")
     #cabstract
     #v(1fr)
+    #set par(first-line-indent: 0em)
     *关键词：*
     #ckeywords.join("，")
     #v(2em)
@@ -588,7 +605,9 @@
     #heading(numbering: none, "Abstract")
     #eabstract
     #v(1fr)
-    *Keywords: *
+    #set par(first-line-indent: 0em)
+    *KEYWORDS:*
+    #h(0.5em, weak: true)
     #ekeywords.join(", ")
     #v(2em)
   ]
@@ -596,6 +615,7 @@
 
   chineseoutline(
     title: "目录",
+    depth: outlinedepth,
     indent: true,
   )
 
