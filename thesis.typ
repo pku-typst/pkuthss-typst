@@ -19,6 +19,9 @@
   ckeywords: ("Typst", "模板"),
   eabstract: lorem(300),
   ekeywords: ("Typst", "Template"),
+  linespacing: 1em,
+  listofimage: true,
+  listoftable: true,
   doc,
 )
 
@@ -133,6 +136,5 @@ $ S = pi r^2 $ <appendix-eq>
 
 #pagebreak()
 #bibliography("ref.bib",
-  title: "参考文献",
   style: "ieee"
 )
