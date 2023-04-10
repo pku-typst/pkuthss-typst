@@ -476,8 +476,7 @@
   set align(left + top)
   set text(字号.小四)
   heading(numbering: none, "版权声明")
-  [
-    #h(2em)
+  par(justify: true, first-line-indent: 2em)[
     任何收存和保管本论文各种版本的单位和个人，
     未经本论文作者同意，不得将本论文转借他人，
     亦不得随意复制、抄录、拍照或以任何方式传播。
@@ -488,7 +487,7 @@
   pagebreak()
   pagebreak()
 
-  par(justify: true)[
+  par(justify: true, first-line-indent: 2em)[
     #heading(numbering: none, "摘要")
     #cabstract
     #v(1fr)
@@ -498,7 +497,7 @@
   ]
   pagebreak(weak: true)
 
-  par(justify: true)[
+  par(justify: true, first-line-indent: 2em)[
     #[
       #set text(字号.小二)
       #set align(center)
@@ -524,7 +523,7 @@
   )
 
   set align(left + top)
-  par(justify: true)[
+  par(justify: true, first-line-indent: 2em)[
     #doc
   ]
 }
