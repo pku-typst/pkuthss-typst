@@ -19,6 +19,7 @@
   宋体: ("Times New Roman", "SimSun"),
   黑体: ("Times New Roman", "SimHei"),
   楷体: ("Times New Roman", "KaiTi"),
+  代码: ("CMU Typewriter Text", "Times New Roman", "SimSun"),
 )
 
 #let textit(it) = [
@@ -475,6 +476,7 @@
   show strong: it => textbf(it)
   show emph: it => textit(it)
   show par: set block(spacing: linespacing)
+  show raw: set text(font: 字体.代码)
 
   show heading: it => [
     // Cancel indentation for headings of level 2 or above

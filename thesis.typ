@@ -125,7 +125,19 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
 
 在 Typst 中，定义表格的默认方式是 `table` 函数。但如果需要给表格增加标题，或者在文章中引用表格，则需要将其放置在 `figure` 中，就像下面这样：
 
-#codeblock(
+#pagebreak()
+
+#table(
+  columns: (1fr, 1fr),
+  [
+    #set align(center) 
+    代码
+  ],
+  [
+    #set align(center) 
+    渲染结果
+  ],
+  codeblock(
   ```typ
 #figure(
   table(
@@ -142,30 +154,29 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
   caption: "答辩委员会名单",
 ) <table>
 ```,
-  caption: "默认表格",
-  outline: true,
+    caption: "默认表格",
+  ),
+  [
+    #figure(
+      table(
+        columns: (auto, auto, auto, auto),
+        inset: 10pt,
+        align: horizon,
+          [*姓名*],[*职称*],[*工作单位*],[*职责*],
+          [李四],[教授],[北京大学],[主席],
+          [王五],[教授],[北京大学],[成员],
+          [赵六],[教授],[北京大学],[成员],
+          [钱七],[教授],[北京大学],[成员],
+          [孙八],[教授],[北京大学],[成员],
+      ),
+      caption: "答辩委员会名单",
+    ) <table>
+  ]
 )
 
 对应的渲染结果如 @table 所示。代码中的 `<table>` 是这一表格的标签，可以在文中通过 `@table` 来引用。
 
-#figure(
-  table(
-    columns: (auto, auto, auto, auto),
-    inset: 10pt,
-    align: horizon,
-      [*姓名*],[*职称*],[*工作单位*],[*职责*],
-      [李四],[教授],[北京大学],[主席],
-      [王五],[教授],[北京大学],[成员],
-      [赵六],[教授],[北京大学],[成员],
-      [钱七],[教授],[北京大学],[成员],
-      [孙八],[教授],[北京大学],[成员],
-  ),
-  caption: "答辩委员会名单",
-) <table>\
-
 默认的表格不是特别美观，本模板中提供了 `booktab` 函数用于生成三线表，下面是一个示例。代码中的 `<booktab>` 是这一表格的标签，可以在文中通过 `@booktab` 来引用。
-
-#pagebreak()
 
 #table(
   columns: (1fr, 1fr),
@@ -205,30 +216,93 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
 
 == 公式
 
+@eq 是一个公式。代码中的 `<eq>` 是这一公式的标签，可以在文中通过 `@eq` 来引用。
+
+#pagebreak()
+
+#table(
+  columns: (1fr, 1fr),
+  [
+    #set align(center)
+    代码
+  ],
+  [
+    #set align(center)
+    渲染结果
+  ],
+  ```typ
 $ E = m c^2 $ <eq>
-
-@eq 是一个公式。
-
-$ sum_(k=0)^n k
-    &= 1 + ... + n \
-    &= (n(n+1)) / 2 $ <eq2>
+  ```,
+  [
+    $ E = m c^2 $ <eq>
+  ]
+)\
 
 @eq2 是一个多行公式。
 
+#table(
+  columns: (1fr, 1fr),
+  [
+    #set align(center)
+    代码
+  ],
+  [
+    #set align(center)
+    渲染结果
+  ],
+  ```typ
+$ sum_(k=0)^n k
+    &= 1 + ... + n \
+    &= (n(n+1)) / 2 $ <eq2>  ```,
+  [
+$ sum_(k=0)^n k
+    &= 1 + ... + n \
+    &= (n(n+1)) / 2 $ <eq2>
+  ]
+)\
+
+@eq3 到 @eq6 中给出了更多的示例。
+
+#table(
+  columns: (1fr, 1fr),
+  [
+    #set align(center)
+    代码
+  ],
+  [
+    #set align(center)
+    渲染结果
+  ],
+  ```typ
 $ frac(a^2, 2) $ <eq3>
 $ vec(1, 2, delim: "[") $
 $ mat(1, 2; 3, 4) $
 $ lim_x =
     op("lim", limits: #true)_x $ <eq6>
-
-@eq3 到 @eq6 中给出了更多的示例。
+  ```,
+  [
+$ frac(a^2, 2) $ <eq3>
+$ vec(1, 2, delim: "[") $
+$ mat(1, 2; 3, 4) $
+$ lim_x =
+    op("lim", limits: #true)_x $ <eq6>
+  ]
+)
 
 == 代码块
 
 像 Markdown 一样，我们可以在文档中插入代码块：
 
-#grid(
+#table(
   columns: (1fr, 1fr),
+  [
+    #set align(center)
+    代码
+  ],
+  [
+    #set align(center)
+    渲染结果
+  ],
   ````typ
   ```c
   int main() {
@@ -238,7 +312,6 @@ $ lim_x =
   ```
   ````,
   [
-    #v(1.5em)
     ```c
       int main() {
         printf("Hello, world!");
@@ -250,8 +323,16 @@ $ lim_x =
 
 如果想要给代码块加上标题，并在文章中引用代码块，可以使用本模板中定义的 `codeblock` 命令。其中，`caption` 参数用于指定代码块的标题，`outline` 参数用于指定代码块显示时是否使用边框。下面给出的 @code 是一个简单的 Python 程序。其中的 `<code>` 是这一代码块的标签，意味着这一代码块可以在文档中通过 `@code` 来引用。
 
-#grid(
+#table(
   columns: (1fr, 1fr),
+  [
+    #set align(center)
+    代码
+  ],
+  [
+    #set align(center)
+    渲染结果
+  ],
   ````typ
 #codeblock(
   ```python
@@ -299,6 +380,8 @@ $ lim_x =
 == 参考文献
 
 Typst 支持 BibLaTeX 格式的 `.bib` 文件，同时也新定义了一种基于 YAML 的文献引用格式。要想在文档中引用参考文献，需要在文档中通过调用 `bibliography` 函数来引用参考文献文件。下面是一个示例：
+
+#pagebreak()
 
 #table(
   columns: (1fr, 1fr),
@@ -364,7 +447,67 @@ $ lim_x =
 
 附录中也可以插入公式，如 @appendix-eq。
 
-$ S = pi r^2 $ <appendix-eq>\
+#table(
+  columns: (1fr, 1fr),
+  [
+    #set align(center) 
+    代码
+  ],
+  [
+    #set align(center) 
+    渲染结果
+  ],
+  ```typ
+$ S = pi r^2 $ <appendix-eq>
+$ mat(
+  1, 2, ..., 10;
+  2, 4, ..., 20;
+  3, 6, ..., 30;
+  dots.v, dots.v, dots.down, dots.v;
+  10, 20, ..., 100
+) $
+$ cal(A) < bb(B) < frak(C) < mono(D) < sans(E) < serif(F) $
+$ bold(alpha < beta < gamma < delta < epsilon) $
+$ upright(zeta < eta < theta < iota < kappa) $
+$ lambda < mu < nu < xi < omicron $
+$ bold(Sigma < Tau) < italic(Upsilon < Phi) < Chi < Psi < Omega $
+  ```,
+  [
+$ S = pi r^2 $ <appendix-eq>
+$ mat(
+  1, 2, ..., 10;
+  2, 4, ..., 20;
+  3, 6, ..., 30;
+  dots.v, dots.v, dots.down, dots.v;
+  10, 20, ..., 100
+) $
+$ cal(A) < bb(B) < frak(C) < mono(D) < sans(E) < serif(F) $
+$ bold(alpha < beta < gamma < delta < epsilon) $
+$ upright(zeta < eta < theta < iota < kappa) $
+$ lambda < mu < nu < xi < omicron $
+$ bold(Sigma < Tau) < italic(Upsilon < Phi) < Chi < Psi < Omega $
+  ]
+)\
+
+@complex 是一个非常复杂的公式的例子：
+
+#table(
+  columns: (1fr, 1fr),
+  [
+    #set align(center) 
+    代码
+  ],
+  [
+    #set align(center) 
+    渲染结果
+  ],
+  ```typ
+$ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large numbers"), underbrace(x + norm(y), y^(w^u) - root(t, z)))), dots.v, u)^(frac(x + 3, y - 2)) $ <complex>
+  ```,
+  [
+    $ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large numbers"), underbrace(x + norm(y), y^(w^u) - root(t, z)))), dots.v, u)^(frac(x + 3, y - 2)) $ <complex>
+  ]
+)\
 
 附录中也可以插入代码块，如 @appendix-code。
 
@@ -390,6 +533,12 @@ $ S = pi r^2 $ <appendix-eq>\
 
 #set enum(indent: 0em)
 #set list(indent: 0em)
+
+#heading(level: 2, numbering: none, "2023-04-11")
+
++ 将代码块的默认字体改为 #字体.代码
+  - `CMU Typewriter Text` 的字体文件已经加入 `fonts` 目录，可以通过在运行 Typst 时使用 `--font-path` 参数指定 `fonts` 目录来使用
+
 #heading(level: 2, numbering: none, "2023-04-10")
 
 + 正确设置了语言类型
