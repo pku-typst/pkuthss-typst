@@ -1,3 +1,5 @@
+#import "helpers.typ": *
+
 #let 字号 = (
   一号: 26pt,
   小一: 24pt,
@@ -266,33 +268,78 @@
   })
 }
 
-#let codeblock(raw, caption: none, outline: false) = {  
-  [
-    #figure([], caption: caption, kind: "code", supplement: "")
-    #set align(center)
-    #set text(字号.五号, font: 字体.宋体)
-    代码
-    #locate(loc => {
-      chinesenumbering(
-        chaptercounter.at(loc).first(), 
-        ..rawcounter.at(loc), 
-        location: loc)
-    })
-    #if caption != none {
-      h(0.5em) 
-      caption
-    }
-  ]
+#let codeblock(raw, caption: none, outline: false) = {
+  figure(
+    if outline {
+      rect(width: 100%)[
+        #set align(left)
+        #raw
+      ]
+    } else {
+      set align(left)
+      raw
+    },
+    caption: caption, kind: "code", supplement: ""
+  )
+}
 
-  if outline {
-    rect(width: 100%)[
-      #set align(left)
-      #raw
-    ]
-  } else {
-    set align(left)
-    raw
+#let booktab(columns: (), aligns: (), width: auto, caption: none, ..cells) = {
+  let headers = cells.pos().slice(0, columns.len())
+  let contents = cells.pos().slice(columns.len(), cells.pos().len())
+  set align(center)
+
+  if aligns == () {
+    for i in range(0, columns.len()) {
+      aligns.push(center)
+    }
   }
+
+  let content_aligns = ()
+  for i in range(0, contents.len()) {
+    content_aligns.push(aligns.at(calc.mod(i, aligns.len())))
+  }
+
+  figure(
+    block(
+      width: width,
+      grid(
+        columns: (auto),
+        row-gutter: 1em,
+        line(length: 100%),
+        [
+          #set align(center)
+          #box(
+            width: 100% - 1em,
+            grid(
+              columns: columns,
+              ..zip(headers, aligns).map(it => [
+                #set align(it.last())
+                #textbf(it.first())
+              ])
+            )
+          )
+        ],
+        line(length: 100%),
+        [
+          #set align(center)
+          #box(
+            width: 100% - 1em,
+            grid(
+              columns: columns,
+              row-gutter: 1em,
+              ..zip(contents, content_aligns).map(it => [
+                #set align(it.last())
+                #it.first()
+              ])
+            )
+          )
+        ],
+        line(length: 100%),
+      ),
+    ),
+    caption: caption,
+    kind: table
+  )
 }
 
 #let conf(
@@ -480,23 +527,40 @@
 
   show figure: it => [
     #set align(center)
-    #set text(字号.五号)
     #if not it.has("kind") {
+      it
     } else if it.kind == image {
       it.body
-      text("图 ")
-      locate(loc => {
-        chinesenumbering(chaptercounter.at(loc).first(), imagecounter.at(loc).first(), location: loc)
-      })
-      text("  ")
-      it.caption
+      [
+        #set text(字号.五号)
+        图
+        #locate(loc => {
+          chinesenumbering(chaptercounter.at(loc).first(), imagecounter.at(loc).first(), location: loc)
+        })
+        #h(1em)
+        #it.caption
+      ]
     } else if it.kind == table {
-      text("表 ")
-      locate(loc => {
-        chinesenumbering(chaptercounter.at(loc).first(), tablecounter.at(loc).first(), location: loc)
-      })
-      text("  ")
-      it.caption
+      [
+        #set text(字号.五号)
+        表
+        #locate(loc => {
+          chinesenumbering(chaptercounter.at(loc).first(), tablecounter.at(loc).first(), location: loc)
+        })
+        #h(1em)
+        #it.caption
+      ]
+      it.body
+    } else if it.kind == "code" {
+      [
+        #set text(字号.五号)
+        代码
+        #locate(loc => {
+          chinesenumbering(chaptercounter.at(loc).first(), rawcounter.at(loc).first(), location: loc)
+        })
+        #h(1em)
+        #it.caption
+      ]
       it.body
     }
   ]
@@ -532,6 +596,11 @@
               表
               #chinesenumbering(chaptercounter.at(el_loc).first(), tablecounter.at(el_loc).first(), location: el_loc)
             ])
+          } else if el.kind == "code" {
+            link(el_loc, [
+              代码
+              #chinesenumbering(chaptercounter.at(el_loc).first(), rawcounter.at(el_loc).first(), location: el_loc)
+            ])
           }
         } else if el.func() == heading {
           // Handle headings
@@ -547,13 +616,19 @@
           // Handle code blocks
           // Since the ref is linked to the code block instead of the internal
           // `figure`, we need to do an extra query here.
-          let figure_el = query(figure.where(kind: "code"), after: el_loc).first()
+          let figure_el = query(figure, after: el_loc).first()
           let el_loc = figure_el.location()
           link(el_loc, [
-            代码
+            #if figure_el.kind == image {
+              [图]
+            } else if figure_el.kind == table {
+              [表]
+            } else if figure_el.kind == "code" {
+              [代码]
+            }
             #chinesenumbering(
               chaptercounter.at(el_loc).first(),
-              rawcounter.at(el_loc).first(), location: el_loc
+              counter(figure.where(kind: figure_el.kind)).at(el_loc).first(), location: el_loc
            )]
           )
         }
