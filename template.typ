@@ -150,7 +150,7 @@
 #let chineseoutline(title: "目录", depth: none, indent: false) = {
   heading(title, numbering: none, outlined: false)
   locate(it => {
-    let elements = query(heading, after: it)
+    let elements = query(heading.where(outlined: true), after: it)
 
     for el in elements {
       // Skip list of images and list of tables

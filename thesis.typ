@@ -48,16 +48,16 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     渲染结果
   ],
   ```typ
-#heading(level: 2, numbering: none, "二级标题")
-#heading(level: 3, numbering: none, "三级标题")
-#heading(level: 4, numbering: none, "四级标题")
-#heading(level: 5, numbering: none, "五级标题")
+#heading(level: 2, numbering: none, outlined: false, "二级标题")
+#heading(level: 3, numbering: none, outlined: false, "三级标题")
+#heading(level: 4, numbering: none, outlined: false, "四级标题")
+#heading(level: 5, numbering: none, outlined: false, "五级标题")
   ```,
   [
-    #heading(level: 2, numbering: none, "二级标题")
-    #heading(level: 3, numbering: none, "三级标题")
-    #heading(level: 4, numbering: none, "四级标题")
-    #heading(level: 5, numbering: none, "五级标题")
+    #heading(level: 2, numbering: none, outlined: false, "二级标题")
+    #heading(level: 3, numbering: none, outlined: false, "三级标题")
+    #heading(level: 4, numbering: none, outlined: false, "四级标题")
+    #heading(level: 5, numbering: none, outlined: false, "五级标题")
   ]
 )\
 
@@ -402,6 +402,8 @@ $ S = pi r^2 $ <appendix-eq>\
   - 现在设置为 #字体.宋体
 + 修正了图题和标题的字号
   - 现在设置为 #字号.五号
++ 修正了目录中没有对 `outlined` 进行筛选的问题
+  - 现在目录中只会显示 `outlined` 为 `true` 的条目
 + 增加了对三线表的支持
   - 现在可以通过 `booktab` 命令插入三线表
 + 增加了对含标题代码块的支持
