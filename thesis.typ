@@ -179,7 +179,7 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
   ],
   ```typ
   #booktab(
-    width: 50%,
+    width: 100%,
     aligns: (left, center, right),
     columns: (1fr, 1fr, 1fr),
     caption: [`booktab` 示例],
