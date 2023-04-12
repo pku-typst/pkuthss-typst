@@ -534,9 +534,14 @@ $ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+#heading(level: 2, numbering: none, "2023-04-12")
+
++ 将代码块的首选字体改为 `New Computer Modern Mono`
+  - Typst `v0.2.0` 版本内嵌了 `New Computer Modern` 字体，虽然并未同时提供 `New Computer Modern Mono`，这里将本模板的代码块字体相应进行了调整。`New Computer Modern Mono` 的字体文件现在在 `fonts` 目录中提供，同时删除了原来的 `CMU Typewriter Text` 字体文件。
+
 #heading(level: 2, numbering: none, "2023-04-11")
 
-+ 将代码块的默认字体改为 #字体.代码
++ 将代码块的首选字体改为 `CMU Typewriter Text`
   - `CMU Typewriter Text` 的字体文件已经加入 `fonts` 目录，可以通过在运行 Typst 时使用 `--font-path` 参数指定 `fonts` 目录来使用
 
 #heading(level: 2, numbering: none, "2023-04-10")
