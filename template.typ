@@ -19,7 +19,7 @@
   宋体: ("Times New Roman", "SimSun"),
   黑体: ("Times New Roman", "SimHei"),
   楷体: ("Times New Roman", "KaiTi"),
-  代码: ("CMU Typewriter Text", "Times New Roman", "SimSun"),
+  代码: ("New Computer Modern Mono", "Times New Roman", "SimSun"),
 )
 
 #let textit(it) = [
