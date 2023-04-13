@@ -19,10 +19,13 @@
   ckeywords: ("Typst", "模板"),
   eabstract: lorem(300),
   ekeywords: ("Typst", "Template"),
+  acknowledgements: [感谢 Typst 开发者的辛勤付出。 #lorem(300)],
   linespacing: 1em,
   outlinedepth: 3,
+  blind: false,
   listofimage: true,
   listoftable: true,
+  listofcode: true,
   alwaysstartodd: true,
   doc,
 )
@@ -431,6 +434,8 @@ $ lim_x =
 
 - 参考文献格式，特别是中文参考文献的格式不完全符合学校有关规定。#link("https://discord.com/channels/1054443721975922748/1094796790559162408/1094928907880386662", "Discord 上的这个对话")显示，Typst 有关功能还在开发中。待有关接口对外开放后，本模板将会进行相应的适配。
 - 暂时还不支持脚注。
+- 需要完善对盲评格式的支持。
+- 需要完善奇数页开始选项的效果。
 
 #appendix()
 
@@ -534,10 +539,17 @@ $ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+#heading(level: 2, numbering: none, "2023-04-13")
+
++ 修正了 `alwaysstartodd` 为 `false` 时，摘要页不显示页码的错误
++ 去除了版权声明中多余的空格
++ 增加了致谢页和原创性声明页
++ 增加了 `blind` 选项，设置为 `true` 时将生成盲评格式的论文。但目前只是去除了致谢和原创性声明，还需要进一步完善。
+
 #heading(level: 2, numbering: none, "2023-04-12")
 
 + 将代码块的首选字体改为 `New Computer Modern Mono`
-  - Typst `v0.2.0` 版本内嵌了 `New Computer Modern` 字体，虽然并未同时提供 `New Computer Modern Mono`，这里将本模板的代码块字体相应进行了调整。`New Computer Modern Mono` 的字体文件现在在 `fonts` 目录中提供，同时删除了原来的 `CMU Typewriter Text` 字体文件。
+  - Typst `v0.2.0` 版本内嵌了 `New Computer Modern` 字体，虽然并未同时提供 `New Computer Modern Mono`，这里将本模板的代码块字体相应进行了调整。`New Computer Modern Mono` 的字体文件现在在 `fonts` 目录中提供，同时删除了原来的 `CMU Typewriter Text` 字体文件
 
 #heading(level: 2, numbering: none, "2023-04-11")
 

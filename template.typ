@@ -362,8 +362,10 @@
   ckeywords: (),
   eabstract: [],
   ekeywords: (),
+  acknowledgements: [],
   linespacing: 1em,
   outlinedepth: 3,
+  blind: false,
   listofimage: true,
   listoftable: true,
   listofcode: true,
@@ -390,6 +392,7 @@
               #line(length: 100%)
             ]
           }
+        } else if partcounter.at(loc).at(0) > 20 {
         } else {
           if calc.even(loc.page()) {
             [
@@ -423,15 +426,15 @@
                 #v(-1em)
                 #line(length: 100%)
               ]
+            }
           }
-        }
       }]}),
     footer: locate(loc => {
       [
         #set text(字号.五号)
         #set align(center)
-        #if loc.page() <= 4 {
-          // FIXME: Skip cover and copyright page
+        #if query(heading, before: loc).len() < 2 or query(heading, after: loc).len() == 0 {
+          // Skip cover, copyright and origin pages
         } else {
           let headers = query(heading, before: loc)
           let part = partcounter.at(headers.last().location()).first()
@@ -494,7 +497,7 @@
     ]
 
     #if it.level == 1 {
-      if it.body.text != "Abstract" {
+      if not it.body.text in ("Abstract", "学位论文使用授权说明")  {
         pagebreak(weak: true)
       }
       locate(loc => {
@@ -716,10 +719,7 @@
   set text(字号.小四)
   heading(numbering: none, outlined: false, "版权声明")
   par(justify: true, first-line-indent: 2em, leading: linespacing)[
-    任何收存和保管本论文各种版本的单位和个人，
-    未经本论文作者同意，不得将本论文转借他人，
-    亦不得随意复制、抄录、拍照或以任何方式传播。
-    否则，引起有碍作者著作权之问题，将可能承担法律责任。
+    任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。
   ]
 
   locate(loc => {
@@ -795,4 +795,66 @@
   par(justify: true, first-line-indent: 2em, leading: linespacing)[
     #doc
   ]
+
+  if not blind {
+    par(justify: true, first-line-indent: 2em, leading: linespacing)[
+      #heading(numbering: none, "致谢")
+      #acknowledgements
+    ]
+
+    partcounter.update(30)
+    heading(numbering: none, "北京大学学位论文原创性声明和使用授权说明")
+    align(center)[#heading(level: 2, numbering: none, outlined: false, "原创性声明")]
+    par(justify: true, first-line-indent: 2em, leading: linespacing)[
+      本人郑重声明：
+      所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。
+      除文中已经注明引用的内容外，
+      本论文不含任何其他个人或集体已经发表或撰写过的作品或成果。
+      对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式标明。
+      本声明的法律结果由本人承担。
+
+      #v(1em)
+
+      #align(right)[
+        论文作者签名
+        #h(5em)
+        日期：
+        #h(2em)
+        年
+        #h(2em)
+        月
+        #h(2em)
+        日
+      ]
+
+      #align(center)[#heading(level: 2, numbering: none, outlined: false, "学位论文使用授权说明")]
+      #v(-0.33em, weak: true)
+      #align(center)[#text(字号.五号)[（必须装订在提交学校图书馆的印刷本）]]
+      #v(字号.小三)
+
+      本人完全了解北京大学关于收集、保存、使用学位论文的规定，即：
+      
+      - 按照学校要求提交学位论文的印刷本和电子版本；
+      - 学校有权保存学位论文的印刷本和电子版，并提供目录检索与阅览服务，在校园网上提供服务；
+      - 学校可以采用影印、缩印、数字化或其它复制手段保存论文；
+      - 因某种特殊原因须要延迟发布学位论文电子版，授权学校 #box[#rect(width: 9pt, height: 9pt)] 一年 /	 #box[#rect(width: 9pt, height: 9pt)] 两年 / #box[#rect(width: 9pt, height: 9pt)] 三年以后，在校园网上全文发布。
+
+      #align(center)[（保密论文在解密后遵守此规定）]
+
+      #v(1em)
+      #align(right)[
+        论文作者签名
+        #h(5em)
+        导师签名
+        #h(5em)
+        日期：
+        #h(2em)
+        年
+        #h(2em)
+        月
+        #h(2em)
+        日
+      ]
+    ]
+  }
 }
