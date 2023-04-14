@@ -151,7 +151,7 @@
 #let chineseoutline(title: "目录", depth: none, indent: false) = {
   heading(title, numbering: none, outlined: false)
   locate(it => {
-    let elements = query(heading.where(outlined: true), after: it)
+    let elements = query(heading.where(outlined: true).after(it), it)
 
     for el in elements {
       // Skip list of images and list of tables
@@ -206,7 +206,7 @@
         }
         
         // Page number
-        let footer = query(<__footer__>, after: el.location())
+        let footer = query(selector(<__footer__>).after(el.location()), el.location())
         let page_number = if footer == () {
           0
         } else {
@@ -230,7 +230,7 @@
 #let listoffigures(title: "插图", kind: image) = {
   heading(title, numbering: none, outlined: false)
   locate(it => {
-    let elements = query(figure.where(kind: kind), after: it)
+    let elements = query(figure.where(kind: kind).after(it), it)
 
     for el in elements {
       let maybe_number = {
@@ -253,7 +253,7 @@
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
         
         // Page number
-        let footers = query(<__footer__>, after: el.location())
+        let footers = query(selector(<__footer__>).after(el.location()), el.location())
         let page_number = if footers == () {
           0
         } else {
@@ -379,7 +379,7 @@
         #set align(center)
         #if partcounter.at(loc).at(0) < 10 {
           // Handle the first page of Chinese abstract specailly
-          let headings = query(heading, after: loc)
+          let headings = query(selector(heading).after(loc), loc)
           let next_heading = if headings == () {
             ()
           } else {
@@ -401,12 +401,12 @@
               #line(length: 100%)
             ]
           } else {
-            let footers = query(<__footer__>, after: loc)
+            let footers = query(selector(<__footer__>).after(loc), loc)
             let elems = if footers == () {
               ()
             } else {
               query(
-                heading.where(level: 1), before: footers.first().location()
+                heading.where(level: 1).before(footers.first().location()), footers.first().location()
               )
             }
             if elems == () {
@@ -433,10 +433,10 @@
       [
         #set text(字号.五号)
         #set align(center)
-        #if query(heading, before: loc).len() < 2 or query(heading, after: loc).len() == 0 {
+        #if query(selector(heading).before(loc), loc).len() < 2 or query(selector(heading).after(loc), loc).len() == 0 {
           // Skip cover, copyright and origin pages
         } else {
-          let headers = query(heading, before: loc)
+          let headers = query(selector(heading).before(loc), loc)
           let part = partcounter.at(headers.last().location()).first()
           [
             #if part < 20 {
@@ -621,7 +621,7 @@
           // Handle code blocks
           // Since the ref is linked to the code block instead of the internal
           // `figure`, we need to do an extra query here.
-          let figure_el = query(figure, after: el_loc).first()
+          let figure_el = query(selector(figure).after(el_loc), el_loc).first()
           let el_loc = figure_el.location()
           link(el_loc, [
             #if figure_el.kind == image {

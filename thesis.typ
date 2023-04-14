@@ -539,6 +539,11 @@ $ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+#heading(level: 2, numbering: none, "2023-04-14")
+
++ 适配了下一版本对 `query` 函数的改动
+  - 这会导致模板与 Typst `v0.2.0` 版本的不兼容。如果你使用的是 Typst `v0.2.0` 版本，请使用此前版本的模板。
+
 #heading(level: 2, numbering: none, "2023-04-13")
 
 + 修正了 `alwaysstartodd` 为 `false` 时，摘要页不显示页码的错误
