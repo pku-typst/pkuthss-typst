@@ -1,13 +1,3 @@
-#let range(start, end) = {
-  let ret = ()
-  let i = start
-  while i < end {
-    ret.push(i)
-    i = i + 1
-  }
-  ret
-}
-
 #let zip(..lists) = {
   let lists = lists.pos()
   if lists == () {
