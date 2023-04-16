@@ -104,7 +104,7 @@
       numbering(if brackets { "(A.1)" } else { "A.1" }, ..nums)
     }
   }
-}) 
+})
 
 #let chineseunderline(s, width: 300pt, bold: false) = {
   let chars = s.split("")
@@ -151,7 +151,7 @@
 #let chineseoutline(title: "目录", depth: none, indent: false) = {
   heading(title, numbering: none, outlined: false)
   locate(it => {
-    let elements = query(heading.where(outlined: true).after(it), it)
+    let elements = query(heading.where(outlined: true), after: it)
 
     for el in elements {
       // Skip list of images and list of tables
@@ -183,10 +183,10 @@
             let width = measure(maybe_number, styles).width
             box(
               width: lengthceil(width),
-              if el.level == 1 { 
-                textbf(maybe_number) 
-              } else { 
-                maybe_number 
+              if el.level == 1 {
+                textbf(maybe_number)
+              } else {
+                maybe_number
               }
             )
           })
@@ -204,9 +204,9 @@
         } else {
           box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
         }
-        
+
         // Page number
-        let footer = query(selector(<__footer__>).after(el.location()), el.location())
+        let footer = query(<__footer__>, after: el.location())
         let page_number = if footer == () {
           0
         } else {
@@ -230,7 +230,7 @@
 #let listoffigures(title: "插图", kind: image) = {
   heading(title, numbering: none, outlined: false)
   locate(it => {
-    let elements = query(figure.where(kind: kind).after(it), it)
+    let elements = query(figure.where(kind: kind), after: it)
 
     for el in elements {
       let maybe_number = {
@@ -251,9 +251,9 @@
 
         // Filler dots
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
-        
+
         // Page number
-        let footers = query(selector(<__footer__>).after(el.location()), el.location())
+        let footers = query(<__footer__>, after: el.location())
         let page_number = if footers == () {
           0
         } else {
@@ -379,7 +379,7 @@
         #set align(center)
         #if partcounter.at(loc).at(0) < 10 {
           // Handle the first page of Chinese abstract specailly
-          let headings = query(selector(heading).after(loc), loc)
+          let headings = query(heading, after: loc)
           let next_heading = if headings == () {
             ()
           } else {
@@ -401,12 +401,12 @@
               #line(length: 100%)
             ]
           } else {
-            let footers = query(selector(<__footer__>).after(loc), loc)
+            let footers = query(<__footer__>, after: loc)
             let elems = if footers == () {
               ()
             } else {
               query(
-                heading.where(level: 1).before(footers.first().location()), footers.first().location()
+                heading.where(level: 1), before: footers.first().location()
               )
             }
             if elems == () {
@@ -433,10 +433,10 @@
       [
         #set text(字号.五号)
         #set align(center)
-        #if query(selector(heading).before(loc), loc).len() < 2 or query(selector(heading).after(loc), loc).len() == 0 {
+        #if query(heading, before: loc).len() < 2 or query(heading, after: loc).len() == 0 {
           // Skip cover, copyright and origin pages
         } else {
-          let headers = query(selector(heading).before(loc), loc)
+          let headers = query(heading, before: loc)
           let part = partcounter.at(headers.last().location()).first()
           [
             #if part < 20 {
@@ -456,7 +456,7 @@
   set heading(numbering: chinesenumbering)
   set figure(
     numbering: (..nums) => locate(loc => {
-      if appendixcounter.at(loc).first() < 10 { 
+      if appendixcounter.at(loc).first() < 10 {
         numbering("1.1", chaptercounter.at(loc).first(), ..nums)
       } else {
         numbering("A.1", chaptercounter.at(loc).first(), ..nums)
@@ -466,7 +466,7 @@
   set math.equation(
     numbering: (..nums) => locate(loc => {
       set text(font: 字体.宋体)
-      if appendixcounter.at(loc).first() < 10 { 
+      if appendixcounter.at(loc).first() < 10 {
         numbering("(1.1)", chaptercounter.at(loc).first(), ..nums)
       } else {
         numbering("(A.1)", chaptercounter.at(loc).first(), ..nums)
@@ -621,7 +621,7 @@
           // Handle code blocks
           // Since the ref is linked to the code block instead of the internal
           // `figure`, we need to do an extra query here.
-          let figure_el = query(selector(figure).after(el_loc), el_loc).first()
+          let figure_el = query(figure, after: el_loc).first()
           let el_loc = figure_el.location()
           link(el_loc, [
             #if figure_el.kind == image {
@@ -833,7 +833,7 @@
       #v(字号.小三)
 
       本人完全了解北京大学关于收集、保存、使用学位论文的规定，即：
-      
+
       - 按照学校要求提交学位论文的印刷本和电子版本；
       - 学校有权保存学位论文的印刷本和电子版，并提供目录检索与阅览服务，在校园网上提供服务；
       - 学校可以采用影印、缩印、数字化或其它复制手段保存论文；
