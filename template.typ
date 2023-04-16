@@ -119,7 +119,11 @@
       let nxt = now + c
 
       if measure(nxt, styles).width > width or c == "\n" {
-        ret.push(now)
+        if bold {
+          ret.push(textbf(now))
+        } else {
+          ret.push(now)
+        }
         ret.push(v(-1em))
         ret.push(line(length: 100%))
         if c == "\n" {
