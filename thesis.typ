@@ -43,11 +43,11 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
 #table(
   columns: (1fr, 1fr),
   [
-    #set align(center) 
+    #set align(center)
     代码
   ],
   [
-    #set align(center) 
+    #set align(center)
     渲染结果
   ],
   ```typ
@@ -79,11 +79,11 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
 #table(
   columns: (1fr, 1fr),
   [
-    #set align(center) 
+    #set align(center)
     代码
   ],
   [
-    #set align(center) 
+    #set align(center)
     渲染结果
   ],
   ```typ
@@ -101,11 +101,11 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
 #table(
   columns: (1fr, 1fr),
   [
-    #set align(center) 
+    #set align(center)
     代码
   ],
   [
-    #set align(center) 
+    #set align(center)
     渲染结果
   ],
   ```typ
@@ -133,11 +133,11 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
 #table(
   columns: (1fr, 1fr),
   [
-    #set align(center) 
+    #set align(center)
     代码
   ],
   [
-    #set align(center) 
+    #set align(center)
     渲染结果
   ],
   codeblock(
@@ -184,11 +184,11 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
 #table(
   columns: (1fr, 1fr),
   [
-    #set align(center) 
+    #set align(center)
     代码
   ],
   [
-    #set align(center) 
+    #set align(center)
     渲染结果
   ],
   ```typ
@@ -389,11 +389,11 @@ Typst 支持 BibLaTeX 格式的 `.bib` 文件，同时也新定义了一种基�
 #table(
   columns: (1fr, 1fr),
   [
-    #set align(center) 
+    #set align(center)
     代码
   ],
   [
-    #set align(center) 
+    #set align(center)
     渲染结果
   ],
   ```typ
@@ -455,11 +455,11 @@ $ lim_x =
 #table(
   columns: (1fr, 1fr),
   [
-    #set align(center) 
+    #set align(center)
     代码
   ],
   [
-    #set align(center) 
+    #set align(center)
     渲染结果
   ],
   ```typ
@@ -499,11 +499,11 @@ $ bold(Sigma < Tau) < italic(Upsilon < Phi) < Chi < Psi < Omega $
 #table(
   columns: (1fr, 1fr),
   [
-    #set align(center) 
+    #set align(center)
     代码
   ],
   [
-    #set align(center) 
+    #set align(center)
     渲染结果
   ],
   ```typ
@@ -538,6 +538,14 @@ $ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large
 
 #set enum(indent: 0em)
 #set list(indent: 0em)
+
+#heading(level: 2, numbering: none, "2023-04-16")
+
++ 增加了编译所需的字体文件
++ 修正了论文标题样式
+  - 现在分为两行显示的论文标题样式将同样正确应用 `bold` 选项
++ 增加了更多字号设置
+  - 对应 Word 中初号至小七的所有字号
 
 #heading(level: 2, numbering: none, "2023-04-14")
 
