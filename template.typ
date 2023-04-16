@@ -1,6 +1,8 @@
 #import "helpers.typ": *
 
 #let 字号 = (
+  初号: 42pt,
+  小初: 36pt,
   一号: 26pt,
   小一: 24pt,
   二号: 22pt,
@@ -108,7 +110,7 @@
       numbering(if brackets { "(A.1)" } else { "A.1" }, ..nums)
     }
   }
-}) 
+})
 
 #let chineseunderline(s, width: 300pt, bold: false) = {
   let chars = s.split("")
@@ -191,10 +193,10 @@
             let width = measure(maybe_number, styles).width
             box(
               width: lengthceil(width),
-              if el.level == 1 { 
-                textbf(maybe_number) 
-              } else { 
-                maybe_number 
+              if el.level == 1 {
+                textbf(maybe_number)
+              } else {
+                maybe_number
               }
             )
           })
@@ -212,7 +214,7 @@
         } else {
           box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
         }
-        
+
         // Page number
         let footer = query(selector(<__footer__>).after(el.location()), el.location())
         let page_number = if footer == () {
@@ -259,7 +261,7 @@
 
         // Filler dots
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
-        
+
         // Page number
         let footers = query(selector(<__footer__>).after(el.location()), el.location())
         let page_number = if footers == () {
@@ -464,7 +466,7 @@
   set heading(numbering: chinesenumbering)
   set figure(
     numbering: (..nums) => locate(loc => {
-      if appendixcounter.at(loc).first() < 10 { 
+      if appendixcounter.at(loc).first() < 10 {
         numbering("1.1", chaptercounter.at(loc).first(), ..nums)
       } else {
         numbering("A.1", chaptercounter.at(loc).first(), ..nums)
@@ -474,7 +476,7 @@
   set math.equation(
     numbering: (..nums) => locate(loc => {
       set text(font: 字体.宋体)
-      if appendixcounter.at(loc).first() < 10 { 
+      if appendixcounter.at(loc).first() < 10 {
         numbering("(1.1)", chaptercounter.at(loc).first(), ..nums)
       } else {
         numbering("(A.1)", chaptercounter.at(loc).first(), ..nums)
@@ -841,7 +843,7 @@
       #v(字号.小三)
 
       本人完全了解北京大学关于收集、保存、使用学位论文的规定，即：
-      
+
       - 按照学校要求提交学位论文的印刷本和电子版本；
       - 学校有权保存学位论文的印刷本和电子版，并提供目录检索与阅览服务，在校园网上提供服务；
       - 学校可以采用影印、缩印、数字化或其它复制手段保存论文；
