@@ -42,13 +42,7 @@
   #h(0em, weak: true)
 ]
 
-#let lengthceil(len, unit: 字号.小四) = {
-  let start = unit
-  while start < len {
-    start = start + unit
-  }
-  start
-}
+#let lengthceil(len, unit: 字号.小四) = calc.ceil(len / unit) * unit
 
 #let partcounter = counter("part")
 #let chaptercounter = counter("chapter")
@@ -357,11 +351,13 @@
   cauthor: "张三",
   eauthor: "San Zhang",
   studentid: "23000xxxxx",
+  blindid: "L2023XXXXX",
   cthesisname: "博士研究生学位论文",
   cheader: "北京大学博士学位论文",
-  ctitle: "北京大学学位论文Typst模板",
+  ctitle: "北京大学学位论文 Typst 模板",
   etitle: "Typst Template for Peking University Dissertations",
   school: "某个学院",
+  cfirstmajor: "某个一级学科",
   cmajor: "某个专业",
   emajor: "Some Major",
   direction: "某个研究方向",
@@ -524,7 +520,7 @@
       }
       imagecounter.update(())
       tablecounter.update(())
-      rawcounter.update(0)
+      rawcounter.update(())
       equationcounter.update(())
 
       set align(center)
@@ -654,34 +650,6 @@
     })
   }
 
-  box(
-    grid(
-      columns: (auto, auto),
-      gutter: 0.4em,
-      image("pkulogo.svg", height: 2.4em, fit: "contain"),
-      image("pkuword.svg", height: 1.6em, fit: "contain")
-    )
-  )
-  linebreak()
-  textbf(cthesisname)
-
-  set text(字号.二号)
-  v(60pt)
-  grid(
-    columns: (80pt, 300pt),
-    [
-      #set align(right + top)
-      题目：
-    ],
-    [
-      #set align(center + horizon)
-      #chineseunderline(ctitle, width: 300pt, bold: true)
-    ]
-  )
-
-  v(60pt)
-  set text(字号.三号)
-
   let fieldname(name) = [
     #set align(right + top)
     #textbf(name)
@@ -698,26 +666,86 @@
     )
   ]
 
-  grid(
-    columns: (80pt, 280pt),
-    row-gutter: 1em,
-    fieldname(text("姓") + h(2em) + text("名：")),
-    fieldvalue(cauthor),
-    fieldname(text("学") + h(2em) + text("号：")),
-    fieldvalue(studentid),
-    fieldname(text("学") + h(2em) + text("院：")),
-    fieldvalue(school),
-    fieldname(text("专") + h(2em) + text("业：")),
-    fieldvalue(cmajor),
-    fieldname("研究方向："),
-    fieldvalue(direction),
-    fieldname(text("导") + h(2em) + text("师：")),
-    fieldvalue(csupervisor),
-  )
+  if blind {
+    set align(center + top)
+    text(字号.初号)[#textbf(cheader)]
+    linebreak()
+    set text(字号.三号, font: 字体.仿宋)
+    set par(justify: true, leading: 1em)
+    [（匿名评阅论文封面）]
+    v(2fr)
+    grid(
+      columns: (80pt, 320pt),
+      row-gutter: 1.5em,
+      align(left + top)[中文题目：],
+      align(left + top)[#ctitle],
+      align(left + top)[英文题目：],
+      align(left + top)[#etitle],
+    )
+    v(2em)
+    grid(
+      columns: (80pt, 320pt),
+      row-gutter: 1.5em,
+      align(left + top)[一级学科：],
+      align(left + top)[#cfirstmajor],
+      align(left + top)[二级学科：],
+      align(left + top)[#cmajor],
+      align(left + top)[论文编号：],
+      align(left + top)[#blindid],
+    )
 
-  v(60pt)
-  set text(字号.小二)
-  text(date)
+    v(4fr)
+    text(字号.小二, font: 字体.仿宋)[#date]
+    v(1fr)
+  } else {
+    box(
+      grid(
+        columns: (auto, auto),
+        gutter: 0.4em,
+        image("pkulogo.svg", height: 2.4em, fit: "contain"),
+        image("pkuword.svg", height: 1.6em, fit: "contain")
+      )
+    )
+    linebreak()
+    textbf(cthesisname)
+
+    set text(字号.二号)
+    v(60pt)
+    grid(
+      columns: (80pt, 300pt),
+      [
+        #set align(right + top)
+        题目：
+      ],
+      [
+        #set align(center + horizon)
+        #chineseunderline(ctitle, width: 300pt, bold: true)
+      ]
+    )
+
+    v(60pt)
+    set text(字号.三号)
+
+    grid(
+      columns: (80pt, 280pt),
+      row-gutter: 1em,
+      fieldname(text("姓") + h(2em) + text("名：")),
+      fieldvalue(cauthor),
+      fieldname(text("学") + h(2em) + text("号：")),
+      fieldvalue(studentid),
+      fieldname(text("学") + h(2em) + text("院：")),
+      fieldvalue(school),
+      fieldname(text("专") + h(2em) + text("业：")),
+      fieldvalue(cmajor),
+      fieldname("研究方向："),
+      fieldvalue(direction),
+      fieldname(text("导") + h(2em) + text("师：")),
+      fieldvalue(csupervisor),
+    )
+
+    v(60pt)
+    text(字号.小二)[#date]
+  }
 
   locate(loc => {
     if alwaysstartodd {

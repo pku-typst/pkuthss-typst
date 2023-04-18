@@ -1,8 +1,17 @@
 #import "template.typ": *
 #import "contributors.typ": *
 
+#let issue(id) = link("https://github.com/lucifer1004/pkuthss-typst/issues/" + str(id), text(fill: purple)[\##id])
+
 #set enum(indent: 0em)
 #set list(indent: 0em)
+
+#heading(level: 2, numbering: none, "2023-04-18")
+
++ 完整实现了盲评格式的论文（#issue(5)）
+  - 现在在 `blind = true` 时可以正确生成盲评格式的封面
++ 修改了 `lengthceil` 辅助函数的逻辑
+  - 现在直接使用 `math.ceil` 函数，不再需要使用循环
 
 #heading(level: 2, numbering: none, "2023-04-16")
 
