@@ -187,20 +187,20 @@
             let width = measure(maybe_number, styles).width
             box(
               width: lengthceil(width),
-              if el.level == 1 {
+              link(el.location(), if el.level == 1 {
                 textbf(maybe_number)
               } else {
                 maybe_number
-              }
+              })
             )
           })
         }
 
-        if el.level == 1 {
+        link(el.location(), if el.level == 1 {
           textbf(el.body)
         } else {
           el.body
-        }
+        })
 
         // Filler dots
         if el.level == 1 {
@@ -216,17 +216,18 @@
         } else {
           counter(page).at(footer.first().location()).first()
         }
-        if el.level == 1 {
+        
+        link(el.location(), if el.level == 1 {
           textbf(str(page_number))
         } else {
           str(page_number)
-        }
+        })
 
         linebreak()
         v(-0.2em)
       }
 
-      link(el.location(), line)
+      line
     }
   })
 }
@@ -247,11 +248,11 @@
           let width = measure(maybe_number, styles).width
           box(
             width: lengthceil(width),
-            maybe_number
+            link(el.location(), maybe_number)
           )
         })
 
-        el.caption
+        link(el.location(), el.caption)
 
         // Filler dots
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
@@ -263,12 +264,12 @@
         } else {
           counter(page).at(footers.first().location()).first()
         }
-        str(page_number)
+        link(el.location(), str(page_number))
         linebreak()
         v(-0.2em)
       }
 
-      link(el.location(), line)
+      line
     }
   })
 }

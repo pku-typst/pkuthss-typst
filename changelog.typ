@@ -6,6 +6,9 @@
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+#heading(level: 2, numbering: none, "2023-04-20")
+
++ 不再给目录和索引页中填充空隙用的 `repeat([.])` 添加链接（参见#link("https://github.com/typst/typst/issues/758", text(fill: purple)[typst/typst\#758])）
 
 #heading(level: 2, numbering: none, "2023-04-19")
 
