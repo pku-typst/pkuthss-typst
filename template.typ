@@ -53,8 +53,8 @@
 #let equationcounter = counter(math.equation)
 #let appendix() = {
   appendixcounter.update(10)
-  chaptercounter.update(())
-  counter(heading).update(())
+  chaptercounter.update(0)
+  counter(heading).update(0)
 }
 
 #let chinesenumber(num, standalone: false) = if num < 11 {

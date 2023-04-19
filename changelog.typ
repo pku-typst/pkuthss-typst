@@ -6,6 +6,11 @@
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+
+#heading(level: 2, numbering: none, "2023-04-19")
+
++ 修复了附录中没有一级标题时使用行间公式导致无法编译的错误（#issue(7)）
+
 #heading(level: 2, numbering: none, "2023-04-18")
 
 + 完整实现了盲评格式的论文（#issue(5)）
