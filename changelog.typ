@@ -9,6 +9,7 @@
 #heading(level: 2, numbering: none, "2023-04-20")
 
 + 不再给目录和索引页中填充空隙用的 `repeat([.])` 添加链接（参见#link("https://github.com/typst/typst/issues/758", text(fill: purple)[typst/typst\#758])）
++ 修复了首个章节仅有一个标题时的页码渲染错误（#issue(8)）（#contributors.TeddyHuang-00）
 
 #heading(level: 2, numbering: none, "2023-04-19")
 
