@@ -216,7 +216,7 @@
         } else {
           counter(page).at(footer.first().location()).first()
         }
-        
+
         link(el.location(), if el.level == 1 {
           textbf(str(page_number))
         } else {
@@ -446,7 +446,7 @@
           let headers = query(selector(heading).before(loc), loc)
           let part = partcounter.at(headers.last().location()).first()
           [
-            #if part < 20 {
+            #if part < 15 {
               numbering("I", counter(page).at(loc).first())
             } else {
               str(counter(page).at(loc).first())
@@ -641,7 +641,7 @@
             #chinesenumbering(
               chaptercounter.at(el_loc).first(),
               counter(figure.where(kind: figure_el.kind)).at(el_loc).first(), location: el_loc
-           )]
+            )]
           )
         }
 
@@ -829,6 +829,8 @@
   if listofcode {
     listoffigures(title: "代码", kind: "code")
   }
+
+  partcounter.update(15)
 
   set align(left + top)
   par(justify: true, first-line-indent: 2em, leading: linespacing)[
