@@ -6,6 +6,12 @@
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+#heading(level: 2, numbering: none, "2023-04-26")
+
++ 适配 Typst `v0.3.0`，将 `calc.mod` 改为 `calc.rem`
++ 简化了 `show ref` 中的逻辑
+  - 现在提供了 `element`，可以少进行一次 `query`
+
 #heading(level: 2, numbering: none, "2023-04-20")
 
 + 不再给目录和索引页中填充空隙用的 `repeat([.])` 添加链接（参见#link("https://github.com/typst/typst/issues/758", text(fill: purple)[typst/typst\#758])）

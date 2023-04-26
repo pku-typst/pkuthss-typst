@@ -60,32 +60,32 @@
 #let chinesenumber(num, standalone: false) = if num < 11 {
   ("零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十").at(num)
 } else if num < 100 {
-  if calc.mod(num, 10) == 0 {
+  if calc.rem(num, 10) == 0 {
     chinesenumber(calc.floor(num / 10)) + "十"
   } else if num < 20 and standalone {
-    "十" + chinesenumber(calc.mod(num, 10))
+    "十" + chinesenumber(calc.rem(num, 10))
   } else {
-    chinesenumber(calc.floor(num / 10)) + "十" + chinesenumber(calc.mod(num, 10))
+    chinesenumber(calc.floor(num / 10)) + "十" + chinesenumber(calc.rem(num, 10))
   }
 } else if num < 1000 {
   let left = chinesenumber(calc.floor(num / 100)) + "百"
-  if calc.mod(num, 100) == 0 {
+  if calc.rem(num, 100) == 0 {
     left
-  } else if calc.mod(num, 100) < 10 {
-    left + "零" + chinesenumber(calc.mod(num, 100))
+  } else if calc.rem(num, 100) < 10 {
+    left + "零" + chinesenumber(calc.rem(num, 100))
   } else {
-    left + chinesenumber(calc.mod(num, 100))
+    left + chinesenumber(calc.rem(num, 100))
   }
 } else {
   let left = chinesenumber(calc.floor(num / 1000)) + "千"
-  if calc.mod(num, 1000) == 0 {
+  if calc.rem(num, 1000) == 0 {
     left
-  } else if calc.mod(num, 1000) < 10 {
-    left + "零" + chinesenumber(calc.mod(num, 1000))
-  } else if calc.mod(num, 1000) < 100 {
-    left + "零" + chinesenumber(calc.mod(num, 1000))
+  } else if calc.rem(num, 1000) < 10 {
+    left + "零" + chinesenumber(calc.rem(num, 1000))
+  } else if calc.rem(num, 1000) < 100 {
+    left + "零" + chinesenumber(calc.rem(num, 1000))
   } else {
-    left + chinesenumber(calc.mod(num, 1000))
+    left + chinesenumber(calc.rem(num, 1000))
   }
 }
 
@@ -302,7 +302,7 @@
 
   let content_aligns = ()
   for i in range(0, contents.len()) {
-    content_aligns.push(aligns.at(calc.mod(i, aligns.len())))
+    content_aligns.push(aligns.at(calc.rem(i, aligns.len())))
   }
 
   figure(
@@ -578,77 +578,54 @@
   ]
 
   show ref: it => {
-    locate(loc => {
-      let elems = query(it.target, loc)
+    if it.element == none {
+      // Keep citations as is
+      it
+    } else {
+      // Remove prefix spacing
+      h(0em, weak: true)
 
-      if elems == () {
-        // Keep citations as is
-        it
-      } else {
-        // Remove prefix spacing
-        h(0em, weak: true)
-
-        let el = elems.first()
-        let el_loc = el.location()
-        if el.func() == math.equation {
-          // Handle equations
+      let el = it.element
+      let el_loc = el.location()
+      if el.func() == math.equation {
+        // Handle equations
+        link(el_loc, [
+          式
+          #chinesenumbering(chaptercounter.at(el_loc).first(), equationcounter.at(el_loc).first(), location: el_loc, brackets: true)
+        ])
+      } else if el.func() == figure {
+        // Handle figures
+        if el.kind == image {
           link(el_loc, [
-            式
-            #chinesenumbering(chaptercounter.at(el_loc).first(), equationcounter.at(el_loc).first(), location: el_loc, brackets: true)
+            图
+            #chinesenumbering(chaptercounter.at(el_loc).first(), imagecounter.at(el_loc).first(), location: el_loc)
           ])
-        } else if el.func() == figure {
-          // Handle figures
-          if el.kind == image {
-            link(el_loc, [
-              图
-              #chinesenumbering(chaptercounter.at(el_loc).first(), imagecounter.at(el_loc).first(), location: el_loc)
-            ])
-          } else if el.kind == table {
-            link(el_loc, [
-              表
-              #chinesenumbering(chaptercounter.at(el_loc).first(), tablecounter.at(el_loc).first(), location: el_loc)
-            ])
-          } else if el.kind == "code" {
-            link(el_loc, [
-              代码
-              #chinesenumbering(chaptercounter.at(el_loc).first(), rawcounter.at(el_loc).first(), location: el_loc)
-            ])
-          }
-        } else if el.func() == heading {
-          // Handle headings
-          if el.level == 1 {
-            link(el_loc, chinesenumbering(..counter(heading).at(el_loc), location: el_loc))
-          } else {
-            link(el_loc, [
-              节
-              #chinesenumbering(..counter(heading).at(el_loc), location: el_loc)
-            ])
-          }
-        } else {
-          // Handle code blocks
-          // Since the ref is linked to the code block instead of the internal
-          // `figure`, we need to do an extra query here.
-          let figure_el = query(selector(figure).after(el_loc), el_loc).first()
-          let el_loc = figure_el.location()
+        } else if el.kind == table {
           link(el_loc, [
-            #if figure_el.kind == image {
-              [图]
-            } else if figure_el.kind == table {
-              [表]
-            } else if figure_el.kind == "code" {
-              [代码]
-            }
-            #chinesenumbering(
-              chaptercounter.at(el_loc).first(),
-              counter(figure.where(kind: figure_el.kind)).at(el_loc).first(), location: el_loc
-           )]
-          )
+            表
+            #chinesenumbering(chaptercounter.at(el_loc).first(), tablecounter.at(el_loc).first(), location: el_loc)
+          ])
+        } else if el.kind == "code" {
+          link(el_loc, [
+            代码
+            #chinesenumbering(chaptercounter.at(el_loc).first(), rawcounter.at(el_loc).first(), location: el_loc)
+          ])
         }
-
-        // Remove suffix spacing
-        h(0em, weak: true)
+      } else if el.func() == heading {
+        // Handle headings
+        if el.level == 1 {
+          link(el_loc, chinesenumbering(..counter(heading).at(el_loc), location: el_loc))
+        } else {
+          link(el_loc, [
+            节
+            #chinesenumbering(..counter(heading).at(el_loc), location: el_loc)
+          ])
+        }
       }
-    })
+
+      // Remove suffix spacing
+      h(0em, weak: true)
+    }
   }
 
   let fieldname(name) = [
