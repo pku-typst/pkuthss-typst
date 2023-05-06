@@ -1,5 +1,3 @@
-#import "helpers.typ": *
-
 #let 字号 = (
   初号: 42pt,
   小初: 36pt,
@@ -28,22 +26,7 @@
   代码: ("New Computer Modern Mono", "Times New Roman", "SimSun"),
 )
 
-#let textit(it) = [
-  #set text(font: 字体.楷体, style: "italic")
-  #h(0em, weak: true)
-  #it
-  #h(0em, weak: true)
-]
-
-#let textbf(it) = [
-  #set text(font: 字体.黑体, weight: "semibold")
-  #h(0em, weak: true)
-  #it
-  #h(0em, weak: true)
-]
-
 #let lengthceil(len, unit: 字号.小四) = calc.ceil(len / unit) * unit
-
 #let partcounter = counter("part")
 #let chaptercounter = counter("chapter")
 #let appendixcounter = counter("appendix")
@@ -120,7 +103,7 @@
 
       if measure(nxt, styles).width > width or c == "\n" {
         if bold {
-          ret.push(textbf(now))
+          ret.push(strong(now))
         } else {
           ret.push(now)
         }
@@ -140,7 +123,7 @@
 
     if now.len() > 0 {
       if bold {
-        ret.push(textbf(now))
+        ret.push(strong(now))
       } else {
         ret.push(now)
       }
@@ -188,7 +171,7 @@
             box(
               width: lengthceil(width),
               link(el.location(), if el.level == 1 {
-                textbf(maybe_number)
+                strong(maybe_number)
               } else {
                 maybe_number
               })
@@ -197,7 +180,7 @@
         }
 
         link(el.location(), if el.level == 1 {
-          textbf(el.body)
+          strong(el.body)
         } else {
           el.body
         })
@@ -218,7 +201,7 @@
         }
         
         link(el.location(), if el.level == 1 {
-          textbf(str(page_number))
+          strong(str(page_number))
         } else {
           str(page_number)
         })
@@ -318,9 +301,9 @@
             width: 100% - 1em,
             grid(
               columns: columns,
-              ..zip(headers, aligns).map(it => [
+              ..headers.zip(aligns).map(it => [
                 #set align(it.last())
-                #textbf(it.first())
+                #strong(it.first())
               ])
             )
           )
@@ -333,7 +316,7 @@
             grid(
               columns: columns,
               row-gutter: 1em,
-              ..zip(contents, content_aligns).map(it => [
+              ..contents.zip(content_aligns).map(it => [
                 #set align(it.last())
                 #it.first()
               ])
@@ -483,8 +466,8 @@
   set list(indent: 2em)
   set enum(indent: 2em)
 
-  show strong: it => textbf(it)
-  show emph: it => textit(it)
+  show strong: it => text(font: 字体.黑体, weight: "semibold", it.body)
+  show emph: it => text(font: 字体.楷体, style: "italic", it.body)
   show par: set block(spacing: linespacing)
   show raw: set text(font: 字体.代码)
 
@@ -496,10 +479,10 @@
       #set text(size)
       #v(2em)
       #if it.numbering != none {
-        textbf(counter(heading).display())
+        strong(counter(heading).display())
         h(0.5em)
       }
-      #textbf(it.body)
+      #strong(it.body)
       #v(1em)
     ]
 
@@ -630,7 +613,7 @@
 
   let fieldname(name) = [
     #set align(right + top)
-    #textbf(name)
+    #strong(name)
   ]
 
   let fieldvalue(value) = [
@@ -685,7 +668,7 @@
       )
     )
     linebreak()
-    textbf(cthesisname)
+    strong(cthesisname)
 
     set text(字号.二号)
     v(60pt)
@@ -764,7 +747,7 @@
       #[
         #set text(字号.小二)
         #set align(center)
-        #textbf(etitle)
+        #strong(etitle)
       ]
       #[
         #set align(center)
