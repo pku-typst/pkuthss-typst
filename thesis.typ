@@ -211,27 +211,33 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     渲染结果
   ],
   ```typ
-  #booktab(
+#figure(
+  booktab(
     width: 100%,
     aligns: (left, center, right),
     columns: (1fr, 1fr, 1fr),
-    caption: [`booktab` 示例],
     [左对齐], [居中], [右对齐],
     [4], [5], [6],
     [7], [8], [9],
     [10], [], [11],
-  ) <booktab>
+  ),
+  caption: [`booktab` 示例],
+  kind: table,
+) <booktab>
   ```,
   [
-    #booktab(
-      width: 100%,
-      aligns: (left, center, right),
-      columns: (1fr, 1fr, 1fr),
+    #figure(
+      booktab(
+        width: 100%,
+        aligns: (left, center, right),
+        columns: (1fr, 1fr, 1fr),
+        [左对齐], [居中], [右对齐],
+        [4], [5], [6],
+        [7], [8], [9],
+        [10], [], [11],
+      ),
       caption: [`booktab` 示例],
-      [左对齐], [居中], [右对齐],
-      [4], [5], [6],
-      [7], [8], [9],
-      [10], [], [11],
+      kind: table,
     ) <booktab>
   ]
 )

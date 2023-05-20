@@ -6,6 +6,13 @@
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+#heading(level: 2, numbering: none, "2023-05-20")
+
++ *破坏性改动* 更改了 `booktab` 函数逻辑（#issue(12)）：
+  - `booktab` 不再接收 `caption` 参数。
+  - `booktab` 不再直接返回 `figure` 环境，而是返回一个 `block` 环境。
+  - `booktab` 在使用时需要使用 `figure` 环境包裹，在 `figure` 环境中使用 `caption` 参数并且指定 `kind: table`。
+
 #heading(level: 2, numbering: none, "2023-05-06")
 
 + 修改了#strong[黑体]和#emph[斜体]前后空白的处理逻辑：

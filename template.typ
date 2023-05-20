@@ -199,7 +199,7 @@
         } else {
           counter(page).at(footer.first().location()).first()
         }
-        
+
         link(el.location(), if el.level == 1 {
           strong(str(page_number))
         } else {
@@ -272,7 +272,7 @@
   )
 }
 
-#let booktab(columns: (), aligns: (), width: auto, caption: none, ..cells) = {
+#let booktab(columns: (), aligns: (), width: auto, ..cells) = {
   let headers = cells.pos().slice(0, columns.len())
   let contents = cells.pos().slice(columns.len(), cells.pos().len())
   set align(center)
@@ -288,46 +288,43 @@
     content_aligns.push(aligns.at(calc.rem(i, aligns.len())))
   }
 
-  figure(
-    block(
-      width: width,
-      grid(
-        columns: (auto),
-        row-gutter: 1em,
-        line(length: 100%),
-        [
-          #set align(center)
-          #box(
-            width: 100% - 1em,
-            grid(
-              columns: columns,
-              ..headers.zip(aligns).map(it => [
-                #set align(it.last())
-                #strong(it.first())
-              ])
-            )
+  block(
+    width: width,
+    breakable: false,
+    grid(
+      columns: (auto),
+      row-gutter: 1em,
+      line(length: 100%),
+      [
+        #set align(center)
+        #box(
+          width: 100% - 1em,
+          grid(
+            columns: columns,
+            ..headers.zip(aligns).map(it => [
+              #set align(it.last())
+              #strong(it.first())
+            ])
           )
-        ],
-        line(length: 100%),
-        [
-          #set align(center)
-          #box(
-            width: 100% - 1em,
-            grid(
-              columns: columns,
-              row-gutter: 1em,
-              ..contents.zip(content_aligns).map(it => [
-                #set align(it.last())
-                #it.first()
-              ])
-            )
+        )
+      ],
+      line(length: 100%),
+      [
+        #set align(center)
+        #box(
+          width: 100% - 1em,
+          grid(
+            columns: columns,
+            row-gutter: 1em,
+            ..contents.zip(content_aligns).map(it => [
+              #set align(it.last())
+              #it.first()
+            ])
           )
-        ],
-        line(length: 100%),
-      ),
+        )
+      ],
+      line(length: 100%),
     ),
-    caption: caption,
-    kind: table
   )
 }
 
