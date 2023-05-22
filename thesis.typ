@@ -131,13 +131,13 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
   ],
   ```typ
 #figure(
-  image("1-writing-app.png", width: 100%),
+  image("images/1-writing-app.png", width: 100%),
   caption: "Typst 网页版界面",
 ) <web>
 ```,
 [
   #figure(
-  image("1-writing-app.png", width: 100%),
+  image("images/1-writing-app.png", width: 100%),
   caption: "Typst 网页版界面",
 ) <web>
 ]
@@ -198,7 +198,7 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
 
 对应的渲染结果如 @table 所示。代码中的 `<table>` 是这一表格的标签，可以在文中通过 `@table` 来引用。
 
-默认的表格不是特别美观，本模板中提供了 `booktab` 函数用于生成三线表，下面是一个示例。代码中的 `<booktab>` 是这一表格的标签，可以在文中通过 `@booktab` 来引用。
+默认的表格不是特别美观，本模板中提供了 `booktab` 函数用于生成三线表， @booktab 是一个示例。代码中的 `<booktab>` 是这一表格的标签，可以在文中通过 `@booktab` 来引用。
 
 #table(
   columns: (1fr, 1fr),
@@ -462,7 +462,7 @@ $ lim_x =
 附录中也可以插入图片，如 @web1。
 
 #figure(
-  image("1-writing-app.png", width: 100%),
+  image("images/1-writing-app.png", width: 100%),
   caption: "Typst 网页版界面",
 ) <web1>
 

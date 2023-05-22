@@ -90,7 +90,7 @@
 })
 
 #let chineseunderline(s, width: 300pt, bold: false) = {
-  let chars = s.split("")
+  let chars = s.codepoints()
   let n = chars.len()
   style(styles => {
     let i = 0
@@ -288,7 +288,7 @@
     content_aligns.push(aligns.at(calc.rem(i, aligns.len())))
   }
 
-  figure(
+  return figure(
     block(
       width: width,
       grid(
@@ -627,6 +627,8 @@
     )
   ]
 
+  // Cover page
+
   if blind {
     set align(center + top)
     text(字号.初号)[#textbf(cheader)]
@@ -714,6 +716,8 @@
     }
   })
 
+  // Copyright
+
   set align(left + top)
   set text(字号.小四)
   heading(numbering: none, outlined: false, "版权声明")
@@ -727,6 +731,8 @@
     }
   })
 
+  // Chinese abstract
+
   par(justify: true, first-line-indent: 2em, leading: linespacing)[
     #heading(numbering: none, outlined: false, "摘要")
     #cabstract
@@ -737,6 +743,8 @@
     #v(2em)
   ]
   pagebreak()
+
+  // English abstract
 
   locate(loc => {
     if alwaysstartodd and calc.even(loc.page()) {
@@ -765,6 +773,8 @@
     ]
   })
   pagebreak()
+
+  // Table of contents
 
   locate(loc => {
     if alwaysstartodd and calc.even(loc.page()) {

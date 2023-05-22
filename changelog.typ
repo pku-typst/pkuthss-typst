@@ -6,6 +6,10 @@
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+#heading(level: 2, numbering: none, "2023-05-22")
+
++ 修正了 `booktab` 不能被正确引用的问题（#issue(12)）。
+
 #heading(level: 2, numbering: none, "2023-05-06")
 
 + 修改了#strong[黑体]和#emph[斜体]前后空白的处理逻辑：
