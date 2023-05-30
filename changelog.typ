@@ -6,6 +6,11 @@
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+#heading(level: 2, numbering: none, "2023-05-30")
+
++ 设置每一章的脚注编号从 1 开始。
+  - 同时增加了脚注的示例。
+
 #heading(level: 2, numbering: none, "2023-05-22")
 
 + 修正了 `booktab` 不能被正确引用的问题（#issue(12)）。

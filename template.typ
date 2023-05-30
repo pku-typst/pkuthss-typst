@@ -30,6 +30,7 @@
 #let partcounter = counter("part")
 #let chaptercounter = counter("chapter")
 #let appendixcounter = counter("appendix")
+#let footnotecounter = counter(footnote)
 #let rawcounter = counter(figure.where(kind: "code"))
 #let imagecounter = counter(figure.where(kind: image))
 #let tablecounter = counter(figure.where(kind: table))
@@ -90,7 +91,7 @@
 })
 
 #let chineseunderline(s, width: 300pt, bold: false) = {
-  let chars = s.codepoints()
+  let chars = s.clusters()
   let n = chars.len()
   style(styles => {
     let i = 0
@@ -472,7 +473,7 @@
   show raw: set text(font: 字体.代码)
 
   show heading: it => [
-    // Cancel indentation for headings of level 2 or above
+    // Cancel indentation for headings
     #set par(first-line-indent: 0em)
 
     #let sizedheading(it, size) = [
@@ -502,6 +503,7 @@
       if it.numbering != none {
         chaptercounter.step()
       }
+      footnotecounter.update(())
       imagecounter.update(())
       tablecounter.update(())
       rawcounter.update(())
