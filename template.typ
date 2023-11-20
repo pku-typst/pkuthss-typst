@@ -236,7 +236,7 @@
           )
         })
 
-        link(el.location(), el.caption)
+        link(el.location(), el.caption.body)
 
         // Filler dots
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
@@ -633,7 +633,7 @@
 
   if blind {
     set align(center + top)
-    text(字号.初号)[#textbf(cheader)]
+    text(字号.初号)[#strong(cheader)]
     linebreak()
     set text(字号.三号, font: 字体.仿宋)
     set par(justify: true, leading: 1em)
