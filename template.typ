@@ -40,6 +40,7 @@
   chaptercounter.update(0)
   counter(heading).update(0)
 }
+#let skippedstate = state("skipped", false)
 
 #let chinesenumber(num, standalone: false) = if num < 11 {
   ("零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十").at(num)
@@ -365,6 +366,7 @@
 ) = {
   set page("a4",
     header: locate(loc => {
+      if skippedstate.at(loc) and calc.even(loc.page()) { return }
       [
         #set text(字号.五号)
         #set align(center)
@@ -393,16 +395,15 @@
             ]
           } else {
             let footers = query(selector(<__footer__>).after(loc), loc)
-            let elems = if footers == () {
-              ()
-            } else {
-              query(
+            if footers != () {
+              let elems = query(
                 heading.where(level: 1).before(footers.first().location()), footers.first().location()
               )
-            }
-            if elems == () {
-            } else {
-              let el = elems.last()
+              let el = if skippedstate.at(footers.first().location()) {
+                elems.at(-2)
+              } else {
+                elems.last()
+              }
               [
                 #let numbering = if el.numbering == chinesenumbering {
                   chinesenumbering(..counter(heading).at(el.location()), location: el.location())
@@ -421,6 +422,7 @@
           }
       }]}),
     footer: locate(loc => {
+      if skippedstate.at(loc) and calc.even(loc.page()) { return }
       [
         #set text(字号.五号)
         #set align(center)
@@ -488,8 +490,14 @@
     ]
 
     #if it.level == 1 {
-      if not it.body.text in ("Abstract", "学位论文使用授权说明")  {
-        pagebreak(weak: true)
+      if not it.body.text in ("Abstract", "学位论文使用授权说明", "版权声明")  {
+        if alwaysstartodd {
+          skippedstate.update(true)
+          pagebreak(to: "odd", weak: true)
+          skippedstate.update(false)
+        } else {
+          pagebreak(weak: true)
+        }
       }
       locate(loc => {
         if it.body.text == "摘要" {
@@ -530,33 +538,18 @@
       it.body
       [
         #set text(字号.五号)
-        图
-        #locate(loc => {
-          chinesenumbering(chaptercounter.at(loc).first(), imagecounter.at(loc).first(), location: loc)
-        })
-        #h(1em)
         #it.caption
       ]
     } else if it.kind == table {
       [
         #set text(字号.五号)
-        表
-        #locate(loc => {
-          chinesenumbering(chaptercounter.at(loc).first(), tablecounter.at(loc).first(), location: loc)
-        })
-        #h(1em)
         #it.caption
       ]
       it.body
     } else if it.kind == "code" {
       [
         #set text(字号.五号)
-        代码
-        #locate(loc => {
-          chinesenumbering(chaptercounter.at(loc).first(), rawcounter.at(loc).first(), location: loc)
-        })
-        #h(1em)
-        #it.caption
+        代码#it.caption
       ]
       it.body
     }
@@ -711,30 +704,24 @@
     v(60pt)
     text(字号.小二)[#date]
   }
-
-  locate(loc => {
-    if alwaysstartodd {
-      pagebreak()
-    }
-  })
+  pagebreak()
+  if alwaysstartodd {
+    pagebreak(to: "odd", weak: true)
+  }
 
   // Copyright
-
   set align(left + top)
   set text(字号.小四)
   heading(numbering: none, outlined: false, "版权声明")
   par(justify: true, first-line-indent: 2em, leading: linespacing)[
     任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。
   ]
-
-  locate(loc => {
-    if alwaysstartodd {
-      pagebreak()
-    }
-  })
+  pagebreak()
+  if alwaysstartodd {
+    pagebreak(to: "odd", weak: true)
+  }
 
   // Chinese abstract
-
   par(justify: true, first-line-indent: 2em, leading: linespacing)[
     #heading(numbering: none, outlined: false, "摘要")
     #cabstract
@@ -744,51 +731,47 @@
     #ckeywords.join("，")
     #v(2em)
   ]
+  skippedstate.update(true)
   pagebreak()
 
   // English abstract
-
-  locate(loc => {
-    if alwaysstartodd and calc.even(loc.page()) {
-      pagebreak()
-    }
-
-    par(justify: true, first-line-indent: 2em, leading: linespacing)[
-      #[
-        #set text(字号.小二)
-        #set align(center)
-        #strong(etitle)
-      ]
-      #[
-        #set align(center)
-        #eauthor \(#emajor\) \
-        Directed by #esupervisor
-      ]
-      #heading(numbering: none, outlined: false, "Abstract")
-      #eabstract
-      #v(1fr)
-      #set par(first-line-indent: 0em)
-      *KEYWORDS:*
-      #h(0.5em, weak: true)
-      #ekeywords.join(", ")
-      #v(2em)
+  if alwaysstartodd {
+    pagebreak(to: "odd", weak: true)
+  }
+  skippedstate.update(false)
+  par(justify: true, first-line-indent: 2em, leading: linespacing)[
+    #[
+      #set text(字号.小二)
+      #set align(center)
+      #strong(etitle)
     ]
-  })
+    #[
+      #if not blind {
+        [
+          #set align(center)
+          #eauthor \(#emajor\) \
+          Directed by #esupervisor
+        ]
+      }
+    ]
+    #heading(numbering: none, outlined: false, "Abstract")
+    #eabstract
+    #v(1fr)
+    #set par(first-line-indent: 0em)
+    *KEYWORDS:*
+    #h(0.5em, weak: true)
+    #ekeywords.join(", ")
+    #v(2em)
+  ]
   pagebreak()
 
   // Table of contents
 
-  locate(loc => {
-    if alwaysstartodd and calc.even(loc.page()) {
-      pagebreak()
-    }
-
-    chineseoutline(
-      title: "目录",
-      depth: outlinedepth,
-      indent: true,
-    )
-  })
+  chineseoutline(
+    title: "目录",
+    depth: outlinedepth,
+    indent: true,
+  )
 
   if listofimage {
     listoffigures()
