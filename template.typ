@@ -364,6 +364,16 @@
   alwaysstartodd: true,
   doc,
 ) = {
+  let smartpagebreak = () => {
+    if alwaysstartodd {
+      skippedstate.update(true)
+      pagebreak(to: "odd", weak: true)
+      skippedstate.update(false)
+    } else {
+      pagebreak(weak: true)
+    }
+  }
+
   set page("a4",
     header: locate(loc => {
       if skippedstate.at(loc) and calc.even(loc.page()) { return }
@@ -371,22 +381,22 @@
         #set text(字号.五号)
         #set align(center)
         #if partcounter.at(loc).at(0) < 10 {
-          // Handle the first page of Chinese abstract specailly
           let headings = query(selector(heading).after(loc), loc)
           let next_heading = if headings == () {
             ()
           } else {
             headings.first().body.text
           }
+
+          // [HARDCODED] Handle the first page of Chinese abstract specailly
           if next_heading == "摘要" and calc.odd(loc.page()) {
             [
-              摘要
+              #next_heading
               #v(-1em)
               #line(length: 100%)
             ]
           }
-        } else if partcounter.at(loc).at(0) > 20 {
-        } else {
+        } else if partcounter.at(loc).at(0) <= 20 {
           if calc.even(loc.page()) {
             [
               #align(center, cheader)
@@ -399,10 +409,12 @@
               let elems = query(
                 heading.where(level: 1).before(footers.first().location()), footers.first().location()
               )
-              let el = if skippedstate.at(footers.first().location()) {
-                elems.at(-2)
-              } else {
+
+              // [HARDCODED] Handle the last page of Chinese abstract specailly
+              let el = if elems.last().body.text == "摘要" or not skippedstate.at(footers.first().location()) {
                 elems.last()
+              } else {
+                elems.at(-2)
               }
               [
                 #let numbering = if el.numbering == chinesenumbering {
@@ -491,13 +503,7 @@
 
     #if it.level == 1 {
       if not it.body.text in ("Abstract", "学位论文使用授权说明", "版权声明")  {
-        if alwaysstartodd {
-          skippedstate.update(true)
-          pagebreak(to: "odd", weak: true)
-          skippedstate.update(false)
-        } else {
-          pagebreak(weak: true)
-        }
+        smartpagebreak()
       }
       locate(loc => {
         if it.body.text == "摘要" {
@@ -704,10 +710,8 @@
     v(60pt)
     text(字号.小二)[#date]
   }
-  pagebreak()
-  if alwaysstartodd {
-    pagebreak(to: "odd", weak: true)
-  }
+
+  smartpagebreak()
 
   // Copyright
   set align(left + top)
@@ -716,10 +720,8 @@
   par(justify: true, first-line-indent: 2em, leading: linespacing)[
     任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。
   ]
-  pagebreak()
-  if alwaysstartodd {
-    pagebreak(to: "odd", weak: true)
-  }
+
+  smartpagebreak()
 
   // Chinese abstract
   par(justify: true, first-line-indent: 2em, leading: linespacing)[
@@ -731,29 +733,23 @@
     #ckeywords.join("，")
     #v(2em)
   ]
-  skippedstate.update(true)
-  pagebreak()
+
+  smartpagebreak()
 
   // English abstract
-  if alwaysstartodd {
-    pagebreak(to: "odd", weak: true)
-  }
-  skippedstate.update(false)
   par(justify: true, first-line-indent: 2em, leading: linespacing)[
     #[
       #set text(字号.小二)
       #set align(center)
       #strong(etitle)
     ]
-    #[
-      #if not blind {
-        [
-          #set align(center)
-          #eauthor \(#emajor\) \
-          Directed by #esupervisor
-        ]
-      }
-    ]
+    #if not blind {
+      [
+        #set align(center)
+        #eauthor \(#emajor\) \
+        Directed by #esupervisor
+      ]
+    }
     #heading(numbering: none, outlined: false, "Abstract")
     #eabstract
     #v(1fr)
@@ -763,10 +759,8 @@
     #ekeywords.join(", ")
     #v(2em)
   ]
-  pagebreak()
-
+  
   // Table of contents
-
   chineseoutline(
     title: "目录",
     depth: outlinedepth,

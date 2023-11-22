@@ -6,10 +6,14 @@
 #set enum(indent: 0em)
 #set list(indent: 0em)
 
+#heading(level: 2, numbering: none, "2023-11-22")
+
++ 进一步优化了 `alwaysstartodd=true` 时的表现，现在插入的空白页不会显示页眉和页脚。
+
 #heading(level: 2, numbering: none, "2023-11-20")
 
 + 修正了 `blind=true` 时，使用已经删除的 `textbf` 函数导致编译失败的问题（#issue(14)）。
-+ 修正了 `alwaysstartodd=true` 时的处理逻辑（#issue(4)）
++ 修正了 `alwaysstartodd=true` 时的处理逻辑（#issue(4)）。
 + 修正了 `v0.9` 版本下图表标题错误的问题。
 
 #heading(level: 2, numbering: none, "2023-05-30")
