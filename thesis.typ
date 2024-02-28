@@ -3,6 +3,7 @@
 #show: doc => conf(
   cauthor: "张三",
   eauthor: "San Zhang",
+  studentid: "L2023XXXXX",
   blindid: "L2023XXXXX",
   cthesisname: "博士研究生学位论文",
   cheader: "北京大学博士学位论文",
