@@ -188,11 +188,8 @@
         })
 
         // Filler dots
-        if el.level == 1 {
-          box(width: 1fr, h(10pt) + box(width: 1fr) + h(10pt))
-        } else {
-          box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
-        }
+        box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
+
 
         // Page number
         let footer = query(selector(<__footer__>).after(el.location()), el.location())
@@ -201,7 +198,7 @@
         } else {
           counter(page).at(footer.first().location()).first()
         }
-        
+
         link(el.location(), if el.level == 1 {
           strong(str(page_number))
         } else {
@@ -502,7 +499,7 @@
     ]
 
     #if it.level == 1 {
-      if not it.body.text in ("Abstract", "学位论文使用授权说明", "版权声明")  {
+      if not it.body.text in ("ABSTRACT", "学位论文使用授权说明", "版权声明")  {
         smartpagebreak()
       }
       locate(loc => {
@@ -750,16 +747,16 @@
         Directed by #esupervisor
       ]
     }
-    #heading(numbering: none, outlined: false, "Abstract")
+    #heading(numbering: none, outlined: false, "ABSTRACT")
     #eabstract
     #v(1fr)
     #set par(first-line-indent: 0em)
-    *KEYWORDS:*
+    KEY WORDS:
     #h(0.5em, weak: true)
     #ekeywords.join(", ")
     #v(2em)
   ]
-  
+
   // Table of contents
   chineseoutline(
     title: "目录",
