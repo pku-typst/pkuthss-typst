@@ -188,11 +188,8 @@
         })
 
         // Filler dots
-        if el.level == 1 {
-          box(width: 1fr, h(10pt) + box(width: 1fr) + h(10pt))
-        } else {
-          box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
-        }
+        box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
+
 
         // Page number
         let footer = query(selector(<__footer__>).after(el.location()), el.location())
