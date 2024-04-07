@@ -502,7 +502,7 @@
     ]
 
     #if it.level == 1 {
-      if not it.body.text in ("Abstract", "学位论文使用授权说明", "版权声明")  {
+      if not it.body.text in ("ABSTRACT", "学位论文使用授权说明", "版权声明")  {
         smartpagebreak()
       }
       locate(loc => {
@@ -750,7 +750,7 @@
         Directed by #esupervisor
       ]
     }
-    #heading(numbering: none, outlined: false, "Abstract")
+    #heading(numbering: none, outlined: false, "ABSTRACT")
     #eabstract
     #v(1fr)
     #set par(first-line-indent: 0em)
