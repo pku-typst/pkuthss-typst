@@ -201,7 +201,7 @@
         } else {
           counter(page).at(footer.first().location()).first()
         }
-        
+
         link(el.location(), if el.level == 1 {
           strong(str(page_number))
         } else {
@@ -754,12 +754,12 @@
     #eabstract
     #v(1fr)
     #set par(first-line-indent: 0em)
-    *KEYWORDS:*
+    KEY WORDS:
     #h(0.5em, weak: true)
     #ekeywords.join(", ")
     #v(2em)
   ]
-  
+
   // Table of contents
   chineseoutline(
     title: "目录",
