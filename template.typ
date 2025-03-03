@@ -74,8 +74,8 @@
   }
 }
 
-#let chinesenumbering(..nums, location: none, brackets: false) = locate(loc => {
-  let actual_loc = if location == none { loc } else { location }
+#let chinesenumbering(..nums, location: none, brackets: false) = context {
+  let actual_loc = if location == none { here() } else { location }
   if appendixcounter.at(actual_loc).first() < 10 {
     if nums.pos().len() == 1 {
       "第" + chinesenumber(nums.pos().first(), standalone: true) + "章"
@@ -89,12 +89,12 @@
       numbering(if brackets { "(A.1)" } else { "A.1" }, ..nums)
     }
   }
-})
+}
 
 #let chineseunderline(s, width: 300pt, bold: false) = {
   let chars = s.clusters()
   let n = chars.len()
-  style(styles => {
+  context {
     let i = 0
     let now = ""
     let ret = ()
@@ -103,7 +103,7 @@
       let c = chars.at(i)
       let nxt = now + c
 
-      if measure(nxt, styles).width > width or c == "\n" {
+      if measure(nxt).width > width or c == "\n" {
         if bold {
           ret.push(strong(now))
         } else {
@@ -134,13 +134,14 @@
     }
 
     ret.join()
-  })
+  }
 }
 
 #let chineseoutline(title: "目录", depth: none, indent: false) = {
   heading(title, numbering: none, outlined: false)
-  locate(it => {
-    let elements = query(heading.where(outlined: true).after(it), it)
+  context {
+    let it = here()
+    let elements = query(heading.where(outlined: true).after(it))
 
     for el in elements {
       // Skip list of images and list of tables
@@ -168,8 +169,8 @@
         }
 
         if maybe_number != none {
-          style(styles => {
-            let width = measure(maybe_number, styles).width
+          context {
+            let width = measure(maybe_number).width
             box(
               width: lengthceil(width),
               link(el.location(), if el.level == 1 {
@@ -178,7 +179,7 @@
                 maybe_number
               })
             )
-          })
+          }
         }
 
         link(el.location(), if el.level == 1 {
@@ -195,7 +196,7 @@
         }
 
         // Page number
-        let footer = query(selector(<__footer__>).after(el.location()), el.location())
+        let footer = query(selector(<__footer__>).after(el.location()))
         let page_number = if footer == () {
           0
         } else {
@@ -214,13 +215,14 @@
 
       line
     }
-  })
+  }
 }
 
 #let listoffigures(title: "插图", kind: image) = {
   heading(title, numbering: none, outlined: false)
-  locate(it => {
-    let elements = query(figure.where(kind: kind).after(it), it)
+  context {
+    let it = here()
+    let elements = query(figure.where(kind: kind).after(it))
 
     for el in elements {
       let maybe_number = {
@@ -229,13 +231,13 @@
         h(0.5em)
       }
       let line = {
-        style(styles => {
-          let width = measure(maybe_number, styles).width
+        context {
+          let width = measure(maybe_number).width
           box(
             width: lengthceil(width),
             link(el.location(), maybe_number)
           )
-        })
+        }
 
         link(el.location(), el.caption.body)
 
@@ -243,7 +245,7 @@
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
 
         // Page number
-        let footers = query(selector(<__footer__>).after(el.location()), el.location())
+        let footers = query(selector(<__footer__>).after(el.location()))
         let page_number = if footers == () {
           0
         } else {
@@ -256,7 +258,7 @@
 
       line
     }
-  })
+  }
 }
 
 #let codeblock(raw, caption: none, outline: false) = {
@@ -290,7 +292,7 @@
     content_aligns.push(aligns.at(calc.rem(i, aligns.len())))
   }
 
-  return figure(
+  figure(
     block(
       width: width,
       grid(
@@ -375,13 +377,13 @@
   }
 
   set page("a4",
-    header: locate(loc => {
-      if skippedstate.at(loc) and calc.even(loc.page()) { return }
+    header: context {
+      if skippedstate.at(here()) and calc.even(here().page()) { return }
       [
         #set text(字号.五号)
         #set align(center)
-        #if partcounter.at(loc).at(0) < 10 {
-          let headings = query(selector(heading).after(loc), loc)
+        #if partcounter.at(here()).at(0) < 10 {
+          let headings = query(selector(heading).after(here()))
           let next_heading = if headings == () {
             ()
           } else {
@@ -389,32 +391,32 @@
           }
 
           // [HARDCODED] Handle the first page of Chinese abstract specailly
-          if next_heading == "摘要" and calc.odd(loc.page()) {
+          if next_heading == "摘要" and calc.odd(here().page()) {
             [
               #next_heading
-              #v(-1em)
+              #v(-0.8em)
               #line(length: 100%)
             ]
           }
-        } else if partcounter.at(loc).at(0) <= 20 {
-          if calc.even(loc.page()) {
+        } else if partcounter.at(here()).at(0) <= 20 {
+          if calc.even(here().page()) {
             [
               #align(center, cheader)
-              #v(-1em)
+              #v(-0.8em)
               #line(length: 100%)
             ]
           } else {
-            let footers = query(selector(<__footer__>).after(loc), loc)
+            let footers = query(selector(<__footer__>).after(here()))
             if footers != () {
               let elems = query(
-                heading.where(level: 1).before(footers.first().location()), footers.first().location()
+                heading.where(level: 1).before(footers.first().location())
               )
 
               // [HARDCODED] Handle the last page of Chinese abstract specailly
               let el = if elems.last().body.text == "摘要" or not skippedstate.at(footers.first().location()) {
                 elems.last()
               } else {
-                elems.at(-2)
+                elems.at(-1)
               }
               [
                 #let numbering = if el.numbering == chinesenumbering {
@@ -427,63 +429,63 @@
                   h(0.5em)
                 }
                 #el.body
-                #v(-1em)
+                #v(-0.8em)
                 #line(length: 100%)
               ]
             }
           }
-      }]}),
-    footer: locate(loc => {
-      if skippedstate.at(loc) and calc.even(loc.page()) { return }
+      }]},
+    footer: context {
+      if skippedstate.at(here()) and calc.even(here().page()) { return }
       [
         #set text(字号.五号)
         #set align(center)
-        #if query(selector(heading).before(loc), loc).len() < 2 or query(selector(heading).after(loc), loc).len() == 0 {
+        #if query(selector(heading).before(here())).len() < 2 or query(selector(heading).after(here())).len() == 0 {
           // Skip cover, copyright and origin pages
         } else {
-          let headers = query(selector(heading).before(loc), loc)
+          let headers = query(selector(heading).before(here()))
           let part = partcounter.at(headers.last().location()).first()
           [
             #if part < 20 {
-              numbering("I", counter(page).at(loc).first())
+              numbering("I", counter(page).at(here()).first())
             } else {
-              str(counter(page).at(loc).first())
+              str(counter(page).at(here()).first())
             }
           ]
         }
         #label("__footer__")
       ]
-    }),
+    },
   )
 
   set text(字号.一号, font: 字体.宋体, lang: "zh")
   set align(center + horizon)
   set heading(numbering: chinesenumbering)
   set figure(
-    numbering: (..nums) => locate(loc => {
-      if appendixcounter.at(loc).first() < 10 {
-        numbering("1.1", chaptercounter.at(loc).first(), ..nums)
+    numbering: (..nums) => context {
+      if appendixcounter.at(here()).first() < 10 {
+        numbering("1.1", chaptercounter.at(here()).first(), ..nums)
       } else {
-        numbering("A.1", chaptercounter.at(loc).first(), ..nums)
+        numbering("A.1", chaptercounter.at(here()).first(), ..nums)
       }
-    })
+    }
   )
   set math.equation(
-    numbering: (..nums) => locate(loc => {
+    numbering: (..nums) => context {
       set text(font: 字体.宋体)
-      if appendixcounter.at(loc).first() < 10 {
-        numbering("(1.1)", chaptercounter.at(loc).first(), ..nums)
+      if appendixcounter.at(here()).first() < 10 {
+        numbering("(1.1)", chaptercounter.at(here()).first(), ..nums)
       } else {
-        numbering("(A.1)", chaptercounter.at(loc).first(), ..nums)
+        numbering("(A.1)", chaptercounter.at(here()).first(), ..nums)
       }
-    })
+    }
   )
   set list(indent: 2em)
   set enum(indent: 2em)
 
   show strong: it => text(font: 字体.黑体, weight: "semibold", it.body)
   show emph: it => text(font: 字体.楷体, style: "italic", it.body)
-  show par: set block(spacing: linespacing)
+  set par(spacing: linespacing)
   show raw: set text(font: 字体.代码)
 
   show heading: it => [
@@ -505,15 +507,15 @@
       if not it.body.text in ("Abstract", "学位论文使用授权说明", "版权声明")  {
         smartpagebreak()
       }
-      locate(loc => {
+      context {
         if it.body.text == "摘要" {
           partcounter.update(10)
           counter(page).update(1)
-        } else if it.numbering != none and partcounter.at(loc).first() < 20 {
+        } else if it.numbering != none and partcounter.at(here()).first() < 20 {
           partcounter.update(20)
           counter(page).update(1)
         }
-      })
+      }
       if it.numbering != none {
         chaptercounter.step()
       }
@@ -555,7 +557,8 @@
     } else if it.kind == "code" {
       [
         #set text(字号.五号)
-        代码#it.caption
+        #context {[代码]+it.counter.display(it.numbering)+"   "}
+        #it.caption.body 
       ]
       it.body
     }
@@ -724,41 +727,40 @@
   smartpagebreak()
 
   // Chinese abstract
-  par(justify: true, first-line-indent: 2em, leading: linespacing)[
-    #heading(numbering: none, outlined: false, "摘要")
-    #cabstract
-    #v(1fr)
-    #set par(first-line-indent: 0em)
-    *关键词：*
-    #ckeywords.join("，")
-    #v(2em)
-  ]
+  set par(justify: true, first-line-indent: 2em, leading: linespacing)
+  heading(numbering: none, outlined: false, "摘要")
+  cabstract
+  v(1fr)
+  set par(first-line-indent: 0em)
+  text[*关键词：*]
+  ckeywords.join("，")
+  v(2em)
+  set par(first-line-indent: 2em)
+  
 
   smartpagebreak()
 
   // English abstract
-  par(justify: true, first-line-indent: 2em, leading: linespacing)[
-    #[
-      #set text(字号.小二)
-      #set align(center)
-      #strong(etitle)
-    ]
-    #if not blind {
-      [
-        #set align(center)
-        #eauthor \(#emajor\) \
-        Directed by #esupervisor
-      ]
-    }
-    #heading(numbering: none, outlined: false, "Abstract")
-    #eabstract
-    #v(1fr)
-    #set par(first-line-indent: 0em)
-    *KEYWORDS:*
-    #h(0.5em, weak: true)
-    #ekeywords.join(", ")
-    #v(2em)
+  [
+    #set text(字号.小二)
+    #set align(center)
+    #strong(etitle)
   ]
+  if not blind {
+    [
+      #set align(center)
+      #eauthor \(#emajor\) \
+      Directed by #esupervisor
+    ]
+  }
+  heading(numbering: none, outlined: false, "Abstract")
+  eabstract
+  v(1fr)
+  set par(first-line-indent: 0em)
+  [*KEYWORDS:*]
+  h(0.5em, weak: true)
+  ekeywords.join(", ")
+  v(2em)
   
   // Table of contents
   chineseoutline(
@@ -780,20 +782,22 @@
   }
 
   set align(left + top)
-  par(justify: true, first-line-indent: 2em, leading: linespacing)[
-    #doc
-  ]
+  // par(justify: true, first-line-indent: 2em, leading: linespacing)[
+  //   #doc
+  // ]
+  set par(justify: true, first-line-indent: 2em, leading: linespacing)
+  doc
+
+  smartpagebreak()
 
   if not blind {
-    par(justify: true, first-line-indent: 2em, leading: linespacing)[
-      #heading(numbering: none, "致谢")
-      #acknowledgements
-    ]
+    heading(numbering: none, "致谢")
+    acknowledgements
 
     partcounter.update(30)
     heading(numbering: none, "北京大学学位论文原创性声明和使用授权说明")
     align(center)[#heading(level: 2, numbering: none, outlined: false, "原创性声明")]
-    par(justify: true, first-line-indent: 2em, leading: linespacing)[
+    [
       本人郑重声明：
       所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。
       除文中已经注明引用的内容外，
