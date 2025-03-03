@@ -109,7 +109,7 @@
         } else {
           ret.push(now)
         }
-        ret.push(v(-1em))
+        ret.push(v(-0.8em))
         ret.push(line(length: 100%))
         if c == "\n" {
           now = ""
