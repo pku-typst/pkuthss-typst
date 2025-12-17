@@ -373,6 +373,8 @@
 
   let smartpagebreak = () => {
     if alwaysstartodd {
+      skippedstate.update(false)
+      pagebreak(weak: true)
       skippedstate.update(true)
       pagebreak(to: "odd", weak: true)
       skippedstate.update(false)
