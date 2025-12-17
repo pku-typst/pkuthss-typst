@@ -366,6 +366,11 @@
   alwaysstartodd: true,
   doc,
 ) = {
+  let lastchapterbeforebody = "目录"
+  if listofimage {lastchapterbeforebody = "插图"}
+  if listoftable {lastchapterbeforebody = "表格"}
+  if listofcode {lastchapterbeforebody = "代码"}
+
   let smartpagebreak = () => {
     if alwaysstartodd {
       skippedstate.update(true)
@@ -398,7 +403,7 @@
               #line(length: 100%)
             ]
           }
-        } else if partcounter.at(here()).at(0) <= 20 {
+        } else if partcounter.at(here()).at(0) <= 21 {
           if calc.even(here().page()) {
             [
               #align(center, cheader)
@@ -511,9 +516,14 @@
         if it.body.text == "摘要" {
           partcounter.update(10)
           counter(page).update(1)
-        } else if it.numbering != none and partcounter.at(here()).first() < 20 {
-          partcounter.update(20)
-          counter(page).update(1)
+        } else {
+          if it.body.text == lastchapterbeforebody{
+            partcounter.update(20)
+          }
+          if it.numbering != none and partcounter.at(here()).first() < 21 {
+            counter(page).update(1)
+            partcounter.update(21)
+          }
         }
       }
       if it.numbering != none {
