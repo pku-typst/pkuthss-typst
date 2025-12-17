@@ -203,11 +203,7 @@
           counter(page).at(footer.first().location()).first()
         }
         
-        link(el.location(), if el.level == 1 {
-          strong(str(page_number))
-        } else {
-          str(page_number)
-        })
+        str(page_number)
 
         linebreak()
         v(-0.2em)
