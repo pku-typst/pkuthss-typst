@@ -214,6 +214,14 @@
   }
 }
 
+#let bodytotextwithtrim(a) = {  
+  if a.has("children") {
+    a.children.find(it => it != [ ])
+  } else {
+    a
+  }
+}
+
 #let listoffigures(title: "插图", kind: image) = {
   heading(title, numbering: none, outlined: false)
   context {
@@ -235,7 +243,7 @@
           )
         }
 
-        link(el.location(), el.caption.body)
+        link(el.location(), bodytotextwithtrim(el.caption.body))
 
         // Filler dots
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
