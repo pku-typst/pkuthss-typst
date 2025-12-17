@@ -588,6 +588,7 @@
           式
           #chinesenumbering(chaptercounter.at(el_loc).first(), equationcounter.at(el_loc).first(), location: el_loc, brackets: true)
         ])
+        h(0.25em, weak: true)
       } else if el.func() == figure {
         // Handle figures
         if el.kind == image {
