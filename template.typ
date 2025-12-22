@@ -216,7 +216,7 @@
 
 #let extract_caption_content(a) = {  
   if a.has("children") {
-    a.children.find(it => it != [ ])
+    a.children.find(it => it.text.len() > 0)
   } else {
     a
   }
