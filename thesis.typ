@@ -15,7 +15,7 @@
   direction: "某个研究方向",
   csupervisor: "李四 教授",
   esupervisor: "Prof. Si Li",
-  date: "二零二三年六月",
+  date: "二〇二三年六月",
   cabstract: "本文介绍了 pkuthss-typst 文档模板所提供的功能。",
   ckeywords: ("Typst", "模板"),
   eabstract: "This document introduces the features of the pkuthss-typst template.",

@@ -203,11 +203,7 @@
           counter(page).at(footer.first().location()).first()
         }
         
-        link(el.location(), if el.level == 1 {
-          strong(str(page_number))
-        } else {
-          str(page_number)
-        })
+        str(page_number)
 
         linebreak()
         v(-0.2em)
@@ -215,6 +211,14 @@
 
       line
     }
+  }
+}
+
+#let extract_caption_content(a) = {  
+  if a.has("children") {
+    a.children.find(it => it.text.len() > 0)
+  } else {
+    a
   }
 }
 
@@ -239,7 +243,7 @@
           )
         }
 
-        link(el.location(), el.caption.body)
+        link(el.location(), bodytotextwithtrim(el.caption.body))
 
         // Filler dots
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
@@ -366,8 +370,15 @@
   alwaysstartodd: true,
   doc,
 ) = {
+  let lastchapterbeforebody = "目录"
+  if listofimage {lastchapterbeforebody = "插图"}
+  if listoftable {lastchapterbeforebody = "表格"}
+  if listofcode {lastchapterbeforebody = "代码"}
+
   let smartpagebreak = () => {
     if alwaysstartodd {
+      skippedstate.update(false)
+      pagebreak(weak: true)
       skippedstate.update(true)
       pagebreak(to: "odd", weak: true)
       skippedstate.update(false)
@@ -398,7 +409,7 @@
               #line(length: 100%)
             ]
           }
-        } else if partcounter.at(here()).at(0) <= 20 {
+        } else if partcounter.at(here()).at(0) <= 21 {
           if calc.even(here().page()) {
             [
               #align(center, cheader)
@@ -511,9 +522,14 @@
         if it.body.text == "摘要" {
           partcounter.update(10)
           counter(page).update(1)
-        } else if it.numbering != none and partcounter.at(here()).first() < 20 {
-          partcounter.update(20)
-          counter(page).update(1)
+        } else {
+          if it.body.text == lastchapterbeforebody{
+            partcounter.update(20)
+          }
+          if it.numbering != none and partcounter.at(here()).first() < 21 {
+            counter(page).update(1)
+            partcounter.update(21)
+          }
         }
       }
       if it.numbering != none {
@@ -580,6 +596,7 @@
           式
           #chinesenumbering(chaptercounter.at(el_loc).first(), equationcounter.at(el_loc).first(), location: el_loc, brackets: true)
         ])
+        h(0.25em, weak: true)
       } else if el.func() == figure {
         // Handle figures
         if el.kind == image {
@@ -710,7 +727,9 @@
       fieldvalue(csupervisor),
     )
 
-    v(60pt)
+    v(25pt)
+    text(字号.三号, font: 字体.仿宋)[☐ 学术学位 #h(30pt)☐ 专业学位]
+    v(25pt)
     text(字号.小二)[#date]
   }
 
