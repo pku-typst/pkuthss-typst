@@ -214,7 +214,7 @@
   }
 }
 
-#let bodytotextwithtrim(a) = {  
+#let extract_caption_content(a) = {  
   if a.has("children") {
     a.children.find(it => it != [ ])
   } else {
