@@ -728,7 +728,7 @@
     )
 
     v(25pt)
-    text(字号.三号, font: 字体.仿宋)[$square$ 学术学位 #h(30pt)$square$ 专业学位]
+    text(字号.三号, font: 字体.仿宋)[☐ 学术学位 #h(30pt)☐ 专业学位]
     v(25pt)
     text(字号.小二)[#date]
   }
