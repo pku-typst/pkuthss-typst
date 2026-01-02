@@ -1,8 +1,33 @@
 // template.typ - PKU Thesis 模板入口
 // 这是一个 facade，将所有模块功能组合并导出给用户
 
+// ========== 命令行参数支持 ==========
+// 通过 typst compile --input key=value 传递参数
+// 支持的参数：
+//   blind=true|false          - 盲审模式
+//   preview=true|false        - 预览模式（链接显示蓝色）
+//   alwaysstartodd=true|false - 章节是否总是从奇数页开始
+//
+// 示例：
+//   typst compile thesis.typ --input blind=true
+//   typst compile thesis.typ --input preview=false
+//   typst compile thesis.typ --input alwaysstartodd=false
+
+#let _parse-bool(value, default) = {
+  if value == none { default }
+  else if value == "true" or value == "1" { true }
+  else if value == "false" or value == "0" { false }
+  else { default }
+}
+
+#let _cli-blind = _parse-bool(sys.inputs.at("blind", default: none), none)
+#let _cli-preview = _parse-bool(sys.inputs.at("preview", default: none), none)
+#let _cli-alwaysstartodd = _parse-bool(sys.inputs.at("alwaysstartodd", default: none), none)
+
 #import "@preview/itemize:0.2.0" as itemize
 #import "@preview/cuti:0.4.0": show-cn-fakebold
+#import "@preview/codly:1.3.0": *
+#import "@preview/codly-languages:0.1.10": *
 
 // 导入并重导出所有公共符号
 #import "lib/config.typ": appendix, 字体, 字号
@@ -34,15 +59,13 @@
   csupervisor: "李四",
   esupervisor: "Si Li",
   date: (year: 2026, month: 6),
+  // 学位类型："academic"（学术学位）或 "professional"（专业学位）
+  degree-type: "academic",
   cabstract: [],
   ckeywords: (),
   eabstract: [],
   ekeywords: (),
   acknowledgements: [],
-  // Word 中的行距和 Typst 中的行距不同，需要进行转换
-  // Typst 中：spacing + top-edge - bottom-edge = Word 中的行距
-  // 因此我们需要根据不同区域的字号来动态调整 spacing 以保持一致的行距
-  linespacing: 20pt,
   // Word 模板中中文正文的首行缩进固定为 1.77em
   // 如果要求严格对应，请将 first-line-indent 设置为 1.77em
   // 这里设置为 2em 是为了更加美观
@@ -57,8 +80,18 @@
   // 如果想要去除原创性声明页的页眉和页码，可以设置为 true
   // Word 模板中包含原创性声明页的页眉和页码，所以这里默认为 false
   cleandeclaration: false,
+  // 预览模式下会将链接文本显示为蓝色
+  // 在生成打印版时，可以设置为 false
+  // 可通过命令行 --input preview=false 覆盖
+  preview: true,
+  // 代码块的额外参数
+  codly-args: (:),
   doc,
 ) = {
+  // 命令行参数覆盖配置文件中的值
+  let blind = if _cli-blind != none { _cli-blind } else { blind }
+  let preview = if _cli-preview != none { _cli-preview } else { preview }
+  let alwaysstartodd = if _cli-alwaysstartodd != none { _cli-alwaysstartodd } else { alwaysstartodd }
   // 智能分页函数
   let smartpagebreak = () => {
     if alwaysstartodd {
@@ -116,7 +149,12 @@
   show: itemize.default-enum-list
   show strong: it => text(font: 字体.黑体, weight: "bold", it.body)
   show emph: it => text(font: 字体.楷体, style: "italic", it.body)
-  show raw: set text(font: 字体.代码, size: 字号.五号)
+  show raw: set text(font: 字体.代码, size: 字号.五号, top-edge: "ascender")
+  show: codly-init.with()
+  codly(languages: codly-languages, ..codly-args)
+  show link: it => if type(it.dest) == str and preview {
+    text(fill: blue)[#it]
+  } else { it }
 
   // 应用 show 规则
   show heading: it => styles.heading-show-rule(it, smartpagebreak)
@@ -133,7 +171,7 @@
       cmajor: cmajor,
       blindid: blindid,
       date: date,
-      linespacing: linespacing,
+      degree-type: degree-type,
     )
   } else {
     pages.cover-page-normal(
@@ -146,6 +184,7 @@
       direction: direction,
       csupervisor: csupervisor,
       date: date,
+      degree-type: degree-type,
     )
   }
 
@@ -198,9 +237,9 @@
   set align(left + top)
   set par(
     justify: true,
-    first-line-indent: first-line-indent,
-    leading: linespacing,
-    spacing: linespacing,
+    first-line-indent: (amount: first-line-indent, all: true),
+    leading: 10.5pt,
+    spacing: 10.5pt,
   )
   doc
 

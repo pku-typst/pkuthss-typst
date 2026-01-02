@@ -14,6 +14,27 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
+== 2026-01-03 #contributors.lucifer1004
+
++ 重构了模板架构：
+  - 简化了 `partcounter` 状态机（从 5 状态简化为 3 状态）。
+  - 使用 `heading` 的 `supplement` 字段传递元数据，消除了对标题文本的硬编码匹配。
+  - 更新了 `AGENTS.md` 文档，详细记录了内部架构设计。
++ 新增功能：
+  - 新增 `degree-type` 配置项，支持选择"学术学位"或"专业学位"。
+  - 新增命令行参数支持（`--input blind=true/false`、`--input preview=true/false`、`--input alwaysstartodd=true/false`）。
+  - 引入 #link("https://typst.app/universe/package/codly/", `codly`) 包，支持代码块语法高亮。
+  - 新增 `preview` 配置项，控制链接文本是否显示为蓝色。
+  - `booktab` 组件现代化重构，支持原生 `table` 参数，新增 `outlined` 参数。
++ 修复问题：
+  - 修复了图片后段落不自动缩进的问题（使用 `first-line-indent: (amount: 2em, all: true)`）。
+  - 修复了英文摘要内容过长时与 KEY WORDS 重叠的问题。
+  - 修复了目录中原创性声明页页码显示为 0 的问题。
+  - 修复了子标题（如 3.1）被错误缩进的问题。
+  - 修复了盲审封面中学位类型勾选框对齐问题。
++ 文档完善：
+  - 将 `thesis.typ` 扩展为完整的项目文档，包含模板配置、Typst 基础语法、常见问题解答等。
+
 == 2026-01-02 #contributors.lucifer1004 #contributors.TOMATOFQY
 
 + 引入 #link("https://typst.app/universe/package/itemize/", `itemize`) 包，修复了列表编号和文本内容衬线不对齐的问题。

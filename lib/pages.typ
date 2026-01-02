@@ -36,6 +36,17 @@
   )
 }
 
+#let box-unchecked = box(width: 12pt, align(center, square(size: 12pt)))
+#let box-checked = box(width: 12pt, align(center, square(size: 12pt)[✓]))
+
+// 学位类型选择框
+#let degree-type-checkbox(degree-type) = {
+  let academic-box = if degree-type == "academic" { box-checked } else { box-unchecked }
+  let professional-box = if degree-type == "professional" { box-checked } else { box-unchecked }
+  set align(center + horizon)
+  [#academic-box#h(0.5em)学术学位#h(4 * 0.5em)#professional-box#h(0.5em)专业学位]
+}
+
 // 封面页（盲审版）
 #let cover-page-blind(
   cheader: none,
@@ -45,7 +56,7 @@
   cmajor: none,
   blindid: none,
   date: none,
-  linespacing: 10pt,
+  degree-type: "academic",
 ) = {
   set align(center + top)
   text(字号.小初, font: 字体.黑体)[
@@ -59,7 +70,7 @@
   v(1fr)
   [
     #set align(left)
-    #set par(spacing: 1.5 * linespacing)
+    #set par(spacing: 1.5em)
     中文题目：#ctitle.split("\n").join()
 
     英文题目：#etitle.split("\n").join()
@@ -73,7 +84,7 @@
     论文编号：#blindid
   ]
   v(1fr)
-  [☐ 学术学位#h(4 * 0.5em)☐ 专业学位]
+  degree-type-checkbox(degree-type)
   v(3fr)
   [#chineseyear(date.year) 年 #chinesenumber(date.month) 月]
 }
@@ -88,6 +99,7 @@
   cmajor: none,
   direction: none,
   csupervisor: none,
+  degree-type: "academic",
   date: none,
 ) = {
   set text(字号.一号)
@@ -145,7 +157,7 @@
 
   set text(字号.小四)
   v(2fr)
-  text(字号.三号, font: 字体.仿宋)[☐ 学术学位#h(4 * 0.5em)☐ 专业学位]
+  text(字号.三号, font: 字体.仿宋)[#degree-type-checkbox(degree-type)]
   v(1fr)
   text(字号.三号, font: 字体.宋体)[
     #chineseyear(date.year) *年* #chinesenumber(date.month) *月*

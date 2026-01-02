@@ -154,65 +154,73 @@
 }
 
 // 三线表组件
-#let booktab(columns: (), aligns: (), width: auto, caption: none, ..cells) = {
-  let headers = cells.pos().slice(0, columns.len())
-  let contents = cells.pos().slice(columns.len(), cells.pos().len())
-  set align(center)
+// 基于 Typst 原生 table，支持所有 table 参数（stroke 除外）
+//
+// booktab 专用参数:
+//   width: 表格外层容器宽度，默认 auto
+//   caption: 表格标题（设为 none 且 outlined 为 false 时不使用 figure）
+//   outlined: 是否包装在 figure 中（默认 true），设为 false 时生成纯表格
+//
+// 必须指定 columns 参数（用于分离表头行），其他参数直接传递给 table
+// stroke 参数会被忽略（三线表有固定的线条样式）
+//
+// 用法:
+//   // 带标题的表格（出现在表格列表中）
+//   #booktab(
+//     columns: 3,
+//     caption: "示例表格",
+//     [表头1], [表头2], [表头3],
+//     [内容1], [内容2], [内容3],
+//   )
+//
+//   // 纯表格（不带标题和编号）
+//   #booktab(
+//     columns: 2,
+//     outlined: false,
+//     [代码], [结果],
+//     [...], [...],
+//   )
+#let booktab(width: auto, caption: none, outlined: true, ..args) = {
+  let table-args = args.named()
+  let all-cells = args.pos()
 
-  if aligns == () {
-    for i in range(0, columns.len()) {
-      aligns.push(center)
-    }
+  // 从 columns 推断列数（必须指定）
+  let columns = table-args.at("columns", default: 1)
+  let col-count = if type(columns) == int { columns } else if (
+    type(columns) == array
+  ) { columns.len() } else { 1 }
+
+  if all-cells.len() < col-count {
+    panic("booktab: not enough cells for header row")
   }
 
-  let content_aligns = ()
-  for i in range(0, contents.len()) {
-    content_aligns.push(aligns.at(calc.rem(i, aligns.len())))
-  }
+  // 分离表头和内容
+  let headers = all-cells.slice(0, col-count)
+  let contents = all-cells.slice(col-count)
 
-  figure(
-    block(
-      width: width,
-      grid(
-        columns: auto,
-        row-gutter: 1em,
-        line(length: 100%),
-        [
-          #set align(center)
-          #box(
-            width: 100% - 1em,
-            grid(
-              columns: columns,
-              ..headers
-                .zip(aligns)
-                .map(it => [
-                  #set align(it.last())
-                  #strong(it.first())
-                ])
-            ),
-          )
-        ],
-        line(length: 100%),
-        [
-          #set align(center)
-          #box(
-            width: 100% - 1em,
-            grid(
-              columns: columns,
-              row-gutter: 1em,
-              ..contents
-                .zip(content_aligns)
-                .map(it => [
-                  #set align(it.last())
-                  #it.first()
-                ])
-            ),
-          )
-        ],
-        line(length: 100%),
-      ),
+  // 移除 stroke（三线表固定样式）
+  let _ = table-args.remove("stroke", default: none)
+
+  set text(字号.表文, top-edge: "ascender")
+
+  let the-table = block(
+    width: width,
+    table(
+      stroke: none,
+      ..table-args,
+      // 表头行
+      table.hline(stroke: 1.5pt),
+      ..headers.map(strong),
+      table.hline(stroke: 0.75pt),
+      // 内容行
+      ..contents,
+      table.hline(stroke: 1.5pt),
     ),
-    caption: caption,
-    kind: table,
   )
+
+  if outlined {
+    figure(the-table, caption: caption, kind: table)
+  } else {
+    the-table
+  }
 }
