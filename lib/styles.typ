@@ -18,7 +18,19 @@
 
 // 生成页眉内容
 #let make-header(cheader: none) = context {
-  if skippedstate.at(here()) and calc.even(here().page()) { return }
+  // 使用逻辑页码（显示的页码）而非物理页码进行奇偶判断
+  let logical-page = counter(page).at(here()).first()
+  
+  // 检查当前页面是否是正文第一页（包含第一个带编号的一级标题）
+  // 在这种情况下，页眉渲染时页码还未重置，需要特殊处理
+  let headings-after = query(selector(heading.where(level: 1)).after(here()))
+  let is-body-first-page = headings-after.len() > 0 and headings-after.first().numbering != none and partcounter.at(here()).first() < 21
+  
+  // 如果是正文第一页，强制视为奇数页（页码将被重置为1）
+  let is-odd = if is-body-first-page { true } else { calc.odd(logical-page) }
+  let is-even = if is-body-first-page { false } else { calc.even(logical-page) }
+  
+  if skippedstate.at(here()) and is-even { return }
   [
     #set text(字号.五号)
     #set align(center)
@@ -32,15 +44,15 @@
       }
 
       // [HARDCODED] Handle the first page of Chinese abstract specailly
-      if next_heading == "摘要" and calc.odd(here().page()) {
+      if next_heading == "摘要" and is-odd {
         [
           #next_heading
           #v(header-gap)
           #line(length: 100%)
         ]
       }
-    } else if partcounter.at(here()).at(0) <= 21 {
-      if calc.even(here().page()) {
+    } else if partcounter.at(here()).at(0) <= 21 or is-body-first-page {
+      if is-even {
         [
           #align(center, cheader)
           #v(header-gap)
@@ -80,7 +92,9 @@
 
 // 生成页脚内容
 #let make-footer() = context {
-  if skippedstate.at(here()) and calc.even(here().page()) { return }
+  // 使用逻辑页码（显示的页码）而非物理页码进行奇偶判断
+  let logical-page = counter(page).at(here()).first()
+  if skippedstate.at(here()) and calc.even(logical-page) { return }
   [
     #set text(字号.五号)
     #set align(center)
