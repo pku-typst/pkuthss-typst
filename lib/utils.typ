@@ -1,7 +1,7 @@
 // lib/utils.typ - 纯工具函数
 // 中文数字转换、编号格式化、文本处理等
 
-#import "config.typ": 字号, appendixcounter
+#import "config.typ": appendixcounter, 字号
 
 // 长度向上取整到指定单位
 #let lengthceil(len, unit: 字号.小四) = calc.ceil(len / unit) * unit
@@ -159,4 +159,3 @@
     a
   }
 }
-

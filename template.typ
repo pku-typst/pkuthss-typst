@@ -5,15 +5,12 @@
 #import "@preview/cuti:0.4.0": show-cn-fakebold
 
 // 导入并重导出所有公共符号
-#import "lib/config.typ": 字号, 字体, appendix
+#import "lib/config.typ": appendix, 字体, 字号
 #import "lib/config.typ": (
-  partcounter,
-  chaptercounter,
-  appendixcounter,
-  skippedstate,
+  appendixcounter, chaptercounter, partcounter, skippedstate,
 )
 #import "lib/utils.typ": chinesenumbering
-#import "lib/components.typ": chineseoutline, listoffigures, codeblock, booktab
+#import "lib/components.typ": booktab, chineseoutline, codeblock, listoffigures
 
 // 内部使用的模块
 #import "lib/pages.typ"
@@ -52,12 +49,6 @@
   alwaysstartodd: true,
   doc,
 ) = {
-  // 计算最后一个前置章节名称（用于页码切换）
-  let lastchapterbeforebody = "目录"
-  if listofimage { lastchapterbeforebody = "插图" }
-  if listoftable { lastchapterbeforebody = "表格" }
-  if listofcode { lastchapterbeforebody = "代码" }
-
   // 智能分页函数
   let smartpagebreak = () => {
     if alwaysstartodd {
@@ -119,7 +110,7 @@
   show raw: set text(font: 字体.代码, size: 字号.五号)
 
   // 应用 show 规则
-  show heading: it => styles.heading-show-rule(it, smartpagebreak, lastchapterbeforebody)
+  show heading: it => styles.heading-show-rule(it, smartpagebreak)
   show figure: styles.figure-show-rule
   show ref: styles.ref-show-rule
 
@@ -199,14 +190,21 @@
 
   // ========== 正文 ==========
   set align(left + top)
-  set par(justify: true, first-line-indent: first-line-indent, leading: linespacing, spacing: linespacing)
+  set par(
+    justify: true,
+    first-line-indent: first-line-indent,
+    leading: linespacing,
+    spacing: linespacing,
+  )
   doc
 
   smartpagebreak()
 
   // ========== 致谢和声明（非盲审） ==========
   if not blind {
-    pages.acknowledgements-page(first-line-indent: first-line-indent)[#acknowledgements]
+    pages.acknowledgements-page(
+      first-line-indent: first-line-indent,
+    )[#acknowledgements]
     pages.declaration-page(first-line-indent: first-line-indent)
   }
 }

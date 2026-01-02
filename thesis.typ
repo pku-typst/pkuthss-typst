@@ -41,7 +41,7 @@
   listofimage: true,
   listoftable: true,
   listofcode: true,
-  alwaysstartodd: false,
+  alwaysstartodd: true,
   doc,
 )
 

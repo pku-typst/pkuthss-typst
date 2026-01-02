@@ -1,19 +1,19 @@
 // lib/components.typ - UI 组件
 // 目录、图表列表、代码块、三线表等可复用组件
 
-#import "config.typ": 字号, partcounter, chaptercounter
-#import "utils.typ": lengthceil, chinesenumbering, bodytotextwithtrim
+#import "config.typ": chaptercounter, front-heading, partcounter, 字号
+#import "utils.typ": bodytotextwithtrim, chinesenumbering, lengthceil
 
 // 中文目录
 #let chineseoutline(title: "目录", depth: none, indent: false) = {
-  heading(title, numbering: none, outlined: false)
+  front-heading(title)
   context {
     let it = here()
     let elements = query(heading.where(outlined: true).after(it))
 
     for el in elements {
-      // Skip list of images and list of tables
-      if partcounter.at(el.location()).first() < 20 and el.numbering == none {
+      // 前置部分（part < 2）的无编号章节不出现在目录中
+      if partcounter.at(el.location()).first() < 2 and el.numbering == none {
         continue
       }
 
@@ -67,7 +67,8 @@
         // Page number
         let footer = query(selector(<__footer__>).after(el.location()))
         let page_number = if footer == () {
-          0
+          // 最后一页没有后续 footer，直接使用 heading 位置的页码
+          counter(page).at(el.location()).first()
         } else {
           counter(page).at(footer.first().location()).first()
         }
@@ -85,7 +86,7 @@
 
 // 图表列表（插图、表格、代码）
 #let listoffigures(title: "插图", kind: image) = {
-  heading(title, numbering: none, outlined: false)
+  front-heading(title)
   context {
     let it = here()
     let elements = query(figure.where(kind: kind).after(it))

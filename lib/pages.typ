@@ -2,7 +2,7 @@
 // 封面、版权声明、摘要、致谢、原创性声明等页面
 
 #import "@preview/cuti:0.4.0": show-cn-fakebold
-#import "config.typ": 字号, 字体, partcounter
+#import "config.typ": back-heading, front-heading, 字体, 字号
 #import "utils.typ": chinesenumber, chineseyear, split-text-by-width
 
 // 构建带自动换行的字段 grid
@@ -156,7 +156,7 @@
 #let copyright-page(linespacing: 20pt) = {
   set align(left + top)
   set text(字号.小四)
-  heading(numbering: none, outlined: false, "版权声明")
+  front-heading("版权声明", pagebreak: false)
   linebreak()
   par(justify: true, first-line-indent: 2em, leading: 2 * linespacing)[
     任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。
@@ -164,9 +164,14 @@
 }
 
 // 中文摘要页
-#let abstract-page-zh(ckeywords: (), linespacing: 20pt, first-line-indent: 2em, cabstract) = {
+#let abstract-page-zh(
+  ckeywords: (),
+  linespacing: 20pt,
+  first-line-indent: 2em,
+  cabstract,
+) = {
   set par(justify: true, first-line-indent: 2em, leading: linespacing)
-  heading(numbering: none, outlined: false, "摘要")
+  front-heading("摘要", enter-front: true, header: "摘要")
   cabstract
   v(1fr)
   set par(first-line-indent: 0em)
@@ -188,6 +193,16 @@
   first-line-indent: 2em,
   eabstract,
 ) = {
+  // 使用不显示标题内容的 heading，只用于触发页眉
+  heading(
+    numbering: none,
+    outlined: false,
+    supplement: [#metadata((
+      pagebreak: true,
+      show-header: true,
+      header: "ABSTRACT",
+    ))],
+  )[]
   [
     #set text(字号.小二)
     #set align(center)
@@ -217,15 +232,18 @@
 
 // 致谢页
 #let acknowledgements-page(first-line-indent: 2em, acknowledgements) = {
-  heading(numbering: none, "致谢")
+  back-heading("致谢")
   acknowledgements
 }
 
 // 原创性声明和授权说明页
 #let declaration-page(first-line-indent: 2em) = {
-  partcounter.update(30)
   set par(first-line-indent: first-line-indent)
-  heading(numbering: none, "北京大学学位论文原创性声明和使用授权说明")
+  back-heading(
+    "北京大学学位论文原创性声明和使用授权说明",
+    pagebreak: true,
+    show-header: false,
+  )
   align(center)[#text(
     字号.四号,
     weight: "bold",
@@ -275,7 +293,7 @@
       - 按照学校要求提交学位论文的印刷本和电子版本；
       - 学校有权保存学位论文的印刷本和电子版，并提供目录检索与阅览服务，在校园网上提供服务；
       - 学校可以采用影印、缩印、数字化或其它复制手段保存论文；
-      - 因某种特殊原因须要延迟发布学位论文电子版，授权学校 #box(square(size: 9pt)) 一年 /	#box(square(size: 9pt)) 两年 / #box(square(size: 9pt)) 三年以后，在校园网上全文发布。
+      - 因某种特殊原因须要延迟发布学位论文电子版，授权学校#box(width: 12pt, align(center, square(size: 9pt)))一年/#box(width: 12pt, align(center, square(size: 9pt)))两年/#box(width: 12pt, align(center, square(size: 9pt)))三年以后，在校园网上全文发布。
     ]
     #v(1fr)
     #align(center)[（保密论文在解密后遵守此规定）]
