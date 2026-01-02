@@ -1,3 +1,6 @@
+#import "@preview/itemize:0.2.0" as itemize
+#import "@preview/cuti:0.4.0": show-cn-fakebold
+
 #let 字号 = (
   初号: 42pt,
   小初: 36pt,
@@ -50,7 +53,11 @@
   } else if num < 20 and standalone {
     "十" + chinesenumber(calc.rem(num, 10))
   } else {
-    chinesenumber(calc.floor(num / 10)) + "十" + chinesenumber(calc.rem(num, 10))
+    (
+      chinesenumber(calc.floor(num / 10))
+        + "十"
+        + chinesenumber(calc.rem(num, 10))
+    )
   }
 } else if num < 1000 {
   let left = chinesenumber(calc.floor(num / 100)) + "百"
@@ -72,6 +79,52 @@
   } else {
     left + chinesenumber(calc.rem(num, 1000))
   }
+}
+
+#let chineseyear(year) = (
+  str(year)
+    .clusters()
+    .map(it => ("〇", "一", "二", "三", "四", "五", "六", "七", "八", "九").at(
+      int(it),
+    ))
+    .join("")
+)
+
+// 根据最大宽度拆分文本为多行，返回字符串数组
+// 必须在 context 中调用（因为使用了 measure）
+#let split-text-by-width(text-content, max-width) = {
+  let chars = if type(text-content) == str {
+    text-content.clusters()
+  } else {
+    str(text-content).clusters()
+  }
+  let result = ()
+  let current = ""
+
+  for c in chars {
+    if c == "\n" {
+      if current.len() > 0 {
+        result.push(current)
+      }
+      current = ""
+    } else {
+      let next = current + c
+      if measure(next).width > max-width {
+        if current.len() > 0 {
+          result.push(current)
+        }
+        current = c
+      } else {
+        current = next
+      }
+    }
+  }
+
+  if current.len() > 0 {
+    result.push(current)
+  }
+
+  result
 }
 
 #let chinesenumbering(..nums, location: none, brackets: false) = context {
@@ -109,8 +162,6 @@
         } else {
           ret.push(now)
         }
-        ret.push(v(-0.8em))
-        ret.push(line(length: 100%))
         if c == "\n" {
           now = ""
         } else {
@@ -129,11 +180,9 @@
       } else {
         ret.push(now)
       }
-      ret.push(v(-0.9em))
-      ret.push(line(length: 100%))
     }
 
-    ret.join()
+    ret
   }
 }
 
@@ -145,14 +194,19 @@
 
     for el in elements {
       // Skip list of images and list of tables
-      if partcounter.at(el.location()).first() < 20 and el.numbering == none { continue }
+      if partcounter.at(el.location()).first() < 20 and el.numbering == none {
+        continue
+      }
 
       // Skip headings that are too deep
       if depth != none and el.level > depth { continue }
 
       let maybe_number = if el.numbering != none {
         if el.numbering == chinesenumbering {
-          chinesenumbering(..counter(heading).at(el.location()), location: el.location())
+          chinesenumbering(
+            ..counter(heading).at(el.location()),
+            location: el.location(),
+          )
         } else {
           numbering(el.numbering, ..counter(heading).at(el.location()))
         }
@@ -161,7 +215,7 @@
 
       let line = {
         if indent {
-          h(1em * (el.level - 1 ))
+          h(1em * (el.level - 1))
         }
 
         if el.level == 1 {
@@ -177,7 +231,7 @@
                 strong(maybe_number)
               } else {
                 maybe_number
-              })
+              }),
             )
           }
         }
@@ -189,11 +243,7 @@
         })
 
         // Filler dots
-        if el.level == 1 {
-          box(width: 1fr, h(10pt) + box(width: 1fr) + h(10pt))
-        } else {
-          box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
-        }
+        box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
 
         // Page number
         let footer = query(selector(<__footer__>).after(el.location()))
@@ -202,7 +252,7 @@
         } else {
           counter(page).at(footer.first().location()).first()
         }
-        
+
         str(page_number)
 
         linebreak()
@@ -231,7 +281,11 @@
     for el in elements {
       let maybe_number = {
         let el_loc = el.location()
-        chinesenumbering(chaptercounter.at(el_loc).first(), counter(figure.where(kind: kind)).at(el_loc).first(), location: el_loc)
+        chinesenumbering(
+          chaptercounter.at(el_loc).first(),
+          counter(figure.where(kind: kind)).at(el_loc).first(),
+          location: el_loc,
+        )
         h(0.5em)
       }
       let line = {
@@ -239,7 +293,7 @@
           let width = measure(maybe_number).width
           box(
             width: lengthceil(width),
-            link(el.location(), maybe_number)
+            link(el.location(), maybe_number),
           )
         }
 
@@ -268,7 +322,7 @@
 #let codeblock(raw, caption: none, outline: false) = {
   figure(
     if outline {
-      rect(width: 100%)[
+      block(width: 100%)[
         #set align(left)
         #raw
       ]
@@ -276,7 +330,9 @@
       set align(left)
       raw
     },
-    caption: caption, kind: "code", supplement: ""
+    caption: caption,
+    kind: "code",
+    supplement: "",
   )
 }
 
@@ -300,7 +356,7 @@
     block(
       width: width,
       grid(
-        columns: (auto),
+        columns: auto,
         row-gutter: 1em,
         line(length: 100%),
         [
@@ -309,11 +365,13 @@
             width: 100% - 1em,
             grid(
               columns: columns,
-              ..headers.zip(aligns).map(it => [
-                #set align(it.last())
-                #strong(it.first())
-              ])
-            )
+              ..headers
+                .zip(aligns)
+                .map(it => [
+                  #set align(it.last())
+                  #strong(it.first())
+                ])
+            ),
           )
         ],
         line(length: 100%),
@@ -324,18 +382,20 @@
             grid(
               columns: columns,
               row-gutter: 1em,
-              ..contents.zip(content_aligns).map(it => [
-                #set align(it.last())
-                #it.first()
-              ])
-            )
+              ..contents
+                .zip(content_aligns)
+                .map(it => [
+                  #set align(it.last())
+                  #it.first()
+                ])
+            ),
           )
         ],
         line(length: 100%),
       ),
     ),
     caption: caption,
-    kind: table
+    kind: table,
   )
 }
 
@@ -355,7 +415,7 @@
   direction: "某个研究方向",
   csupervisor: "李四",
   esupervisor: "Si Li",
-  date: "二零二三年六月",
+  date: (year: 2026, month: 6),
   cabstract: [],
   ckeywords: (),
   eabstract: [],
@@ -371,9 +431,9 @@
   doc,
 ) = {
   let lastchapterbeforebody = "目录"
-  if listofimage {lastchapterbeforebody = "插图"}
-  if listoftable {lastchapterbeforebody = "表格"}
-  if listofcode {lastchapterbeforebody = "代码"}
+  if listofimage { lastchapterbeforebody = "插图" }
+  if listoftable { lastchapterbeforebody = "表格" }
+  if listofcode { lastchapterbeforebody = "代码" }
 
   let smartpagebreak = () => {
     if alwaysstartodd {
@@ -387,7 +447,9 @@
     }
   }
 
-  set page("a4",
+  set page(
+    "a4",
+    margin: (top: 3cm, bottom: 2.5cm, left: 2.6cm, right: 2.6cm),
     header: context {
       if skippedstate.at(here()) and calc.even(here().page()) { return }
       [
@@ -420,18 +482,24 @@
             let footers = query(selector(<__footer__>).after(here()))
             if footers != () {
               let elems = query(
-                heading.where(level: 1).before(footers.first().location())
+                heading.where(level: 1).before(footers.first().location()),
               )
 
               // [HARDCODED] Handle the last page of Chinese abstract specailly
-              let el = if elems.last().body.text == "摘要" or not skippedstate.at(footers.first().location()) {
+              let el = if (
+                elems.last().body.text == "摘要"
+                  or not skippedstate.at(footers.first().location())
+              ) {
                 elems.last()
               } else {
                 elems.at(-1)
               }
               [
                 #let numbering = if el.numbering == chinesenumbering {
-                  chinesenumbering(..counter(heading).at(el.location()), location: el.location())
+                  chinesenumbering(
+                    ..counter(heading).at(el.location()),
+                    location: el.location(),
+                  )
                 } else if el.numbering != none {
                   numbering(el.numbering, ..counter(heading).at(el.location()))
                 }
@@ -445,13 +513,17 @@
               ]
             }
           }
-      }]},
+        }]
+    },
     footer: context {
       if skippedstate.at(here()) and calc.even(here().page()) { return }
       [
         #set text(字号.五号)
         #set align(center)
-        #if query(selector(heading).before(here())).len() < 2 or query(selector(heading).after(here())).len() == 0 {
+        #if (
+          query(selector(heading).before(here())).len() < 2
+            or query(selector(heading).after(here())).len() == 0
+        ) {
           // Skip cover, copyright and origin pages
         } else {
           let headers = query(selector(heading).before(here()))
@@ -479,7 +551,7 @@
       } else {
         numbering("A.1", chaptercounter.at(here()).first(), ..nums)
       }
-    }
+    },
   )
   set math.equation(
     numbering: (..nums) => context {
@@ -489,15 +561,23 @@
       } else {
         numbering("(A.1)", chaptercounter.at(here()).first(), ..nums)
       }
-    }
+    },
   )
   set list(indent: 2em)
   set enum(indent: 2em)
+  set footnote(numbering: "①")
+  show footnote.entry: it => {
+    let loc = it.note.location()
+    numbering(it.note.numbering, ..counter(footnote).at(loc))
+    h(0.5em)
+    it.note.body
+  }
 
-  show strong: it => text(font: 字体.黑体, weight: "semibold", it.body)
+  show: itemize.default-enum-list
+  show strong: it => text(font: 字体.黑体, weight: "bold", it.body)
   show emph: it => text(font: 字体.楷体, style: "italic", it.body)
   set par(spacing: linespacing)
-  show raw: set text(font: 字体.代码)
+  show raw: set text(font: 字体.代码, size: 字号.五号)
 
   show heading: it => [
     // Cancel indentation for headings
@@ -515,7 +595,7 @@
     ]
 
     #if it.level == 1 {
-      if not it.body.text in ("Abstract", "学位论文使用授权说明", "版权声明")  {
+      if not it.body.text in ("ABSTRACT", "学位论文使用授权说明", "版权声明") {
         smartpagebreak()
       }
       context {
@@ -523,7 +603,7 @@
           partcounter.update(10)
           counter(page).update(1)
         } else {
-          if it.body.text == lastchapterbeforebody{
+          if it.body.text == lastchapterbeforebody {
             partcounter.update(20)
           }
           if it.numbering != none and partcounter.at(here()).first() < 21 {
@@ -573,8 +653,8 @@
     } else if it.kind == "code" {
       [
         #set text(字号.五号)
-        #context {[代码]+it.counter.display(it.numbering)+"   "}
-        #it.caption.body 
+        #context { [代码] + it.counter.display(it.numbering) + "   " }
+        #it.caption.body
       ]
       it.body
     }
@@ -594,7 +674,12 @@
         // Handle equations
         link(el_loc, [
           式
-          #chinesenumbering(chaptercounter.at(el_loc).first(), equationcounter.at(el_loc).first(), location: el_loc, brackets: true)
+          #chinesenumbering(
+            chaptercounter.at(el_loc).first(),
+            equationcounter.at(el_loc).first(),
+            location: el_loc,
+            brackets: true,
+          )
         ])
         h(0.25em, weak: true)
       } else if el.func() == figure {
@@ -602,23 +687,38 @@
         if el.kind == image {
           link(el_loc, [
             图
-            #chinesenumbering(chaptercounter.at(el_loc).first(), imagecounter.at(el_loc).first(), location: el_loc)
+            #chinesenumbering(
+              chaptercounter.at(el_loc).first(),
+              imagecounter.at(el_loc).first(),
+              location: el_loc,
+            )
           ])
         } else if el.kind == table {
           link(el_loc, [
             表
-            #chinesenumbering(chaptercounter.at(el_loc).first(), tablecounter.at(el_loc).first(), location: el_loc)
+            #chinesenumbering(
+              chaptercounter.at(el_loc).first(),
+              tablecounter.at(el_loc).first(),
+              location: el_loc,
+            )
           ])
         } else if el.kind == "code" {
           link(el_loc, [
             代码
-            #chinesenumbering(chaptercounter.at(el_loc).first(), rawcounter.at(el_loc).first(), location: el_loc)
+            #chinesenumbering(
+              chaptercounter.at(el_loc).first(),
+              rawcounter.at(el_loc).first(),
+              location: el_loc,
+            )
           ])
         }
       } else if el.func() == heading {
         // Handle headings
         if el.level == 1 {
-          link(el_loc, chinesenumbering(..counter(heading).at(el_loc), location: el_loc))
+          link(el_loc, chinesenumbering(
+            ..counter(heading).at(el_loc),
+            location: el_loc,
+          ))
         } else {
           link(el_loc, [
             节
@@ -632,105 +732,131 @@
     }
   }
 
-  let fieldname(name) = [
-    #set align(right + top)
-    #strong(name)
-  ]
+  // 构建带自动换行的字段 grid
+  // fields: ((name1, value1), (name2, value2), ...)
+  // max-value-width: 值的最大宽度
+  // row-height: 每行高度
+  let build-field-grid(fields, name-width, value-width, row-height) = context {
+    let grid-contents = ()
 
-  let fieldvalue(value) = [
-    #set align(center + horizon)
-    #set text(font: 字体.仿宋)
-    #grid(
-      rows: (auto, auto),
-      row-gutter: 0.2em,
-      value,
-      line(length: 100%)
+    for (name, value) in fields {
+      let value-parts = split-text-by-width(value, value-width)
+      for (i, part) in value-parts.enumerate() {
+        // 第一行显示字段名，后续行留空
+        if i == 0 {
+          grid-contents.push([#strong(name)#v(0.5em)])
+        } else {
+          grid-contents.push([])
+        }
+        grid-contents.push([
+          #set align(center)
+          #set text(字号.三号, font: 字体.仿宋)
+          #part
+          #v(0.5em)
+        ])
+      }
+    }
+
+    grid(
+      columns: (name-width, value-width),
+      rows: row-height,
+      row-gutter: 0.5em,
+      stroke: (x, y) => if x == 1 { (bottom: 1pt) } else { none },
+      ..grid-contents,
     )
-  ]
+  }
 
   // Cover page
 
   if blind {
     set align(center + top)
-    text(字号.初号)[#strong(cheader)]
+    text(字号.小初, font: 字体.黑体)[
+      #show: show-cn-fakebold
+      #strong(cheader)
+    ]
     linebreak()
     set text(字号.三号, font: 字体.仿宋)
     set par(justify: true, leading: 1em)
     [（匿名评阅论文封面）]
-    v(2fr)
-    grid(
-      columns: (80pt, 320pt),
-      row-gutter: 1.5em,
-      align(left + top)[中文题目：],
-      align(left + top)[#ctitle],
-      align(left + top)[英文题目：],
-      align(left + top)[#etitle],
-    )
-    v(2em)
-    grid(
-      columns: (80pt, 320pt),
-      row-gutter: 1.5em,
-      align(left + top)[一级学科：],
-      align(left + top)[#cfirstmajor],
-      align(left + top)[二级学科：],
-      align(left + top)[#cmajor],
-      align(left + top)[论文编号：],
-      align(left + top)[#blindid],
-    )
-
-    v(4fr)
-    text(字号.小二, font: 字体.仿宋)[#date]
     v(1fr)
+    [
+      #set align(left)
+      #set par(spacing: 1.5 * linespacing)
+      中文题目：#ctitle.split("\n").join()
+
+      英文题目：#etitle.split("\n").join()
+
+      #linebreak()
+
+      一级学科：#cfirstmajor
+
+      二级学科：#cmajor
+
+      论文编号：#blindid
+    ]
+    v(1fr)
+    [☐ 学术学位#h(4 * 0.5em)☐ 专业学位]
+    v(3fr)
+    [#chineseyear(date.year) 年 #chinesenumber(date.month) 月]
   } else {
     box(
       grid(
         columns: (auto, auto),
         gutter: 0.4em,
         image("pkulogo.svg", height: 2.4em, fit: "contain"),
-        image("pkuword.svg", height: 1.6em, fit: "contain")
-      )
+        image("pkuword.svg", height: 1.6em, fit: "contain"),
+      ),
     )
     linebreak()
-    strong(cthesisname)
+    text(字号.小初)[#strong(cthesisname)]
+    v(1fr)
+    set text(字号.一号)
+    context {
+      let ctitle-parts = split-text-by-width(ctitle, 10.16cm)
+      let grid-contents = (
+        [
+          #set align(center)
+          #text(字号.二号)[题目：]
+        ],
+      )
+      for (i, part) in ctitle-parts.enumerate() {
+        grid-contents.push(strong(part))
+        if i < ctitle-parts.len() - 1 {
+          grid-contents.push([])
+        }
+      }
 
-    set text(字号.二号)
-    v(60pt)
-    grid(
-      columns: (80pt, 300pt),
-      [
-        #set align(right + top)
-        题目：
-      ],
-      [
-        #set align(center + horizon)
-        #chineseunderline(ctitle, width: 300pt, bold: true)
-      ]
-    )
-
-    v(60pt)
+      grid(
+        columns: (2.75cm, 10.16cm),
+        rows: 1.48cm,
+        align: center,
+        stroke: (x, y) => if x == 1 { (bottom: 1pt) } else { none },
+        ..grid-contents,
+      )
+    }
+    v(5fr)
     set text(字号.三号)
-
-    grid(
-      columns: (80pt, 280pt),
-      row-gutter: 1em,
-      fieldname(text("姓") + h(2em) + text("名：")),
-      fieldvalue(cauthor),
-      fieldname(text("学") + h(2em) + text("号：")),
-      fieldvalue(studentid),
-      fieldname(text("学") + h(2em) + text("院：")),
-      fieldvalue(school),
-      fieldname(text("专") + h(2em) + text("业：")),
-      fieldvalue(cmajor),
-      fieldname("研究方向："),
-      fieldvalue(direction),
-      fieldname(text("导") + h(2em) + text("师：")),
-      fieldvalue(csupervisor),
+    build-field-grid(
+      (
+        (text("姓") + h(2em) + text("名："), cauthor),
+        (text("学") + h(2em) + text("号："), studentid),
+        (text("学") + h(2em) + text("院："), school),
+        (text("专") + h(2em) + text("业："), cmajor),
+        ("研究方向：", direction),
+        ("导师姓名：", csupervisor),
+      ),
+      3.19cm,
+      7.63cm,
+      1.5em,
     )
 
-    v(25pt)
-    text(字号.三号, font: 字体.仿宋)[☐ 学术学位 #h(30pt)☐ 专业学位]
-    v(25pt)
-    text(字号.小二)[#date]
+    set text(字号.小四)
+    v(2fr)
+    text(字号.三号, font: 字体.仿宋)[☐ 学术学位#h(4 * 0.5em)☐ 专业学位]
+    v(1fr)
+    text(字号.三号, font: 字体.宋体)[
+      #chineseyear(date.year) *年* #chinesenumber(date.month) *月*
+    ]
   }
 
   smartpagebreak()
@@ -739,7 +865,8 @@
   set align(left + top)
   set text(字号.小四)
   heading(numbering: none, outlined: false, "版权声明")
-  par(justify: true, first-line-indent: 2em, leading: linespacing)[
+  linebreak()
+  par(justify: true, first-line-indent: 2em, leading: 2 * linespacing)[
     任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。
   ]
 
@@ -755,7 +882,6 @@
   ckeywords.join("，")
   v(2em)
   set par(first-line-indent: 2em)
-  
 
   smartpagebreak()
 
@@ -763,24 +889,23 @@
   [
     #set text(字号.小二)
     #set align(center)
-    #strong(etitle)
+    #strong(upper(etitle))
   ]
   if not blind {
     [
       #set align(center)
       #eauthor \(#emajor\) \
-      Directed by #esupervisor
+      Supervised by #esupervisor
     ]
   }
-  heading(numbering: none, outlined: false, "Abstract")
+  heading(numbering: none, outlined: false, "ABSTRACT")
   eabstract
   v(1fr)
   set par(first-line-indent: 0em)
-  [*KEYWORDS:*]
-  h(0.5em, weak: true)
+  [KEY WORDS: ]
   ekeywords.join(", ")
   v(2em)
-  
+
   // Table of contents
   chineseoutline(
     title: "目录",
@@ -815,7 +940,12 @@
 
     partcounter.update(30)
     heading(numbering: none, "北京大学学位论文原创性声明和使用授权说明")
-    align(center)[#heading(level: 2, numbering: none, outlined: false, "原创性声明")]
+    align(center)[#text(
+      字号.四号,
+      weight: "bold",
+      show-cn-fakebold[原创性声明],
+    )]
+    v(1fr)
     [
       本人郑重声明：
       所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。
@@ -824,7 +954,7 @@
       对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式标明。
       本声明的法律结果由本人承担。
 
-      #v(1em)
+      #v(1fr)
 
       #align(right)[
         论文作者签名
@@ -838,26 +968,38 @@
         日
       ]
 
-      #align(center)[#heading(level: 2, numbering: none, outlined: false, "学位论文使用授权说明")]
-      #v(-0.33em, weak: true)
+      #v(2fr)
+      #align(center)[#text(
+        字号.四号,
+        weight: "bold",
+        show-cn-fakebold[学位论文使用授权说明],
+      )]
       #align(center)[#text(字号.五号)[（必须装订在提交学校图书馆的印刷本）]]
-      #v(字号.小三)
+      #v(1fr)
 
       本人完全了解北京大学关于收集、保存、使用学位论文的规定，即：
-
-      - 按照学校要求提交学位论文的印刷本和电子版本；
-      - 学校有权保存学位论文的印刷本和电子版，并提供目录检索与阅览服务，在校园网上提供服务；
-      - 学校可以采用影印、缩印、数字化或其它复制手段保存论文；
-      - 因某种特殊原因须要延迟发布学位论文电子版，授权学校 #box[#rect(width: 9pt, height: 9pt)] 一年 /	 #box[#rect(width: 9pt, height: 9pt)] 两年 / #box[#rect(width: 9pt, height: 9pt)] 三年以后，在校园网上全文发布。
-
+      #[
+        #set list(
+          marker: [#grid(
+            columns: (auto, 1em),
+            circle(radius: 0.3em, fill: black, stroke: none), [],
+          )],
+          indent: 1.5em,
+        )
+        - 按照学校要求提交学位论文的印刷本和电子版本；
+        - 学校有权保存学位论文的印刷本和电子版，并提供目录检索与阅览服务，在校园网上提供服务；
+        - 学校可以采用影印、缩印、数字化或其它复制手段保存论文；
+        - 因某种特殊原因须要延迟发布学位论文电子版，授权学校 #box(square(size: 9pt)) 一年 /	#box(square(size: 9pt)) 两年 / #box(square(size: 9pt)) 三年以后，在校园网上全文发布。
+      ]
+      #v(1fr)
       #align(center)[（保密论文在解密后遵守此规定）]
-
-      #v(1em)
-      #align(right)[
-        论文作者签名
+      #v(3fr)
+      #align(center)[
+        论文作者签名：
         #h(5em)
-        导师签名
+        导师签名：
         #h(5em)
+        #v(1em)
         日期：
         #h(2em)
         年

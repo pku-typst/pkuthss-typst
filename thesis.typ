@@ -6,8 +6,10 @@
   blindid: "L2023XXXXX",
   cthesisname: "博士研究生学位论文",
   cheader: "北京大学博士学位论文",
+  // 可以用 \n 控制中英文标题在非盲审封面 (blind=false) 中的换行点
+  // 在盲审封面 (blind=true) 中，手工插入的 \n 会被忽略，以确保标题连续
   ctitle: "北京大学学位论文模板\npkuthss-typst v0.1.0",
-  etitle: "PKU dissertation document template\n pkuthss-typst v0.1.0",
+  etitle: "PKU dissertation document template\npkuthss-typst v0.1.0",
   school: "某个学院",
   cfirstmajor: "某个一级学科",
   cmajor: "某个专业",
@@ -15,7 +17,7 @@
   direction: "某个研究方向",
   csupervisor: "李四 教授",
   esupervisor: "Prof. Si Li",
-  date: "二〇二三年六月",
+  date: (year: 2026, month: 6),
   cabstract: "本文介绍了 pkuthss-typst 文档模板所提供的功能。",
   ckeywords: ("Typst", "模板"),
   eabstract: "This document introduces the features of the pkuthss-typst template.",
@@ -27,7 +29,7 @@
   listofimage: true,
   listoftable: true,
   listofcode: true,
-  alwaysstartodd: true,
+  alwaysstartodd: false,
   doc,
 )
 
@@ -51,18 +53,19 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     #set align(center)
     渲染结果
   ],
+
   ```typ
-#heading(level: 2, numbering: none, outlined: false, "二级标题")
-#heading(level: 3, numbering: none, outlined: false, "三级标题")
-#heading(level: 4, numbering: none, outlined: false, "四级标题")
-#heading(level: 5, numbering: none, outlined: false, "五级标题")
+  #heading(level: 2, numbering: none, outlined: false, "二级标题")
+  #heading(level: 3, numbering: none, outlined: false, "三级标题")
+  #heading(level: 4, numbering: none, outlined: false, "四级标题")
+  #heading(level: 5, numbering: none, outlined: false, "五级标题")
   ```,
   [
     #heading(level: 2, numbering: none, outlined: false, "二级标题")
     #heading(level: 3, numbering: none, outlined: false, "三级标题")
     #heading(level: 4, numbering: none, outlined: false, "四级标题")
     #heading(level: 5, numbering: none, outlined: false, "五级标题")
-  ]
+  ],
 )\
 
 需要注意的是，这里的样式经过了本模板的一些定制，并非 Typst 的默认样式。
@@ -87,12 +90,13 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     #set align(center)
     渲染结果
   ],
+
   ```typ
-*bold* and _italic_ are very simple.
+  *bold* and _italic_ are very simple.
   ```,
   [
-*bold* and _italic_ are very simple.
-  ]
+    *bold* and _italic_ are very simple.
+  ],
 )\
 
 由于绝大部分中文字体只有单一字形，这里遵循 `PKUTHSS` 的惯例，使用#strong[黑体]表示粗体，#emph[楷体]表示斜体。但需要注意的是，由于语法解析的问题， `*...*` 和 `_..._` 的前后可能需要空格分隔，而这有时会导致不必要的空白。 如果不希望出现这一空白，可以直接采用 `#strong` 或 `#emph`。
@@ -107,12 +111,13 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     #set align(center)
     渲染结果
   ],
+
   ```typ
-对于中文情形，*使用 \* 加粗* 会导致额外的空白，#strong[使用 \#strong 加粗]则不会。
+  对于中文情形，*使用 \* 加粗* 会导致额外的空白，#strong[使用 \#strong 加粗]则不会。
   ```,
   [
-对于中文情形，*使用 \* 加粗* 会导致额外的空白，#strong[使用 \#strong 加粗]则不会。
-  ]
+    对于中文情形，*使用 \* 加粗* 会导致额外的空白，#strong[使用 \#strong 加粗]则不会。
+  ],
 )\
 
 == 脚注
@@ -129,12 +134,13 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     #set align(center)
     渲染结果
   ],
+
   ```typ
-  Typst 支持添加脚注#footnote[这是一个脚注。]。
-```,
-[
-  Typst 支持添加脚注#footnote[这是一个脚注。]。
-]
+    Typst 支持添加脚注#footnote[这是一个脚注。]。
+  ```,
+  [
+    Typst 支持添加脚注#footnote[这是一个脚注。]。
+  ],
 )\
 
 == 图片
@@ -151,21 +157,22 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     #set align(center)
     渲染结果
   ],
+
   ```typ
-#figure(
-  image("images/1-writing-app.png", width: 100%),
-  caption: "Typst 网页版界面",
-) <web>
-```,
-[
   #figure(
-  image("images/1-writing-app.png", width: 100%),
-  caption: "Typst 网页版界面",
-) <web>
-]
+    image("images/1-writing-app.png", width: 100%),
+    caption: "Typst 网页版界面",
+  ) <web>
+  ```,
+  [
+    #figure(
+      image("images/1-writing-app.png", width: 100%),
+      caption: "Typst 网页版界面",
+    ) <web>
+  ],
 )\
 
-@web 展示了 Typst 网页版的界面。更多有关内容，可以参考 @about。@developers 中介绍了 Typst 的主要开发者。代码中的 `<web>` 是这一图片的标签，可以在文中通过 `@web` 来引用。
+@web 展示了 Typst 网页版的界面。更多有关内容，可以参考 @about。代码中的 `<web>` 是这一图片的标签，可以在文中通过 `@web` 来引用。
 
 == 表格
 
@@ -181,26 +188,9 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     #set align(center)
     渲染结果
   ],
+
   codeblock(
-  ```typ
-#figure(
-  table(
-    columns: (auto, auto, auto, auto),
-    inset: 10pt,
-    align: horizon,
-      [*姓名*],[*职称*],[*工作单位*],[*职责*],
-      [李四],[教授],[北京大学],[主席],
-      [王五],[教授],[北京大学],[成员],
-      [赵六],[教授],[北京大学],[成员],
-      [钱七],[教授],[北京大学],[成员],
-      [孙八],[教授],[北京大学],[成员],
-  ),
-  caption: "答辩委员会名单",
-) <table>
-```,
-    caption: "默认表格",
-  ),
-  [
+    ```typ
     #figure(
       table(
         columns: (auto, auto, auto, auto),
@@ -215,7 +205,25 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
       ),
       caption: "答辩委员会名单",
     ) <table>
-  ]
+    ```,
+    caption: "默认表格",
+  ),
+  [
+    #figure(
+      table(
+        columns: (auto, auto, auto, auto),
+        inset: 10pt,
+        align: horizon,
+        [*姓名*], [*职称*], [*工作单位*], [*职责*],
+        [李四], [教授], [北京大学], [主席],
+        [王五], [教授], [北京大学], [成员],
+        [赵六], [教授], [北京大学], [成员],
+        [钱七], [教授], [北京大学], [成员],
+        [孙八], [教授], [北京大学], [成员],
+      ),
+      caption: "答辩委员会名单",
+    ) <table>
+  ],
 )
 
 对应的渲染结果如 @table 所示。代码中的 `<table>` 是这一表格的标签，可以在文中通过 `@table` 来引用。
@@ -232,6 +240,7 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     #set align(center)
     渲染结果
   ],
+
   ```typ
   #booktab(
     width: 100%,
@@ -250,12 +259,20 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
       aligns: (left, center, right),
       columns: (1fr, 1fr, 1fr),
       caption: [`booktab` 示例],
-      [左对齐], [居中], [右对齐],
-      [4], [5], [6],
-      [7], [8], [9],
-      [10], [], [11],
+      [左对齐],
+      [居中],
+      [右对齐],
+      [4],
+      [5],
+      [6],
+      [7],
+      [8],
+      [9],
+      [10],
+      [],
+      [11],
     ) <booktab>
-  ]
+  ],
 )
 
 == 公式
@@ -272,12 +289,13 @@ Typst 中的标题使用 `=` 表示，其后跟着标题的内容。`=` 的数�
     #set align(center)
     渲染结果
   ],
+
   ```typ
-$ E = m c^2 $ <eq>
+  $ E = m c^2 $ <eq>
   ```,
   [
     $ E = m c^2 $ <eq>
-  ]
+  ],
 )\
 
 @eq2 是一个多行公式。
@@ -292,15 +310,17 @@ $ E = m c^2 $ <eq>
     #set align(center)
     渲染结果
   ],
+
   ```typ
-$ sum_(k=0)^n k
-    &= 1 + ... + n \
-    &= (n(n+1)) / 2 $ <eq2>  ```,
+  $ sum_(k=0)^n k
+      &= 1 + ... + n \
+      &= (n(n+1)) / 2 $ <eq2>  ```,
   [
-$ sum_(k=0)^n k
-    &= 1 + ... + n \
-    &= (n(n+1)) / 2 $ <eq2>
-  ]
+    $
+      sum_(k=0)^n k & = 1 + ... + n \
+                    & = (n(n+1)) / 2
+    $ <eq2>
+  ],
 )\
 
 @eq3 到 @eq6 中给出了更多的示例。
@@ -315,20 +335,23 @@ $ sum_(k=0)^n k
     #set align(center)
     渲染结果
   ],
+
   ```typ
-$ frac(a^2, 2) $ <eq3>
-$ vec(1, 2, delim: "[") $
-$ mat(1, 2; 3, 4) $
-$ lim_x =
-    op("lim", limits: #true)_x $ <eq6>
+  $ frac(a^2, 2) $ <eq3>
+  $ vec(1, 2, delim: "[") $
+  $ mat(1, 2; 3, 4) $
+  $ lim_x =
+      op("lim", limits: #true)_x $ <eq6>
   ```,
   [
-$ frac(a^2, 2) $ <eq3>
-$ vec(1, 2, delim: "[") $
-$ mat(1, 2; 3, 4) $
-$ lim_x =
-    op("lim", limits: #true)_x $ <eq6>
-  ]
+    $ frac(a^2, 2) $ <eq3>
+    $ vec(1, 2, delim: "[") $
+    $ mat(1, 2; 3, 4) $
+    $
+      lim_x =
+      op("lim", limits: #true)_x
+    $ <eq6>
+  ],
 )
 
 == 代码块
@@ -345,6 +368,7 @@ $ lim_x =
     #set align(center)
     渲染结果
   ],
+
   ````typ
   ```c
   int main() {
@@ -360,7 +384,7 @@ $ lim_x =
         return 0;
       }
     ```
-  ]
+  ],
 )\
 
 如果想要给代码块加上标题，并在文章中引用代码块，可以使用本模板中定义的 `codeblock` 命令。其中，`caption` 参数用于指定代码块的标题，`outline` 参数用于指定代码块显示时是否使用边框。下面给出的 @code 是一个简单的 Python 程序。其中的 `<code>` 是这一代码块的标签，意味着这一代码块可以在文档中通过 `@code` 来引用。
@@ -375,15 +399,16 @@ $ lim_x =
     #set align(center)
     渲染结果
   ],
+
   ````typ
-#codeblock(
-  ```python
-  def main():
-      print("Hello, world!")
-  ```,
-  caption: "一个简单的 Python 程序",
-  outline: true,
-) <code>
+  #codeblock(
+    ```python
+    def main():
+        print("Hello, world!")
+    ```,
+    caption: "一个简单的 Python 程序",
+    outline: true,
+  ) <code>
   ````,
   [
     #codeblock(
@@ -394,27 +419,27 @@ $ lim_x =
       caption: "一个简单的 Python 程序",
       outline: true,
     ) <code>
-  ]
+  ],
 )\
 
 @codeblock_definition 中给出了本模板中定义的 `codeblock` 命令的实现。
 
 #codeblock(
   ```typ
-#let codeblock(raw, caption: none, outline: false) = {
-  figure(
-    if outline {
-      rect(width: 100%)[
-        #set align(left)
-        #raw
-      ]
-    } else {
-      set align(left)
-      raw
-    },
-    caption: caption, kind: "code", supplement: ""
-  )
-}
+  #let codeblock(raw, caption: none, outline: false) = {
+    figure(
+      if outline {
+        rect(width: 100%)[
+          #set align(left)
+          #raw
+        ]
+      } else {
+        set align(left)
+        raw
+      },
+      caption: caption, kind: "code", supplement: ""
+    )
+  }
   ```,
   caption: [`codeblock` 命令的实现],
 ) <codeblock_definition>
@@ -435,19 +460,26 @@ Typst 支持 BibLaTeX 格式的 `.bib` 文件，同时也新定义了一种基�
     #set align(center)
     渲染结果
   ],
-  ```typ
-可以像这样引用参考文献： @wang2010guide 和 @kopka2004guide。
 
-#bibliography("ref.bib",
-  style: "ieee"
-)
+  ```typ
+  可以像这样引用参考文献@wang2010guide@kopka2004guide。
   ```,
   [
-    可以像这样引用参考文献： @wang2010guide 和 @kopka2004guide。
-  ]
+    可以像这样引用参考文献@wang2010guide@kopka2004guide。
+  ],
 )
 
-注意代码中的 `"ref.bib"` 也可以是一个数组，比如 `("ref1.bib", "ref2.bib")`。
+#linebreak()
+
+在论文中的合适位置（一般是论文最后），需要插入如 @bibliography-code 所示的代码块。`bibliography` 函数会在对应位置插入参考文献列表。正文中的参考文献引用将自动链接到列表中的对应条目。#link("https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc", "北京大学博士研究生学位论文格式模板(2024)")中明确规定文献索引方式只能选择“顺序编码制”或“著者—出版年制”其中之一。本文档默认采用的 `gb-7714-2015-numeric` 样式对应于“顺序编码制”，如果需要采用“著者—出版年制”，可以将 `style` 参数改为 `gb-7714-2015-author-date`。这里代码中的 `"ref.bib"` 也可以是一个数组，比如 `("ref1.bib", "ref2.bib")`。
+
+#codeblock(caption: "参考文献列表")[
+  ```typ
+  #bibliography("ref.bib",
+    style: "gb-7714-2015-numeric"
+  )
+  ```
+] <bibliography-code>
 
 = 理论
 
@@ -458,20 +490,14 @@ Typst 支持 BibLaTeX 格式的 `.bib` 文件，同时也新定义了一种基�
 $ frac(a^2, 2) $
 $ vec(1, 2, delim: "[") $
 $ mat(1, 2; 3, 4) $
-$ lim_x =
-    op("lim", limits: #true)_x $
+$
+  lim_x =
+  op("lim", limits: #true)_x
+$
 
 == 理论二
 
 在 @theory1 中，我们回顾了 @intro 中的公式。下面，我们来推导一些新的公式：
-
-#lorem(1000)
-
-= 展望
-
-目前本模板还有一些不足之处，有待进一步完善：
-
-- 参考文献格式，特别是中文参考文献的格式不完全符合学校有关规定。#link("https://discord.com/channels/1054443721975922748/1094796790559162408/1094928907880386662", "Discord 上的这个对话")显示，Typst 有关功能还在开发中。待有关接口对外开放后，本模板将会进行相应的适配。
 
 #appendix()
 
@@ -500,36 +526,39 @@ $ lim_x =
     #set align(center)
     渲染结果
   ],
+
   ```typ
-$ S = pi r^2 $ <appendix-eq>
-$ mat(
-  1, 2, ..., 10;
-  2, 4, ..., 20;
-  3, 6, ..., 30;
-  dots.v, dots.v, dots.down, dots.v;
-  10, 20, ..., 100
-) $
-$ cal(A) < bb(B) < frak(C) < mono(D) < sans(E) < serif(F) $
-$ bold(alpha < beta < gamma < delta < epsilon) $
-$ upright(zeta < eta < theta < iota < kappa) $
-$ lambda < mu < nu < xi < omicron $
-$ bold(Sigma < Tau) < italic(Upsilon < Phi) < Chi < Psi < Omega $
+  $ S = pi r^2 $ <appendix-eq>
+  $ mat(
+    1, 2, ..., 10;
+    2, 4, ..., 20;
+    3, 6, ..., 30;
+    dots.v, dots.v, dots.down, dots.v;
+    10, 20, ..., 100
+  ) $
+  $ cal(A) < bb(B) < frak(C) < mono(D) < sans(E) < serif(F) $
+  $ bold(alpha < beta < gamma < delta < epsilon) $
+  $ upright(zeta < eta < theta < iota < kappa) $
+  $ lambda < mu < nu < xi < omicron $
+  $ bold(Sigma < Tau) < italic(Upsilon < Phi) < Chi < Psi < Omega $
   ```,
   [
-$ S = pi r^2 $ <appendix-eq>
-$ mat(
-  1, 2, ..., 10;
-  2, 4, ..., 20;
-  3, 6, ..., 30;
-  dots.v, dots.v, dots.down, dots.v;
-  10, 20, ..., 100
-) $
-$ cal(A) < bb(B) < frak(C) < mono(D) < sans(E) < serif(F) $
-$ bold(alpha < beta < gamma < delta < epsilon) $
-$ upright(zeta < eta < theta < iota < kappa) $
-$ lambda < mu < nu < xi < omicron $
-$ bold(Sigma < Tau) < italic(Upsilon < Phi) < Chi < Psi < Omega $
-  ]
+    $ S = pi r^2 $ <appendix-eq>
+    $
+      mat(
+        1, 2, ..., 10;
+        2, 4, ..., 20;
+        3, 6, ..., 30;
+        dots.v, dots.v, dots.down, dots.v;
+        10, 20, ..., 100
+      )
+    $
+    $ cal(A) < bb(B) < frak(C) < mono(D) < sans(E) < serif(F) $
+    $ bold(alpha < beta < gamma < delta < epsilon) $
+    $ upright(zeta < eta < theta < iota < kappa) $
+    $ lambda < mu < nu < xi < omicron $
+    $ bold(Sigma < Tau) < italic(Upsilon < Phi) < Chi < Psi < Omega $
+  ],
 )\
 
 @complex 是一个非常复杂的公式的例子：
@@ -544,12 +573,15 @@ $ bold(Sigma < Tau) < italic(Upsilon < Phi) < Chi < Psi < Omega $
     #set align(center)
     渲染结果
   ],
+
   ```typ
-$ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large numbers"), underbrace(x + norm(y), y^(w^u) - root(t, z)))), dots.v, u)^(frac(x + 3, y - 2)) $ <complex>
+  $ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large numbers"), underbrace(x + norm(y), y^(w^u) - root(t, z)))), dots.v, u)^(frac(x + 3, y - 2)) $ <complex>
   ```,
   [
-    $ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large numbers"), underbrace(x + norm(y), y^(w^u) - root(t, z)))), dots.v, u)^(frac(x + 3, y - 2)) $ <complex>
-  ]
+    $
+      vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large numbers"), underbrace(x + norm(y), y^(w^u) - root(t, z)))), dots.v, u)^(frac(x + 3, y - 2))
+    $ <complex>
+  ],
 )\
 
 附录中也可以插入代码块，如 @appendix-code。
@@ -564,19 +596,13 @@ $ vec(overline(underbracket(underline(1 + 2) + overbrace(3 + dots.c + 10, "large
   outline: true,
 ) <appendix-code>
 
-== Typst 的开发者 <developers>
-
-#lorem(1000)
-
-= 关于 PKUTHSS <pkuthss>
-
-#lorem(1000)
-
 = 更新日志 <changelog>
 
 #include "changelog.typ"
 
 #pagebreak()
-#bibliography("ref.bib",
-  style: "ieee"
-)
+
+#bibliography("ref.bib", style: "gb-7714-2015-numeric")
+
+// 著者—出版年制
+// #bibliography("ref.bib", style: "gb-7714-2015-author-date")
