@@ -22,7 +22,7 @@
   仿宋: ("Times New Roman", "FangSong"),
   宋体: ("Times New Roman", "SimSun"),
   黑体: ("Times New Roman", "SimHei"),
-  楷体: ("Times New Roman", "KaiTi"),
+  楷体: ("Times New Roman", "KaiTi_GB2312"),
   代码: ("New Computer Modern Mono", "Times New Roman", "SimSun"),
 )
 
@@ -214,7 +214,7 @@
   }
 }
 
-#let extract_caption_content(a) = {  
+#let bodytotextwithtrim(a) = {
   if a.has("children") {
     a.children.find(it => it.text.len() > 0)
   } else {
