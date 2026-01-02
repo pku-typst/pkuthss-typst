@@ -18,11 +18,23 @@
   csupervisor: "李四 教授",
   esupervisor: "Prof. Si Li",
   date: (year: 2026, month: 6),
-  cabstract: "本文介绍了 pkuthss-typst 文档模板所提供的功能。",
-  ckeywords: ("Typst", "模板"),
-  eabstract: "This document introduces the features of the pkuthss-typst template.",
-  ekeywords: ("Typst", "Template"),
-  acknowledgements: [感谢 Typst 开发者的辛勤付出。 #lorem(300)],
+  cabstract: [
+    本文档是北京大学学位论文 Typst 模板（pkuthss-typst）的使用说明与示例。该模板基于 Typst 排版系统开发，旨在为北京大学研究生提供一个符合学校论文格式规范的现代化写作工具。
+
+    Typst 是一种新兴的科技文档排版系统，具有语法简洁、编译速度快、实时预览等优点。与传统的 LaTeX 相比，Typst 的学习曲线更加平缓，同时保持了专业排版的高质量输出。本模板充分利用了 Typst 的特性，实现了封面、摘要、目录、正文、参考文献、附录等论文各部分的自动化排版。
+
+    本文档详细介绍了模板的基本功能，包括：标题层级设置、中英文字体配置、图表插入与引用、数学公式编排、代码块展示、参考文献管理等。通过阅读本文档，用户可以快速掌握使用该模板撰写学位论文的方法。
+  ],
+  ckeywords: ("Typst", "学位论文", "排版模板", "北京大学"),
+  eabstract: [
+    This document serves as the user guide and demonstration for the Peking University dissertation Typst template (pkuthss-typst). The template is developed based on the Typst typesetting system, aiming to provide graduate students at Peking University with a modern writing tool that complies with the university's thesis formatting requirements.
+
+    Typst is an emerging scientific document typesetting system featuring concise syntax, fast compilation, and real-time preview capabilities. Compared to traditional LaTeX, Typst has a gentler learning curve while maintaining high-quality professional typesetting output. This template fully leverages Typst's features to achieve automated formatting for various thesis components, including the cover page, abstract, table of contents, main body, references, and appendices.
+
+    This document provides a comprehensive introduction to the template's basic functionalities, including heading hierarchy configuration, Chinese and English font settings, figure and table insertion with cross-references, mathematical formula typesetting, code block display, and bibliography management. By reading this document, users can quickly master the methods of using this template to write their dissertations.
+  ],
+  ekeywords: ("Typst", "Dissertation", "Template", "Peking University"),
+  acknowledgements: [感谢 Typst 开发者的辛勤付出。],
   linespacing: 1em,
   outlinedepth: 3,
   blind: false,
@@ -32,6 +44,8 @@
   alwaysstartodd: false,
   doc,
 )
+
+= 说明
 
 = 基本功能 <intro>
 
