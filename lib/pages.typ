@@ -45,7 +45,7 @@
   cmajor: none,
   blindid: none,
   date: none,
-  linespacing: 20pt,
+  linespacing: 10pt,
 ) = {
   set align(center + top)
   text(字号.小初, font: 字体.黑体)[
@@ -153,32 +153,54 @@
 }
 
 // 版权声明页
-#let copyright-page(linespacing: 20pt) = {
+#let copyright-page(linespacing: 10pt) = {
   set align(left + top)
   set text(字号.小四)
-  front-heading("版权声明", pagebreak: false)
+
+  // Word 模板中，版权声明页标题为 2 倍行距，段落前后无额外间距
+  // 在黑体三号字情况下，对应行距为 16pt * 1.3 * 2
+  front-heading(
+    "版权声明",
+    pagebreak: false,
+    linespacing: 字号.三号 * 1.3 * 2,
+    spacing-before: 0pt,
+    spacing-after: 0pt,
+  )
   linebreak()
-  par(justify: true, first-line-indent: 2em, leading: 2 * linespacing)[
-    任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。
+
+  // 版权声明页的首行缩进固定为 2em，Word 行距为 2 倍行距
+  // 在宋体小四号字情况下，对应行距 31.2 pt
+  set par(
+    first-line-indent: 2em,
+    leading: 字号.小四 * 1.3,
+    spacing: 字号.小四 * 1.3,
+  )
+  set text(top-edge: 0.8 * 字号.小四 * 1.3, bottom-edge: -0.2 * 字号.小四 * 1.3)
+  [
+    任何收存和保管本论文各种版本的单位和个人 未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。
   ]
 }
 
 // 中文摘要页
 #let abstract-page-zh(
   ckeywords: (),
-  linespacing: 20pt,
   first-line-indent: 2em,
   cabstract,
 ) = {
-  set par(justify: true, first-line-indent: 2em, leading: linespacing)
+  // Word 模板中默认为 20pt 行距
+  // 调整 text(top-edge:, bottom-edge:) 的方式可以更完美地匹配行距
+  // 但是会导致列表编号和列表内容无法对齐
+  // 这里选择基于经验的配置
+  set par(leading: 10.5pt, spacing: 10.5pt, justify: true)
   front-heading("摘要", enter-front: true, header: "摘要")
-  cabstract
-  v(1fr)
-  set par(first-line-indent: 0em)
-  text[*关键词：*]
-  ckeywords.join("，")
-  v(2em)
   set par(first-line-indent: first-line-indent)
+  cabstract
+  // 如果发现关键词和内容挤到一起，或者关键词在下一页顶部
+  // 可以插入 pagebreak() 手动分页
+  v(1fr)
+  [关键词：]
+  ckeywords.join("，")
+  v(1em)
 }
 
 // 英文摘要页
@@ -189,8 +211,6 @@
   esupervisor: none,
   ekeywords: (),
   blind: false,
-  linespacing: 20pt,
-  first-line-indent: 2em,
   eabstract,
 ) = {
   // 使用不显示标题内容的 heading，只用于触发页眉
@@ -204,46 +224,63 @@
     ))],
   )[]
   [
-    #set text(字号.小二)
     #set align(center)
-    #text(font: "Arial", upper(etitle))
+    #v(24pt)
+    // Word 模板中属性显示为单倍行距但实际是两倍行距
+    // 对于英文字体，这里设置 1em 可以匹配
+    #set par(spacing: 1em, leading: 1em)
+    #text(字号.小二, font: "Arial", upper(etitle))
+    #v(8pt)
   ]
-  set par(spacing: linespacing, leading: linespacing)
+  // Word 模板中正文仍然是 20pt 行距
+  // 对于纯英文字体，测试下来 12.5pt 的匹配效果较好
+  set par(spacing: 12.5pt, leading: 12.5pt, justify: true)
   if not blind {
     [
       #set align(center)
-      #v(24pt)
       #eauthor \(#emajor\) \
       Supervised by #esupervisor
-      #v(8pt)
     ]
   }
-  set par(first-line-indent: first-line-indent, justify: true)
+  // Word 模板中英文摘要的首行缩进固定为 0.74cm
+  set par(first-line-indent: 0.74cm, justify: true)
   v(8pt)
   align(center)[#text(字号.小四, font: "Arial", weight: "bold")[ABSTRACT]]
   v(6pt)
   eabstract
   v(1fr)
-  set par(first-line-indent: 0em)
   [KEY WORDS: ]
   ekeywords.join(", ")
-  v(2em)
+  v(1em)
 }
 
 // 致谢页
 #let acknowledgements-page(first-line-indent: 2em, acknowledgements) = {
   back-heading("致谢")
+  set par(
+    first-line-indent: first-line-indent,
+    leading: 10.5pt,
+    spacing: 10.5pt,
+  )
   acknowledgements
 }
 
 // 原创性声明和授权说明页
-#let declaration-page(first-line-indent: 2em) = {
-  set par(first-line-indent: first-line-indent)
+#let declaration-page(cleandeclaration: false) = {
+  // Word 模板中首行缩进固定为 2em
+  set par(first-line-indent: 2em)
   back-heading(
     "北京大学学位论文原创性声明和使用授权说明",
     pagebreak: true,
-    show-header: false,
+    // Word 模板中原创性声明页有页眉，如果不想要，可以在这里手动关闭
+    show-header: not cleandeclaration,
   )
+
+  // 放置一个占位元素，用于清除页码
+  if cleandeclaration {
+    [#[]<__clean_declaration__>]
+  }
+
   align(center)[#text(
     字号.四号,
     weight: "bold",
@@ -251,6 +288,7 @@
   )]
   v(1fr)
   [
+    #set par(leading: 0.95em, spacing: 0.95em)
     本人郑重声明：
     所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。
     除文中已经注明引用的内容外，
@@ -272,7 +310,7 @@
       日
     ]
 
-    #v(2fr)
+    #v(1fr)
     #align(center)[#text(
       字号.四号,
       weight: "bold",
@@ -281,6 +319,7 @@
     #align(center)[#text(字号.五号)[（必须装订在提交学校图书馆的印刷本）]]
     #v(1fr)
 
+    #set par(leading: 0.95em, spacing: 0.95em)
     本人完全了解北京大学关于收集、保存、使用学位论文的规定，即：
     #[
       #set list(
@@ -297,7 +336,7 @@
     ]
     #v(1fr)
     #align(center)[（保密论文在解密后遵守此规定）]
-    #v(3fr)
+    #v(2fr)
     #align(center)[
       论文作者签名：
       #h(5em)

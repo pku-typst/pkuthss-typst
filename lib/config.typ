@@ -72,7 +72,7 @@
   title,
   pagebreak: true,
   enter-front: false,
-  header: none,
+  ..extra-meta,
 ) = {
   heading(
     numbering: none,
@@ -82,7 +82,7 @@
       part: if enter-front { 1 } else { none },
       reset-page: enter-front,
       show-header: true,
-      header: header,
+      ..extra-meta.named(),
     ))],
   )[#title]
 }
@@ -95,6 +95,7 @@
   title,
   pagebreak: true,
   show-header: true,
+  ..extra-meta,
 ) = {
   heading(
     numbering: none,
@@ -102,6 +103,7 @@
     supplement: [#metadata((
       pagebreak: pagebreak,
       show-header: show-header,
+      ..extra-meta.named(),
     ))],
   )[#title]
 }

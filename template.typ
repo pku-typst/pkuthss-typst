@@ -39,7 +39,13 @@
   eabstract: [],
   ekeywords: (),
   acknowledgements: [],
+  // Word 中的行距和 Typst 中的行距不同，需要进行转换
+  // Typst 中：spacing + top-edge - bottom-edge = Word 中的行距
+  // 因此我们需要根据不同区域的字号来动态调整 spacing 以保持一致的行距
   linespacing: 20pt,
+  // Word 模板中中文正文的首行缩进固定为 1.77em
+  // 如果要求严格对应，请将 first-line-indent 设置为 1.77em
+  // 这里设置为 2em 是为了更加美观
   first-line-indent: 2em,
   outlinedepth: 3,
   blind: false,
@@ -47,6 +53,10 @@
   listoftable: true,
   listofcode: true,
   alwaysstartodd: true,
+  // 是否清除原创性声明页的页眉和页码
+  // 如果想要去除原创性声明页的页眉和页码，可以设置为 true
+  // Word 模板中包含原创性声明页的页眉和页码，所以这里默认为 false
+  cleandeclaration: false,
   doc,
 ) = {
   // 智能分页函数
@@ -106,7 +116,6 @@
   show: itemize.default-enum-list
   show strong: it => text(font: 字体.黑体, weight: "bold", it.body)
   show emph: it => text(font: 字体.楷体, style: "italic", it.body)
-  set par(spacing: linespacing)
   show raw: set text(font: 字体.代码, size: 字号.五号)
 
   // 应用 show 规则
@@ -143,7 +152,7 @@
   smartpagebreak()
 
   // ========== 版权声明页 ==========
-  pages.copyright-page(linespacing: linespacing)
+  pages.copyright-page()
 
   smartpagebreak()
 
@@ -151,7 +160,6 @@
   set align(left + top)
   pages.abstract-page-zh(
     ckeywords: ckeywords,
-    linespacing: linespacing,
     first-line-indent: first-line-indent,
   )[#cabstract]
 
@@ -165,8 +173,6 @@
     esupervisor: esupervisor,
     ekeywords: ekeywords,
     blind: blind,
-    linespacing: linespacing,
-    first-line-indent: first-line-indent,
   )[#eabstract]
 
   // ========== 目录和列表 ==========
@@ -205,6 +211,6 @@
     pages.acknowledgements-page(
       first-line-indent: first-line-indent,
     )[#acknowledgements]
-    pages.declaration-page(first-line-indent: first-line-indent)
+    pages.declaration-page(cleandeclaration: cleandeclaration)
   }
 }

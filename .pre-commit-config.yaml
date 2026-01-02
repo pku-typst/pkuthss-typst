@@ -25,13 +25,6 @@ repos:
         language: system
         types: [toml]
 
-      - id: update-docs
-        name: Update README from template
-        entry: python3 scripts/update_docs.py
-        language: system
-        pass_filenames: false
-        files: ^(problems/.*/problem\.toml|README\.md\.template|docs/index\.html\.template)$
-
   - repo: https://github.com/rbubley/mirrors-prettier
     rev: v3.7.4
     hooks:

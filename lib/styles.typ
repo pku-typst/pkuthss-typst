@@ -7,6 +7,9 @@
 )
 #import "utils.typ": chinesenumbering
 
+#let default-heading-spacing-before = (17pt, 24pt, 12pt, 6pt, 6pt, 6pt)
+#let default-heading-spacing-after = (16.5pt, 6pt, 6pt, 6pt, 6pt, 6pt)
+
 // 从 heading 提取元数据（从 supplement 中的 metadata 获取）
 #let get-heading-meta(it) = {
   if it.supplement != none and it.supplement.func() == metadata {
@@ -83,33 +86,40 @@
   let meta = get-heading-meta(el)
   if not meta.at("show-header", default: true) { return }
 
-  let header-gap = -0.6em
+  let header-gap = 3pt
 
   set text(字号.五号)
+  set par(spacing: 0pt)
   set align(center)
 
-  if is-even {
-    // 偶数页：论文标题
-    cheader
-    v(header-gap)
-    line(length: 100%)
-  } else {
-    // 奇数页：章节标题
-    let header-text = meta.at("header", default: none)
-    if header-text == none { header-text = el.body }
+  // 对应 Word 模板中页眉上边距
+  place(top + center, dy: 2cm)[
+    #block(width: 100%)[
+      #stack(
+        dir: ttb,
+        spacing: 3pt,
+        if is-even {
+          // 偶数页：论文标题
+          cheader
+        } else {
+          // 奇数页：章节标题
+          let header-text = meta.at("header", default: none)
+          if header-text == none { header-text = el.body }
 
-    // 编号（如果有）
-    if el.numbering != none {
-      chinesenumbering(
-        ..counter(heading).at(el.location()),
-        location: el.location(),
+          // 编号（如果有）
+          if el.numbering != none {
+            chinesenumbering(
+              ..counter(heading).at(el.location()),
+              location: el.location(),
+            )
+            h(0.5em)
+          }
+          header-text
+        },
+        line(stroke: 0.75pt, length: 100%),
       )
-      h(0.5em)
-    }
-    header-text
-    v(header-gap)
-    line(length: 100%)
-  }
+    ]
+  ]
 }
 
 // 生成页脚内容
@@ -123,10 +133,13 @@
   let logical-page = counter(page).at(here()).first()
   if skippedstate.at(here()) and calc.even(logical-page) { return }
 
-  // 检查是否有足够的 heading
+  // 封面和版权声明页没有页码
+  if query(selector(heading).before(here())).len() < 2 { return }
+
+  // 当存在 <__clean_declaration__> 元素时，不显示原创性声明页的页码
   if (
-    query(selector(heading).before(here())).len() < 2
-      or query(selector(heading).after(here())).len() == 0
+    query(selector(heading).after(here())).len() == 0
+      and query(selector(<__clean_declaration__>)).len() > 0
   ) { return }
 
   set text(字号.五号)
@@ -134,12 +147,15 @@
 
   let page-num = counter(page).at(here()).first()
 
-  [
+  place(bottom + center)[
+    #set align(bottom)
     #if part == 1 {
       numbering("I", page-num)
     } else {
       str(page-num)
     }
+    // 对应 Word 模板中页脚下边距
+    #v(1.75cm)
     #label("__footer__")
   ]
 }
@@ -152,15 +168,35 @@
 }
 
 // heading 渲染（只渲染标题内容，不重新渲染整个 heading 元素）
-#let sizedheading(it, size) = {
-  set text(size)
-  v(2em)
+#let sizedheading(it, size, ..meta) = {
+  // 如果 heading 内容为空，跳过渲染
+  if it.body == none or it.body == [] { return }
+
+  // Word 模板中默认标题的段前间距为 17pt，段后间距为 16.5pt
+  let spacing-before = meta.at(
+    "spacing-before",
+    default: default-heading-spacing-before.at(it.level - 1),
+  )
+  let spacing-after = meta.at(
+    "spacing-after",
+    default: default-heading-spacing-after.at(it.level - 1),
+  )
+  // Word 模板中默认标题的行距为 2.41 倍行距
+  // 在黑体三号字情况下，对应行距为 16pt * 1.3 * 2.41
+  let linespacing = meta.at("linespacing", default: 字号.三号 * 1.3 * 2.41)
+  let font = meta.at("font", default: (:))
+
+  // 清除 Typst 标题自带的前后间距
+  show heading: set block(above: 0pt, below: 0pt)
+  set par(first-line-indent: 0em, leading: linespacing - 1em, spacing: 0pt)
+  v(spacing-before)
   if it.numbering != none {
     strong(counter(heading).display())
-    h(0.5em)
+    // 标题编号和标题之间间距为 1em
+    h(1em)
   }
   strong(it.body)
-  v(1em)
+  v(spacing-after)
 }
 
 // heading 样式规则
@@ -213,7 +249,7 @@
 
   // 4. 渲染
   set align(center)
-  sizedheading(it, 字号.三号)
+  sizedheading(it, 字号.三号, ..meta)
 }
 
 // figure 样式规则

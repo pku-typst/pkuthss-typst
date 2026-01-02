@@ -11,6 +11,9 @@
     let it = here()
     let elements = query(heading.where(outlined: true).after(it))
 
+    // Word 模板中目录的行距为 20pt
+    set par(leading: 10.5pt, spacing: 10.5pt, justify: true)
+
     for el in elements {
       // 前置部分（part < 2）的无编号章节不出现在目录中
       if partcounter.at(el.location()).first() < 2 and el.numbering == none {
@@ -29,7 +32,7 @@
         } else {
           numbering(el.numbering, ..counter(heading).at(el.location()))
         }
-        h(0.5em)
+        h(1em)
       }
 
       let line = {
@@ -37,8 +40,9 @@
           h(1em * (el.level - 1))
         }
 
+        // Word 模板中目录中一级标题的段前间距为 6pt
         if el.level == 1 {
-          v(0.5em, weak: true)
+          v(6pt)
         }
 
         if maybe_number != none {
@@ -76,7 +80,6 @@
         str(page_number)
 
         linebreak()
-        v(-0.2em)
       }
 
       line

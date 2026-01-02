@@ -35,19 +35,19 @@
   ],
   ekeywords: ("Typst", "Dissertation", "Template", "Peking University"),
   acknowledgements: [感谢 Typst 开发者的辛勤付出。],
-  linespacing: 1em,
+  linespacing: 10pt,
+  // first-line-indent: 1.77em,
   outlinedepth: 3,
   blind: false,
   listofimage: true,
   listoftable: true,
   listofcode: true,
   alwaysstartodd: true,
+  cleandeclaration: true,
   doc,
 )
 
-= 说明
-
-= 基本功能 <intro>
+= Typst 的基本功能 <intro>
 
 == 标题
 
@@ -495,23 +495,13 @@ Typst 支持 BibLaTeX 格式的 `.bib` 文件，同时也新定义了一种基�
   ```
 ] <bibliography-code>
 
-= 理论
+= 模板使用说明 <notes>
 
-== 理论一 <theory1>
+本模板主要参考#link("https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc", "北京大学博士研究生学位论文格式模板（2024）")进行开发，尽可能与其保持一致，但受限于 Typst 与 Word 的本质差异，实际使用中仍有可能存在一定差异。 
 
-让我们首先回顾一下 @intro 中的部分公式：
+Word 和 Typst 中计算行距的方式不同。Word 中计算的是相邻两行衬线之间的距离，而 Typst 中计算的是上一行底部和下一行顶部之间的距离。Word 模板中正文行距为 20pt，本模板针对中文和英文部分分别设置了 10.5pt 和 12.5pt 的 `leading`，可以达到近似的效果。理论上来说，可以通过设置 `top-edge` 和 `bottom-edge` 来达到严格对应，但实际上 Word 中的行距还会受到字体本身属性的影响；另一方面，设置这两个参数将影响列表编号和列表内容的视觉对齐，因此这里采取了近似的方法。
 
-$ frac(a^2, 2) $
-$ vec(1, 2, delim: "[") $
-$ mat(1, 2; 3, 4) $
-$
-  lim_x =
-  op("lim", limits: #true)_x
-$
-
-== 理论二
-
-在 @theory1 中，我们回顾了 @intro 中的公式。下面，我们来推导一些新的公式：
+Word 模板中默认的首行缩进为 1.77em，本模板中设置为 2em，作者认为这样更加美观。如果要求严格对应，可以在使用模板时通过配置项 `first-line-indent` 设置为 1.77em。
 
 #appendix()
 

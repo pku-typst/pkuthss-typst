@@ -18,13 +18,20 @@
 
 + 引入 #link("https://typst.app/universe/package/itemize/", `itemize`) 包，修复了列表编号和文本内容衬线不对齐的问题。
 + 引入 #link("https://typst.app/universe/package/cuti/", `cuti`) 包，对部分需要加粗的中文文本进行了处理。
-+ 对照 #link("https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc", "北京大学博士研究生学位论文格式模板(2024)") 进行了若干调整：
-  - 调整了封面样式（#pr(19) #issue(23)）。
++ 对照 #link("https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc", "北京大学博士研究生学位论文格式模板（2024）") 进行了若干调整：
+  - 调整了全局的行距。
+  - 调整了封面样式（#pr(19)）。
   - 调整了英文摘要的样式（#issue(20)）。
   - 调整了目录中一级标题的样式（#pr(16)）。
   - 修改了脚注数字编号的样式。
   - 调整了原创性声明和学位论文使用授权说明的样式。
   - 参考文献默认采用 `gb-7714-2015-numeric` 样式（#issue(6)）。
+
+== 2025-12-22 #contributors.yefan-zhi
+
++ 修复了年份中〇的显示问题。
++ 增加了学位类型（#issue(23)）。
++ 修复了一系列页码问题（#issue(18)）。
 
 == 2023-11-22 #contributors.lucifer1004
 
