@@ -161,8 +161,15 @@
 }
 
 // heading 尺寸计算
+// 注意：一级标题直接使用 字号.一级标题，在 heading-show-rule 中处理
 #let get-heading-size(level) = {
-  if level == 2 { 字号.二级标题 } else if level == 3 { 字号.三级标题 } else {
+  if level == 1 {
+    字号.一级标题
+  } else if level == 2 {
+    字号.二级标题
+  } else if level == 3 {
+    字号.三级标题
+  } else {
     字号.小四
   }
 }
@@ -276,6 +283,9 @@
       #it.caption.body
     ]
     it.body
+  } else {
+    // 未知类型的 figure 保持原样
+    it
   }
 ]
 
