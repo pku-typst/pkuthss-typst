@@ -83,8 +83,6 @@ typst watch thesis.typ
 
 一个使用本模板的论文文件基本结构如下：
 
-#pagebreak()
-
 #codeblock(
   ```typ
   #import "template.typ": *
@@ -233,13 +231,13 @@ typst watch thesis.typ
   [目录显示的最大标题层级],
 ) <config-layout>
 
-== 功能开关
+== 其他配置项
 
 #booktab(
   width: 100%,
   columns: (auto, auto, 1fr),
   align: (left, left, left),
-  caption: "功能开关配置项",
+  caption: "其他配置项",
   [*参数名*],
   [*默认值*],
   [*说明*],
@@ -271,6 +269,12 @@ typst watch thesis.typ
     `display-icon: false` 关闭语言图标；\
     `zebra-fill: none` 关闭交替背景色；\
     `lang-format: none` 关闭语言名称显示],
+  [`supplements`],
+  [`(:)`],
+  [自定义引用记号和列表标题。可用字段：\
+    `图`、`表`、`代码`、`公式`、`节`（引用前缀）；\
+    `插图列表`、`表格列表`、`代码列表`（列表页标题）。\
+    示例：`supplements: (图: "Figure", 插图列表: "List of Figures")`],
 ) <config-switch>
 
 = Typst 基本功能 <typst-basics>
@@ -299,6 +303,9 @@ typst watch thesis.typ
 两种模式可以相互嵌套：
 - 在内容模式中使用 `#` 前缀进入代码模式：`这是文本 #calc.pow(2, 10) 继续文本`
 - 在代码模式中使用 `[...]` 进入内容模式：`#let x = [这是内容]`
+  - 风刀霜剑放#lorem(100)
+    - 发点啥安抚
+      - 范德萨发
 
 #code-preview(
   ```typ
@@ -453,7 +460,11 @@ Typst 支持无序列表和有序列表：
 
 Typst 中定义表格使用 `table` 函数。如需标题和引用功能，同样需要将其放置在 `figure` 中。
 
-本模板提供了 `booktab` 函数用于生成更美观的三线表。`booktab` 基于原生 `table` 实现，支持大部分 `table` 参数（`stroke` 除外），第一行自动作为表头：
+本模板提供了 `booktab` 函数用于生成更美观的三线表。`booktab` 基于原生 `table` 实现，支持大部分 `table` 参数（`stroke` 除外），第一行自动作为表头。
+
+*注意*：本模板默认允许表格跨页显示（`show figure: set block(breakable: true)`）。如果不希望某个表格被分割，可以在表格前手动插入 `#pagebreak()` 进行调整。
+
+三线表示例：
 
 #code-preview(
   ```typ

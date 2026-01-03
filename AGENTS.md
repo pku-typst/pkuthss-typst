@@ -66,7 +66,46 @@ heading(
 - `front-heading(title, pagebreak, enter-front, header)` - 前置部分 heading（摘要、目录等）
 - `back-heading(title, pagebreak, show-header)` - 后置部分 heading（致谢、声明等）
 
-## 4. 命令行参数
+## 4. 引用记号系统
+
+通过 `conf()` 的 `supplements` 参数自定义图、表、代码、公式等的引用前缀：
+
+```typst
+#show: doc => conf(
+  supplements: (
+    图: "Figure",
+    表: "Table",
+    代码: "Code",
+    公式: "Eq.",
+    节: "Section",
+  ),
+  doc,
+)
+```
+
+### 默认值（定义在 `lib/config.typ`）
+
+| 字段       | 默认值   | 用途                         |
+| ---------- | -------- | ---------------------------- |
+| `图`       | `"图"`   | 图片引用和插图列表编号前缀   |
+| `表`       | `"表"`   | 表格引用和表格列表编号前缀   |
+| `代码`     | `"代码"` | 代码引用和代码列表编号前缀   |
+| `公式`     | `"式"`   | 公式引用                     |
+| `节`       | `"节"`   | 章节引用（二级及以下）       |
+| `图表`     | `"图表"` | 未知 figure kind 的 fallback |
+| `插图列表` | `"插图"` | 插图列表页标题               |
+| `表格列表` | `"表格"` | 表格列表页标题               |
+| `代码列表` | `"代码"` | 代码列表页标题               |
+
+### 传递方式
+
+使用闭包传参，在 `template.typ` 中合并用户配置与默认值后传递给：
+
+- `styles.figure-show-rule(it, supplements: ...)`
+- `styles.ref-show-rule(it, supplements: ...)`
+- `listoffigures(..., supplements: ...)`
+
+## 5. 命令行参数
 
 通过 `--input key=value` 传递，覆盖 `conf()` 配置：
 
@@ -80,12 +119,12 @@ heading(
 typst compile thesis.typ --input blind=true --input preview=false
 ```
 
-## 5. 模块依赖关系
+## 6. 模块依赖关系
 
 ```
 template.typ (入口)
     ├── lib/config.typ (常量、计数器、辅助函数)
-    │       ├── 字号、字体
+    │       ├── 字号、字体、引用记号
     │       ├── partcounter, chaptercounter, appendixcounter
     │       ├── appendix(), front-heading(), back-heading()
     │
@@ -108,7 +147,7 @@ template.typ (入口)
             ├── heading-show-rule(), figure-show-rule(), ref-show-rule()
 ```
 
-## 6. 设计原则
+## 7. 设计原则
 
 1. **策略与机制分离**：`front-heading()` / `back-heading()` 声明意图，`heading-show-rule()` 执行操作
 2. **零字符串匹配**：所有状态转换通过 `supplement` 元数据控制

@@ -14,6 +14,24 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
+== 2026-01-03 #contributors.lucifer1004 #pr(27)
+
++ 重构了目录系统：
+  - 使用 Typst 原生 `outline` + `show outline.entry` 替代手动 query 实现。
+  - 使用 `outline.entry.page()` 获取页码，消除了对 `<__footer__>` label 的依赖。
+  - 移除了 `lengthceil` 辅助函数。
+  - 图表列表编号现在包含前缀（如 "图 3.1"、"表 3.1"）。
++ 新增引用记号自定义功能：
+  - 新增 `supplements` 配置项，支持自定义图、表、代码、公式、节的引用前缀。
+  - 支持自定义插图列表、表格列表、代码列表的页面标题。
+  - 使用闭包传参方式将配置传递给 `figure-show-rule`、`ref-show-rule`、`listoffigures`。
++ 调整列表样式以匹配 Word 模板：
+  - 列表 bullet 使用自绘图形（实心圆、实心方形、45° 菱形）替代 Unicode 符号。
++ 其他改进：
+  - 设置 `show figure: set block(breakable: true)` 允许表格跨页显示。
+  - 页脚页码字号从五号（10.5pt）改为小五（9pt）。
+  - 更新了 `AGENTS.md` 和 `thesis.typ` 文档。
+
 == 2026-01-03 #contributors.lucifer1004 #pr(26)
 
 + 重构了模板架构：
