@@ -728,10 +728,14 @@ typst compile thesis.typ --input preview=false
   columns: (auto, 1fr),
   align: (left, left),
   caption: "支持的命令行参数",
-  [*参数*], [*说明*],
-  [`blind`], [盲审模式：`true` 启用，`false` 禁用],
-  [`preview`], [预览模式：`true` 链接显示蓝色，`false` 正常颜色],
-  [`alwaysstartodd`], [章节从奇数页开始：`true` 启用，`false` 禁用],
+  [*参数*],
+  [*说明*],
+  [`blind`],
+  [盲审模式：`true` 启用，`false` 禁用],
+  [`preview`],
+  [预览模式：`true` 链接显示蓝色，`false` 正常颜色],
+  [`alwaysstartodd`],
+  [章节从奇数页开始：`true` 启用，`false` 禁用],
 )
 
 ```bash

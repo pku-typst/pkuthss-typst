@@ -41,8 +41,12 @@
 
 // 学位类型选择框
 #let degree-type-checkbox(degree-type) = {
-  let academic-box = if degree-type == "academic" { box-checked } else { box-unchecked }
-  let professional-box = if degree-type == "professional" { box-checked } else { box-unchecked }
+  let academic-box = if degree-type == "academic" { box-checked } else {
+    box-unchecked
+  }
+  let professional-box = if degree-type == "professional" { box-checked } else {
+    box-unchecked
+  }
   set align(center + horizon)
   [#academic-box#h(0.5em)学术学位#h(4 * 0.5em)#professional-box#h(0.5em)专业学位]
 }

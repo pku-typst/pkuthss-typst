@@ -4,12 +4,12 @@
 
 ## 1. 核心状态机
 
-| 名称              | 类型                      | 作用                             |
-| ----------------- | ------------------------- | -------------------------------- |
+| 名称              | 类型                      | 作用                                 |
+| ----------------- | ------------------------- | ------------------------------------ |
 | `partcounter`     | `counter("part")`         | 标识文档区域（0=封面/1=前置/2=正文） |
-| `chaptercounter`  | `counter("chapter")`      | 正文章节计数（用于图表公式编号） |
-| `appendixcounter` | `counter("appendix")`     | 附录状态标识（≥10 表示附录）     |
-| `skippedstate`    | `state("skipped", false)` | 标记被跳过的空白页               |
+| `chaptercounter`  | `counter("chapter")`      | 正文章节计数（用于图表公式编号）     |
+| `appendixcounter` | `counter("appendix")`     | 附录状态标识（≥10 表示附录）         |
+| `skippedstate`    | `state("skipped", false)` | 标记被跳过的空白页                   |
 
 ## 2. partcounter 状态流转
 
@@ -53,13 +53,13 @@ heading(
 
 ### 元数据字段
 
-| 字段          | 类型              | 默认值  | 作用                     |
-| ------------- | ----------------- | ------- | ------------------------ |
-| `pagebreak`   | `bool`            | `true`  | 是否在 heading 前分页    |
-| `part`        | `int \| none`     | `none`  | 状态转换目标 (1/2/none)  |
-| `reset-page`  | `bool`            | `false` | 是否重置页码为 1         |
-| `show-header` | `bool`            | `true`  | 是否显示页眉             |
-| `header`      | `content \| none` | `none`  | 自定义页眉文本           |
+| 字段          | 类型              | 默认值  | 作用                    |
+| ------------- | ----------------- | ------- | ----------------------- |
+| `pagebreak`   | `bool`            | `true`  | 是否在 heading 前分页   |
+| `part`        | `int \| none`     | `none`  | 状态转换目标 (1/2/none) |
+| `reset-page`  | `bool`            | `false` | 是否重置页码为 1        |
+| `show-header` | `bool`            | `true`  | 是否显示页眉            |
+| `header`      | `content \| none` | `none`  | 自定义页眉文本          |
 
 ### 辅助函数
 
@@ -70,11 +70,11 @@ heading(
 
 通过 `--input key=value` 传递，覆盖 `conf()` 配置：
 
-| 参数             | 说明                           |
-| ---------------- | ------------------------------ |
-| `blind`          | 盲审模式                       |
-| `preview`        | 预览模式（链接显示蓝色）       |
-| `alwaysstartodd` | 章节是否总是从奇数页开始       |
+| 参数             | 说明                     |
+| ---------------- | ------------------------ |
+| `blind`          | 盲审模式                 |
+| `preview`        | 预览模式（链接显示蓝色） |
+| `alwaysstartodd` | 章节是否总是从奇数页开始 |
 
 ```bash
 typst compile thesis.typ --input blind=true --input preview=false

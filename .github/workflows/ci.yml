@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v4
+
+      - name: Compile thesis.typ
+        run: |
+          mkdir -p build
+          typst compile thesis.typ build/thesis.pdf --font-path fonts
+
+      - name: Compile thesis.typ (blind mode)
+        run: |
+          typst compile thesis.typ build/thesis-blind.pdf --font-path fonts --input blind=true
+
+      - name: Upload PDF artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis-pdf
+          path: |
+            build/thesis.pdf
+            build/thesis-blind.pdf
+          retention-days: 30
+
+      - name: Prepare GitHub Pages
+        run: |
+          mkdir -p docs
+          cp build/thesis.pdf docs/thesis.pdf
+          cp build/thesis-blind.pdf docs/thesis-blind.pdf
+          cat > docs/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>pkuthss-typst - 北京大学学位论文 Typst 模板</title>
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 2rem;
+                line-height: 1.6;
+              }
+              h1 { color: #8B0012; }
+              a { color: #8B0012; }
+              .downloads { margin: 2rem 0; }
+              .downloads a {
+                display: inline-block;
+                padding: 0.75rem 1.5rem;
+                background: #8B0012;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                margin-right: 1rem;
+                margin-bottom: 0.5rem;
+              }
+              .downloads a:hover { background: #6B0010; }
+            </style>
+          </head>
+          <body>
+            <h1>pkuthss-typst</h1>
+            <p>北京大学学位论文 Typst 模板</p>
+            <div class="downloads">
+              <a href="thesis.pdf">📄 下载示例论文 (PDF)</a>
+              <a href="thesis-blind.pdf">📄 下载盲审版本 (PDF)</a>
+            </div>
+            <h2>快速开始</h2>
+            <pre><code>git clone https://github.com/pku-typst/pkuthss-typst.git
+          cd pkuthss-typst
+          typst compile thesis.typ</code></pre>
+            <h2>链接</h2>
+            <ul>
+              <li><a href="https://github.com/pku-typst/pkuthss-typst">GitHub 仓库</a></li>
+              <li><a href="https://typst.app">Typst 官网</a></li>
+            </ul>
+          </body>
+          </html>
+          EOF
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

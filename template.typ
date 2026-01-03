@@ -14,15 +14,17 @@
 //   typst compile thesis.typ --input alwaysstartodd=false
 
 #let _parse-bool(value, default) = {
-  if value == none { default }
-  else if value == "true" or value == "1" { true }
-  else if value == "false" or value == "0" { false }
-  else { default }
+  if value == none { default } else if value == "true" or value == "1" {
+    true
+  } else if value == "false" or value == "0" { false } else { default }
 }
 
 #let _cli-blind = _parse-bool(sys.inputs.at("blind", default: none), none)
 #let _cli-preview = _parse-bool(sys.inputs.at("preview", default: none), none)
-#let _cli-alwaysstartodd = _parse-bool(sys.inputs.at("alwaysstartodd", default: none), none)
+#let _cli-alwaysstartodd = _parse-bool(
+  sys.inputs.at("alwaysstartodd", default: none),
+  none,
+)
 
 #import "@preview/itemize:0.2.0" as itemize
 #import "@preview/cuti:0.4.0": show-cn-fakebold
@@ -91,7 +93,9 @@
   // 命令行参数覆盖配置文件中的值
   let blind = if _cli-blind != none { _cli-blind } else { blind }
   let preview = if _cli-preview != none { _cli-preview } else { preview }
-  let alwaysstartodd = if _cli-alwaysstartodd != none { _cli-alwaysstartodd } else { alwaysstartodd }
+  let alwaysstartodd = if _cli-alwaysstartodd != none {
+    _cli-alwaysstartodd
+  } else { alwaysstartodd }
   // 智能分页函数
   let smartpagebreak = () => {
     if alwaysstartodd {
