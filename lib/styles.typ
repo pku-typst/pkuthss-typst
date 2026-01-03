@@ -202,7 +202,12 @@
     // 标题编号和标题之间间距为 1em
     h(1em)
   }
-  strong(it.body)
+  if font != (:) {
+    set text(..font)
+    it.body
+  } else {
+    strong(it.body)
+  }
   v(spacing-after)
 }
 
@@ -361,6 +366,8 @@
           #chinesenumbering(..counter(heading).at(el_loc), location: el_loc)
         ])
       }
+    } else {
+      it
     }
 
     h(0em, weak: true)

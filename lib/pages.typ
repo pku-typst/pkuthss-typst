@@ -229,7 +229,7 @@
   blind: false,
   eabstract,
 ) = {
-  // 使用不显示标题内容的 heading，只用于触发页眉
+  // 英文摘要标题，页眉为 ABSTRACT
   heading(
     numbering: none,
     outlined: false,
@@ -237,17 +237,13 @@
       pagebreak: true,
       show-header: true,
       header: "ABSTRACT",
+      spacing-before: 24pt,
+      spacing-after: 8pt,
+      linespacing: 2em,
+      font: (size: 字号.小二, font: "Arial", weight: "regular"),
     ))],
-  )[]
-  [
-    #set align(center)
-    #v(24pt)
-    // Word 模板中属性显示为单倍行距但实际是两倍行距
-    // 对于英文字体，这里设置 1em 可以匹配
-    #set par(spacing: 1em, leading: 1em)
-    #text(字号.小二, font: "Arial", upper(etitle))
-    #v(8pt)
-  ]
+  )[#upper(etitle)]
+
   // Word 模板中正文仍然是 20pt 行距
   // 对于纯英文字体，测试下来 12.5pt 的匹配效果较好
   set par(spacing: 12.5pt, leading: 12.5pt, justify: true)
@@ -265,7 +261,12 @@
   v(6pt)
   eabstract
   v(1fr)
-  [KEY WORDS: ]
+  let keyword-prefix = if ekeywords.len() == 1 {
+    "KEY WORD: "
+  } else {
+    "KEY WORDS: "
+  }
+  [#keyword-prefix]
   ekeywords.join(", ")
   v(1em)
 }

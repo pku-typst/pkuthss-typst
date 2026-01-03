@@ -14,7 +14,7 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
-== 2026-01-03 #contributors.lucifer1004
+== 2026-01-03 #contributors.lucifer1004 #pr(26)
 
 + 重构了模板架构：
   - 简化了 `partcounter` 状态机（从 5 状态简化为 3 状态）。
@@ -35,7 +35,7 @@
 + 文档完善：
   - 将 `thesis.typ` 扩展为完整的项目文档，包含模板配置、Typst 基础语法、常见问题解答等。
 
-== 2026-01-02 #contributors.lucifer1004 #contributors.TOMATOFQY
+== 2026-01-02 #contributors.lucifer1004 #contributors.TOMATOFQY #pr(26)
 
 + 引入 #link("https://typst.app/universe/package/itemize/", `itemize`) 包，修复了列表编号和文本内容衬线不对齐的问题。
 + 引入 #link("https://typst.app/universe/package/cuti/", `cuti`) 包，对部分需要加粗的中文文本进行了处理。
@@ -48,15 +48,23 @@
   - 调整了原创性声明和学位论文使用授权说明的样式。
   - 参考文献默认采用 `gb-7714-2015-numeric` 样式（#issue(6)）。
 
-== 2026-01-02 #contributors.gzz2000
+== 2026-01-02 #contributors.gzz2000 #pr(25)
 
 + 修复了#pr(24)引入的错误。
 
-== 2025-12-22 #contributors.yefan-zhi
+== 2025-12-22 #contributors.yefan-zhi #pr(24)
 
 + 修复了年份中〇的显示问题。
 + 增加了学位类型（#issue(23)）。
 + 修复了一系列页码问题（#issue(18)）。
+
+== 2025-03-04 #contributors.wjsoj #pr(22)
+
++ 修复了标题与下划线重叠的问题。
+
+== 2025-03-03 #contributors.wjsoj #pr(21)
+
++ 修复了与 Typst `v0.13.0` 版本不兼容的问题。
 
 == 2023-11-22 #contributors.lucifer1004
 
@@ -110,7 +118,7 @@
 + 修改了 `lengthceil` 辅助函数的逻辑：
   - 现在直接使用 `math.ceil` 函数，不再需要使用循环。
 
-== 2023-04-16 #contributors.TeddyHuang-00
+== 2023-04-16 #contributors.TeddyHuang-00 #pr(2)
 
 + 增加了编译所需的字体文件。
 + 修正了论文标题样式：
