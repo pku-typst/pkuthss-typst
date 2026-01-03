@@ -40,7 +40,13 @@
 #let box-checked = box(width: 12pt, align(center, square(size: 12pt)[✓]))
 
 // 学位类型选择框
+// degree-type: "academic" | "professional"，其他值会触发 panic
 #let degree-type-checkbox(degree-type) = {
+  assert(
+    degree-type == "academic" or degree-type == "professional",
+    message: "degree-type 必须是 \"academic\" 或 \"professional\"，当前值: "
+      + repr(degree-type),
+  )
   let academic-box = if degree-type == "academic" { box-checked } else {
     box-unchecked
   }

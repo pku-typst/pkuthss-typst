@@ -17,6 +17,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  PDFCPU_VERSION: "0.11.1"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,8 +41,8 @@ jobs:
 
       - name: Install pdfcpu
         run: |
-          curl -L https://github.com/pdfcpu/pdfcpu/releases/download/v0.11.1/pdfcpu_0.11.1_Linux_x86_64.tar.xz | tar xJ
-          sudo mv pdfcpu /usr/local/bin/
+          curl -L "https://github.com/pdfcpu/pdfcpu/releases/download/v${PDFCPU_VERSION}/pdfcpu_${PDFCPU_VERSION}_Linux_x86_64.tar.xz" | tar xJ
+          sudo mv "pdfcpu_${PDFCPU_VERSION}_Linux_x86_64/pdfcpu" /usr/local/bin/
 
       - name: Optimize PDFs with pdfcpu
         run: |

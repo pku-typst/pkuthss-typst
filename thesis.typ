@@ -266,7 +266,11 @@ typst watch thesis.typ
   [预览模式，链接文本显示为蓝色；生成打印版时设为 `false`],
   [`codly-args`],
   [`(:)`],
-  [传递给 `codly` 包的额外参数，用于自定义代码块样式],
+  [传递给 `codly` 包的额外参数，用于自定义代码块样式。常用选项：\
+    `number-format: none` 关闭行号；\
+    `display-icon: false` 关闭语言图标；\
+    `zebra-fill: none` 关闭交替背景色；\
+    `lang-format: none` 关闭语言名称显示],
 ) <config-switch>
 
 = Typst 基本功能 <typst-basics>
@@ -554,6 +558,16 @@ Typst 使用 `$...$` 包裹数学公式。行内公式前后需要有空格，�
     ```
   ],
 )
+
+本模板使用 #link("https://typst.app/universe/package/codly/")[codly] 包提供代码块的语法高亮和样式增强。默认启用行号、语言图标和交替背景色。可以通过 `codly-args` 配置项自定义样式，例如：
+
+```typ
+#show: doc => conf(
+  // 关闭行号和语言图标
+  codly-args: (number-format: none, display-icon: false),
+  doc,
+)
+```
 
 如果需要给代码块加标题并在文章中引用，可以使用本模板提供的 `codeblock` 命令：
 
