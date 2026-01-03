@@ -164,6 +164,7 @@
   show heading: it => styles.heading-show-rule(it, smartpagebreak)
   show figure: styles.figure-show-rule
   show ref: styles.ref-show-rule
+  show bibliography: it => styles.bibliography-show-rule(it)
 
   // ========== 封面页 ==========
   if blind {

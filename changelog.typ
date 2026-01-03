@@ -26,12 +26,14 @@
   - 引入 #link("https://typst.app/universe/package/codly/", `codly`) 包，支持代码块语法高亮。
   - 新增 `preview` 配置项，控制链接文本是否显示为蓝色。
   - `booktab` 组件现代化重构，支持原生 `table` 参数，新增 `outlined` 参数。
+  - 新增 `bibliography-show-rule`，设置参考文献悬挂缩进和行距以匹配 Word 模板。
 + 修复问题：
   - 修复了图片后段落不自动缩进的问题（使用 `first-line-indent: (amount: 2em, all: true)`）。
   - 修复了英文摘要内容过长时与 KEY WORDS 重叠的问题。
   - 修复了目录中原创性声明页页码显示为 0 的问题。
   - 修复了子标题（如 3.1）被错误缩进的问题。
   - 修复了盲审封面中学位类型勾选框对齐问题。
+  - 修复了参考文献编号与文字基线不对齐的问题。
 + 文档完善：
   - 将 `thesis.typ` 扩展为完整的项目文档，包含模板配置、Typst 基础语法、常见问题解答等。
 

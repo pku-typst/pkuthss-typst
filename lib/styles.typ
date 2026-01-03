@@ -373,3 +373,23 @@
     h(0em, weak: true)
   }
 }
+
+// bibliography 样式规则
+// Word 模板：行距 16pt，段前 3pt，悬挂缩进 1.66 字符
+#let bibliography-show-rule(it) = {
+  set text(字号.五号)
+  set par(
+    leading: 6.5pt,
+    spacing: 6.5pt + 3pt,
+    hanging-indent: 1.66em,
+    first-line-indent: 0em,
+  )
+  show regex("\\[\\d+\\]"): it => {
+    box[
+      #it
+      // 手工对齐编号和文字
+      #v(-8.5pt)
+    ]
+  }
+  it
+}
