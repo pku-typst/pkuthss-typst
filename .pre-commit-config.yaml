@@ -1,0 +1,31 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+
+  - repo: local
+    hooks:
+      - id: typstyle
+        name: typstyle
+        entry: typstyle -i
+        language: system
+        types: [file]
+        files: \.typ$
+
+      - id: taplo
+        name: taplo
+        entry: taplo fmt
+        language: system
+        types: [toml]
+
+  - repo: https://github.com/rbubley/mirrors-prettier
+    rev: v3.7.4
+    hooks:
+      - id: prettier
