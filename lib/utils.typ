@@ -30,7 +30,7 @@
   } else {
     left + chinesenumber(calc.rem(num, 100))
   }
-} else {
+} else if num < 10000 {
   let left = chinesenumber(calc.floor(num / 1000)) + "千"
   if calc.rem(num, 1000) == 0 {
     left
@@ -41,6 +41,8 @@
   } else {
     left + chinesenumber(calc.rem(num, 1000))
   }
+} else {
+  panic("chinesenumber: num is too large")
 }
 
 // 年份转中文（如 2026 -> 二〇二六）
@@ -105,49 +107,6 @@
     } else {
       numbering(if brackets { "(A.1)" } else { "A.1" }, ..nums)
     }
-  }
-}
-
-// 带下划线的中文文本（自动换行）
-#let chineseunderline(s, width: 300pt, bold: false) = {
-  let chars = s.clusters()
-  let n = chars.len()
-  context {
-    let i = 0
-    let now = ""
-    let ret = ()
-
-    while i < n {
-      let c = chars.at(i)
-      let nxt = now + c
-
-      if measure(nxt).width > width or c == "\n" {
-        if bold {
-          ret.push(strong(now))
-        } else {
-          ret.push(now)
-        }
-        if c == "\n" {
-          now = ""
-        } else {
-          now = c
-        }
-      } else {
-        now = nxt
-      }
-
-      i = i + 1
-    }
-
-    if now.len() > 0 {
-      if bold {
-        ret.push(strong(now))
-      } else {
-        ret.push(now)
-      }
-    }
-
-    ret
   }
 }
 

@@ -565,7 +565,6 @@ Typst 使用 `$...$` 包裹数学公式。行内公式前后需要有空格，�
       return fibonacci(n-1) + fibonacci(n-2)
   ```,
   caption: "斐波那契数列递归实现",
-  outline: true,
 ) <fib>
 
 @fib 展示了斐波那契数列的递归实现。
@@ -781,7 +780,7 @@ acknowledgements: include "doc/acknowledgements.typ",
 
 - `#appendix()`：开始附录部分，后续章节编号切换为字母格式
 - `#booktab(...)`：生成三线表，支持 `outlined: false` 生成不带编号的表格
-- `#codeblock(...)`：生成带标题的代码块，支持 `outline: true` 添加边框
+- `#codeblock(...)`：生成带标题和编号的代码块
 - `#chineseoutline(...)`：生成中文目录
 - `#listoffigures(...)`：生成图表列表
 
@@ -821,7 +820,6 @@ $ nabla times arrow(E) = - (partial arrow(B)) / (partial t) $ <appendix-eq>
   }
   ```,
   caption: "Rust Hello World",
-  outline: true,
 ) <appendix-code>
 
 = 更新日志 <changelog>

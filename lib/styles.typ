@@ -7,8 +7,8 @@
 )
 #import "utils.typ": chinesenumbering
 
-#let default-heading-spacing-before = (17pt, 24pt, 12pt, 6pt, 6pt, 6pt)
-#let default-heading-spacing-after = (16.5pt, 6pt, 6pt, 6pt, 6pt, 6pt)
+#let default-heading-spacing-before = (17pt, 24pt, 12pt, 6pt)
+#let default-heading-spacing-after = (16.5pt, 6pt, 6pt, 6pt)
 
 // 从 heading 提取元数据（从 supplement 中的 metadata 获取）
 #let get-heading-meta(it) = {
@@ -175,11 +175,11 @@
   // Word 模板中默认标题的段前间距为 17pt，段后间距为 16.5pt
   let spacing-before = meta.at(
     "spacing-before",
-    default: default-heading-spacing-before.at(it.level - 1),
+    default: default-heading-spacing-before.at(calc.min(it.level - 1, 3)),
   )
   let spacing-after = meta.at(
     "spacing-after",
-    default: default-heading-spacing-after.at(it.level - 1),
+    default: default-heading-spacing-after.at(calc.min(it.level - 1, 3)),
   )
   // Word 模板中默认标题的行距为 2.41 倍行距
   // 在黑体三号字情况下，对应行距为 16pt * 1.3 * 2.41

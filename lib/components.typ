@@ -136,14 +136,10 @@
 }
 
 // 代码块组件
-#let codeblock(raw, caption: none, outline: false) = {
+// 用法: #codeblock(```python ... ```, caption: "示例代码")
+#let codeblock(raw, caption: none) = {
   figure(
-    if outline {
-      block(width: 100%)[
-        #set align(left)
-        #raw
-      ]
-    } else {
+    {
       set align(left)
       raw
     },
