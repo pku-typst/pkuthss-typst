@@ -2,11 +2,11 @@
 #import "contributors.typ": *
 
 #let issue(id) = link(
-  "https://github.com/lucifer1004/pkuthss-typst/issues/" + str(id),
+  "https://github.com/pku-typst/pkuthss-typst/issues/" + str(id),
   text(fill: purple)[\##id],
 )
 #let pr(id) = link(
-  "https://github.com/lucifer1004/pkuthss-typst/pull/" + str(id),
+  "https://github.com/pku-typst/pkuthss-typst/pull/" + str(id),
   text(fill: green.lighten(20%))[\##id],
 )
 

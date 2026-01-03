@@ -20,7 +20,7 @@
         continue
       }
 
-      // Skip headings that are too deep
+      // 跳过层级过深的标题
       if depth != none and el.level > depth { continue }
 
       let maybe_number = if el.numbering != none {
@@ -65,10 +65,10 @@
           el.body
         })
 
-        // Filler dots
+        // 填充点
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
 
-        // Page number
+        // 页码
         let footer = query(selector(<__footer__>).after(el.location()))
         let page_number = if footer == () {
           // 最后一页没有后续 footer，直接使用 heading 位置的页码
@@ -115,13 +115,13 @@
 
         link(el.location(), bodytotextwithtrim(el.caption.body))
 
-        // Filler dots
+        // 填充点
         box(width: 1fr, h(10pt) + box(width: 1fr, repeat[.]) + h(10pt))
 
-        // Page number
+        // 页码
         let footers = query(selector(<__footer__>).after(el.location()))
         let page_number = if footers == () {
-          0
+          counter(page).at(el.location()).first()
         } else {
           counter(page).at(footers.first().location()).first()
         }

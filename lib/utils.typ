@@ -154,7 +154,8 @@
 // 从 figure caption body 中提取文本
 #let bodytotextwithtrim(a) = {
   if a.has("children") {
-    a.children.find(it => it.text.len() > 0)
+    let found = a.children.find(it => it.has("text") and it.text.len() > 0)
+    if found != none { found } else { a }
   } else {
     a
   }

@@ -71,11 +71,11 @@
 //   show-header: bool     - 是否显示页眉（默认 true）
 //   header: content | none - 自定义页眉文本
 
-/// 创建前置部分的 heading
+/// 创建前置部分的 heading（摘要、目录等）
 /// - title: 标题文本
 /// - pagebreak: 是否分页（默认 true）
 /// - enter-front: 是否进入前置部分并重置页码（默认 false）
-/// - header: 自定义页眉文本（默认使用 title）
+/// - extra-meta: 额外的元数据参数（如 header、spacing-before 等）
 #let front-heading(
   title,
   pagebreak: true,

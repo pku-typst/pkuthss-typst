@@ -201,7 +201,7 @@
 
 // heading 样式规则
 #let heading-show-rule(it, smartpagebreak) = {
-  // Cancel indentation for headings
+  // 取消标题的首行缩进
   set par(first-line-indent: 0em)
 
   if it.level != 1 {
@@ -282,16 +282,16 @@
 // ref 样式规则
 #let ref-show-rule(it) = {
   if it.element == none {
-    // Keep citations as is
+    // 参考文献引用保持原样
     it
   } else {
-    // Remove prefix spacing
+    // 移除前后空白
     h(0em, weak: true)
 
     let el = it.element
     let el_loc = el.location()
     if el.func() == math.equation {
-      // Handle equations
+      // 公式引用
       link(el_loc, [
         式
         #chinesenumbering(
@@ -303,7 +303,7 @@
       ])
       h(0.25em, weak: true)
     } else if el.func() == figure {
-      // Handle figures
+      // 图表引用
       if el.kind == image {
         link(el_loc, [
           图
@@ -333,7 +333,7 @@
         ])
       }
     } else if el.func() == heading {
-      // Handle headings
+      // 章节引用
       if el.level == 1 {
         link(el_loc, chinesenumbering(
           ..counter(heading).at(el_loc),
@@ -347,7 +347,6 @@
       }
     }
 
-    // Remove suffix spacing
     h(0em, weak: true)
   }
 }
