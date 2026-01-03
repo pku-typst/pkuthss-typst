@@ -26,7 +26,7 @@
 )
 #let sym-square-filled-rotated(size) = box(
   width: 1em,
-  align(center + horizon, rotate(square(size: size, fill: black), 45deg)),
+  align(center + horizon, rotate(45deg, square(size: size, fill: black))),
 )
 #let sym-bullet(size) = box(
   width: 1em,
