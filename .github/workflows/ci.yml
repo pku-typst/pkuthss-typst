@@ -36,6 +36,17 @@ jobs:
         run: |
           typst compile thesis.typ build/thesis-blind.pdf --font-path fonts --input blind=true
 
+      - name: Install pdfcpu
+        run: |
+          curl -L https://github.com/pdfcpu/pdfcpu/releases/download/v0.11.1/pdfcpu_0.11.1_Linux_x86_64.tar.xz | tar xJ
+          sudo mv pdfcpu /usr/local/bin/
+
+      - name: Optimize PDFs with pdfcpu
+        run: |
+          pdfcpu optimize build/thesis.pdf
+          pdfcpu optimize build/thesis-blind.pdf
+          ls -lh build/
+
       - name: Upload PDF artifacts
         uses: actions/upload-artifact@v4
         with:
