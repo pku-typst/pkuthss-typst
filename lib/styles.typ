@@ -341,6 +341,12 @@
             location: el_loc,
           )
         ])
+      } else {
+        // 未知类型的 figure，使用 kind 名称或默认使用原始引用
+        link(el_loc, [
+          #if type(el.kind) == str { el.kind } else { "图表" }
+          #counter(figure.where(kind: el.kind)).display(el.numbering)
+        ])
       }
     } else if el.func() == heading {
       // 章节引用
