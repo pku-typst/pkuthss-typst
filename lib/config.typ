@@ -30,10 +30,10 @@
 )
 
 #let 字体 = (
-  仿宋: ("Times New Roman", "FangSong"),
-  宋体: ("Times New Roman", "SimSun"),
-  黑体: ("Times New Roman", "SimHei"),
-  楷体: ("Times New Roman", "KaiTi_GB2312"),
+  仿宋: ("Times New Roman", "FangSong", "STFangsong"),
+  宋体: ("Times New Roman", "SimSun", "STSong"),
+  黑体: ("Times New Roman", "SimHei", "STHeiti"),
+  楷体: ("Times New Roman", "KaiTi_GB2312", "STKaiti"),
   代码: ("New Computer Modern Mono", "Times New Roman", "SimSun"),
 )
 

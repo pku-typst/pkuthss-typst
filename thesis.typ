@@ -149,10 +149,10 @@ typst watch thesis.typ
   [页眉标题（偶数页显示）],
   [`ctitle`],
   [-],
-  [论文中文标题，可用 `\n` 控制换行],
+  [论文中文标题，可用 `\n` 控制换行；盲审模式下 `\n` 会被忽略],
   [`etitle`],
   [-],
-  [论文英文标题，可用 `\n` 控制换行],
+  [论文英文标题，可用 `\n` 控制换行；盲审模式下 `\n` 会被忽略],
   [`date`],
   [`(year: 2026, month: 6)`],
   [论文日期，格式为 `(year: 年, month: 月)`],
@@ -646,7 +646,21 @@ $ "基线间距" = "top-edge" - "bottom-edge" + "leading" $
 
 == 中文粗体显示问题
 
-中文粗体默认用黑体显示。如果需要对黑体再额外加粗，或对宋体、楷体等进行加粗，可以使用 `cuti` 包的伪粗体功能。
+中文粗体默认用黑体显示。如果需要对黑体再额外加粗，或对宋体、楷体等进行加粗，模板已集成 `cuti` 包的伪粗体功能，会自动处理。
+
+== 字体配置
+
+本模板的字体配置在 `lib/config.typ` 中定义。默认使用以下字体：
+
+- *宋体*：Times New Roman, SimSun, STSong
+- *黑体*：Times New Roman, SimHei, STHeiti
+- *楷体*：Times New Roman, KaiTi_GB2312, STKaiti
+- *仿宋*：Times New Roman, FangSong, STFangsong
+- *代码*：New Computer Modern Mono, Times New Roman, SimSun
+
+每种字体配置中，英文优先使用 Times New Roman，中文则按 Windows (SimXxx) → macOS (STXxx) 顺序回退。使用 `--font-path fonts` 参数可加载模板自带的字体文件。
+
+如需修改字体，可以编辑 `lib/config.typ` 中的 `字体` 字典。
 
 == 字体警告
 
@@ -667,6 +681,16 @@ conf(
   outlinedepth: 4,  // 显示四级标题
   // ...
 )
+```
+
+== 版本要求
+
+本模板需要 Typst 0.13.0 或更高版本。建议使用最新稳定版本以获得最佳体验。
+
+查看当前 Typst 版本：
+
+```bash
+typst --version
 ```
 
 = 进阶使用技巧 <advanced>
