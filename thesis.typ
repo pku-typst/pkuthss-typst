@@ -10,7 +10,7 @@
   // 可以用 \n 控制中英文标题在非盲审封面 (blind=false) 中的换行点
   // 在盲审封面 (blind=true) 中，手工插入的 \n 会被忽略，以确保标题连续
   ctitle: "北京大学学位论文\nTypst 模板使用指南",
-  etitle: "User Guide for PKU Dissertation\nTypst Template (pkuthss-typst)",
+  etitle: "User Guide for PKU Dissertation\nTypst Template (modern-pku-thesis)",
   school: "信息科学技术学院",
   cfirstmajor: "计算机科学与技术",
   cmajor: "计算机软件与理论",
@@ -21,14 +21,13 @@
   date: (year: 2026, month: 6),
   degree-type: "academic",
   cabstract: include "doc/cabstract.typ",
-  ckeywords: ("Typst", "学位论文", "排版模板", "北京大学", "pkuthss"),
+  ckeywords: ("Typst", "学位论文", "排版模板", "北京大学"),
   eabstract: include "doc/eabstract.typ",
   ekeywords: (
     "Typst",
     "Dissertation",
     "Template",
     "Peking University",
-    "pkuthss",
   ),
   acknowledgements: include "doc/acknowledgements.typ",
   outlinedepth: 3,
