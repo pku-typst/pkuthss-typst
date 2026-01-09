@@ -14,6 +14,12 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
+== 2026-01-10 #contributors.lucifer1004 #pr(29)
+
++ 模板已发布到 Typst Universe，现在可以通过 `typst init @preview/modern-pku-thesis:0.1.0` 创建项目。
++ 模板更名为 `modern-pku-thesis`。
++ 更新了 README 和文档，新增 Typst Universe 安装方式说明。
+
 == 2026-01-03 #contributors.lucifer1004 #pr(27)
 
 + 重构了目录系统：

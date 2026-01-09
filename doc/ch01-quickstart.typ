@@ -17,23 +17,38 @@ Typst 是一个现代化的排版系统，可以通过以下方式使用：
 
 == 获取模板
 
-本模板托管在 GitHub 上，可以通过以下方式获取：
+=== 方式一：通过 Typst Universe（推荐）
+
+模板已发布到 Typst Universe，可以直接创建新项目：
+
+```bash
+typst init @preview/modern-pku-thesis:0.1.0 my-thesis
+cd my-thesis
+```
+
+这会创建一个包含 `main.typ` 和 `ref.bib` 的干净项目，直接编辑即可开始写作。
+
+=== 方式二：克隆仓库
+
+如果需要完整的示例和文档，可以克隆仓库：
 
 ```bash
 git clone https://github.com/pku-typst/pkuthss-typst.git
 cd pkuthss-typst
 ```
 
-获取模板后，可以直接编辑 `thesis.typ` 文件开始写作。编译命令为：
+获取模板后，可以直接编辑 `thesis.typ` 文件开始写作。
+
+=== 编译
 
 ```bash
-typst compile thesis.typ
+typst compile main.typ  # 或 thesis.typ（仓库用户）
 ```
 
 或使用实时预览模式：
 
 ```bash
-typst watch thesis.typ
+typst watch main.typ
 ```
 
 == 基本结构
