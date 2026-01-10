@@ -37,6 +37,10 @@
   listofcode: true,
   alwaysstartodd: false,
   cleandeclaration: true,
+  override-bib: false,
+  bibfiles: "ref.bib",
+  bibstyle: "numeric",
+  bibversion: "2015",
   doc,
 )
 
@@ -73,8 +77,3 @@
 #include "changelog.typ"
 
 #pagebreak()
-
-#bibliography("ref.bib", style: "gb-7714-2015-numeric")
-
-// 如需使用"著者—出版年制"，将上面一行改为：
-// #bibliography("ref.bib", style: "gb-7714-2015-author-date")
