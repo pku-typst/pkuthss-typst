@@ -30,20 +30,17 @@
 #import "@preview/cuti:0.4.0": show-cn-fakebold
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.10": *
+#import "@preview/gb7714-bilingual:0.2.0": *
 
 // 导入并重导出所有公共符号
 #import "lib/config.typ": appendix, 字体, 字号, 引用记号
 #import "lib/utils.typ": chinesenumbering
 #import "lib/components.typ": booktab, chineseoutline, codeblock, listoffigures
-#import "lib/styles.typ": (
-  sym-bullet, sym-square-filled, sym-square-filled-rotated,
-)
+#import "lib/styles.typ": sym-bullet, sym-square-filled, sym-square-filled-rotated
 
 // 高级用户 API：导出内部计数器和状态，用于自定义章节编号等场景
 // 注意：这些是内部实现细节，未来版本可能会有变化
-#import "lib/config.typ": (
-  appendixcounter, chaptercounter, partcounter, skippedstate,
-)
+#import "lib/config.typ": appendixcounter, chaptercounter, partcounter, skippedstate
 
 // 内部使用的模块
 #import "lib/pages.typ"
@@ -97,6 +94,14 @@
   // 引用记号自定义（图、表、代码、公式、节）
   // 示例：supplements: (图: "Figure", 表: "Table")
   supplements: (:),
+  // 完全自定义参考文献样式，忽略 bibfiles、bibstyle、bibversion 参数
+  override-bib: false,
+  // 引用文件列表（可以是单个文件名或文件名列表）
+  bibfiles: (),
+  // 引用风格（默认为 "numeric"，可选 "author-date"）
+  bibstyle: "numeric",
+  // 引用版本（默认为 "2015"，可选 "2025"。注意 GB/T 7714-2025 标准从 2026 年 7 月 1 日开始实施）
+  bibversion: "2015",
   doc,
 ) = {
   // 命令行参数覆盖配置文件中的值
@@ -192,7 +197,6 @@
     supplements: merged-supplements,
   )
   show ref: it => styles.ref-show-rule(it, supplements: merged-supplements)
-  show bibliography: it => styles.bibliography-show-rule(it)
 
   // ========== 封面页 ==========
   if blind {
@@ -285,9 +289,52 @@
     leading: 10.5pt,
     spacing: 10.5pt,
   )
-  doc
 
   smartpagebreak()
+  let bibfiles = if type(bibfiles) == array {
+    bibfiles
+  } else if type(bibfiles) == str and bibfiles != "" {
+    (bibfiles,)
+  } else {
+    ()
+  }
+  let use-gb7714 = not override-bib and bibfiles != ()
+  if use-gb7714 {
+    init-gb7714.with(
+      bibfiles.map(read).join(),
+      style: bibstyle,
+      version: bibversion,
+    )(doc)
+    gb7714-bibliography(
+      title: heading(numbering: none)[参考文献],
+      full-control: entries => {
+        set text(字号.五号)
+        let extra-spacing = if bibversion == "2015" { 1pt } else { 0pt }
+        set par(
+          leading: 6.5pt + extra-spacing,
+          spacing: 6.5pt + 3pt + extra-spacing,
+          hanging-indent: 1.66em,
+          first-line-indent: 0em,
+          justify: true,
+        )
+        if bibstyle == "author-date" {
+          for e in entries [
+            #e.labeled-rendered
+            #parbreak()
+          ]
+        } else if bibstyle == "numeric" {
+          for e in entries [
+            [#e.order]
+            #e.labeled-rendered
+            #parbreak()
+          ]
+        }
+      },
+    )
+  } else {
+    show bibliography: it => styles.bibliography-show-rule(it)
+    doc
+  }
 
   // ========== 致谢和声明（非盲审） ==========
   if not blind {

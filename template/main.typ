@@ -6,7 +6,7 @@
 //   --input preview=false    生成打印版（链接不着色）
 //   --input alwaysstartodd=false  章节不强制从奇数页开始
 
-#import "@preview/modern-pku-thesis:0.1.1": appendix, conf
+#import "@preview/modern-pku-thesis:0.2.0": appendix, conf
 
 #show: conf.with(
   // ========== 基本信息 ==========

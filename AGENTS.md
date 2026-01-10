@@ -105,7 +105,54 @@ heading(
 - `styles.ref-show-rule(it, supplements: ...)`
 - `listoffigures(..., supplements: ...)`
 
-## 5. 命令行参数
+## 5. 参考文献系统
+
+模板集成了 `gb7714-bilingual` 包，提供符合 GB/T 7714 标准的参考文献格式。
+
+### 配置参数
+
+| 参数           | 类型                | 默认值      | 说明                                                |
+| -------------- | ------------------- | ----------- | --------------------------------------------------- |
+| `bibfiles`     | `str \| array<str>` | `()`        | 参考文献文件路径                                    |
+| `bibstyle`     | `str`               | `"numeric"` | 引用风格：`"numeric"` 或 `"author-date"`            |
+| `bibversion`   | `str`               | `"2015"`    | GB/T 7714 版本：`"2015"` 或 `"2025"`                |
+| `override-bib` | `bool`              | `false`     | 是否自定义引用样式（用户自行调用 `bibliography()`） |
+
+### override-bib 行为
+
+当 `override-bib: true` 时：
+
+- 用户自行调用 `bibliography()` 选择任意 CSL 样式
+- 模板的 `show bibliography` 规则仍会应用默认排版格式
+- 用户可添加自己的 `show bibliography` 规则覆盖模板格式
+
+### 内部实现
+
+```typst
+// template.typ 中的处理流程
+let bibfiles = if type(bibfiles) == array { bibfiles } else { (bibfiles,) }
+init-gb7714.with(
+  bibfiles.map(read).join(),
+  style: bibstyle,
+  version: bibversion,
+)(doc)
+
+
+// 使用 full-control 自定义渲染
+gb7714-bibliography(
+  title: heading(numbering: none)[参考文献],
+  full-control: entries => { ... },
+)
+```
+
+### 关键点
+
+1. **show rule 包装**：`init-gb7714.with(...)` 必须作为 show rule 使用
+2. **隐藏 bibliography**：需要一个隐藏的 `bibliography` 调用让 `@key` 语法生效
+3. **full-control 模式**：使用 `gb7714-bibliography` 的 `full-control` 参数完全控制渲染样式
+4. **语言检测**：gb7714-bilingual 自动检测文献语言，可通过 `.bib` 文件的 `language` 字段覆盖
+
+## 6. 命令行参数
 
 通过 `--input key=value` 传递，覆盖 `conf()` 配置：
 
@@ -119,7 +166,7 @@ heading(
 typst compile thesis.typ --input blind=true --input preview=false
 ```
 
-## 6. 模块依赖关系
+## 7. 模块依赖关系
 
 ```
 template.typ (入口)
@@ -147,7 +194,7 @@ template.typ (入口)
             ├── heading-show-rule(), figure-show-rule(), ref-show-rule()
 ```
 
-## 7. 设计原则
+## 8. 设计原则
 
 1. **策略与机制分离**：`front-heading()` / `back-heading()` 声明意图，`heading-show-rule()` 执行操作
 2. **零字符串匹配**：所有状态转换通过 `supplement` 元数据控制

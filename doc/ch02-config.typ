@@ -162,3 +162,29 @@
     列表页标题：`插图列表`（"插图"）、`表格列表`（"表格"）、`代码列表`（"代码"）。\
     示例：`supplements: (图: "Figure", 插图列表: "List of Figures")`],
 ) <config-switch>
+
+== 参考文献配置
+
+本模板集成了 #link("https://github.com/pku-typst/gb7714-bilingual")[gb7714-bilingual] 包，提供符合 GB/T 7714 标准的参考文献格式，并自动根据文献语言切换中英文术语。
+
+#booktab(
+  width: 100%,
+  columns: (auto, auto, 1fr),
+  align: (left, left, left),
+  caption: "参考文献配置项",
+  [*参数名*],
+  [*默认值*],
+  [*说明*],
+  [`bibfiles`],
+  [`()`],
+  [参考文献文件路径，可以是单个文件名（如 `"ref.bib"`）或文件名数组（如 `("ref.bib", "extra.bib")`）],
+  [`bibstyle`],
+  [`"numeric"`],
+  [引用风格：`"numeric"`（顺序编码制）或 `"author-date"`（著者—出版年制）],
+  [`bibversion`],
+  [`"2015"`],
+  [GB/T 7714 标准版本：`"2015"` 或 `"2025"`。注意 GB/T 7714-2025 标准从 2026 年 7 月 1 日开始实施],
+  [`override-bib`],
+  [`false`],
+  [是否自定义参考文献引用样式。设为 `true` 时忽略上述三个参数，用户需自行调用 `bibliography()`。模板仍会应用默认排版格式（五号字、悬挂缩进等），如需覆盖可添加自己的 `show bibliography` 规则],
+) <config-bib>

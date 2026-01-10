@@ -312,6 +312,10 @@ Typst 使用 `$...$` 包裹数学公式。行内公式前后需要有空格，�
 
 == 参考文献
 
+本模板集成了 #link("https://github.com/pku-typst/gb7714-bilingual")[gb7714-bilingual] 包，提供符合 GB/T 7714 标准的参考文献格式。该包会自动根据文献语言切换中英文术语（如英文文献使用 "et al."，中文文献使用 "等"）。
+
+=== 基本用法
+
 Typst 支持 BibLaTeX 格式的 `.bib` 文件。在文档中引用文献使用 `@` 符号：
 
 #code-preview(
@@ -321,18 +325,61 @@ Typst 支持 BibLaTeX 格式的 `.bib` 文件。在文档中引用文献使用 `
   [可以像这样引用参考文献@wang2010guide @kopka2004guide。],
 )
 
-在论文末尾需要插入参考文献列表：
+使用本模板时，只需在 `conf` 函数中配置 `bibfiles` 参数即可，无需手动调用 `bibliography` 函数：
 
 #codeblock(
   ```typ
-  #bibliography("ref.bib", style: "gb-7714-2015-numeric")
+  #show: doc => conf(
+    bibfiles: "ref.bib",        // 单个文件
+    // bibfiles: ("ref.bib", "extra.bib"),  // 多个文件
+    bibstyle: "numeric",        // 顺序编码制（默认）
+    // bibstyle: "author-date", // 著者—出版年制
+    bibversion: "2015",         // GB/T 7714-2015（默认）
+    // bibversion: "2025",      // GB/T 7714-2025（2026年7月1日起实施）
+    doc,
+  )
   ```,
-  caption: "插入参考文献列表",
+  caption: "配置参考文献",
 )
 
-根据#link("https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc")[北京大学博士研究生学位论文格式模板(2024)]，文献索引方式可选择"顺序编码制"（`gb-7714-2015-numeric`）或"著者—出版年制"（`gb-7714-2015-author-date`）。
+根据#link("https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc")[北京大学博士研究生学位论文格式模板(2024)]，文献索引方式可选择"顺序编码制"（`bibstyle: "numeric"`）或"著者—出版年制"（`bibstyle: "author-date"`）。
 
-模板已预设参考文献的排版样式（五号字、悬挂缩进 1.66 字符、行距 16pt、段前 3pt），以匹配 Word 模板规范。
+=== 语言检测
+
+gb7714-bilingual 会自动检测文献语言。如果自动检测不准确，可以在 `.bib` 文件中显式指定 `language` 字段：
+
+#codeblock(
+  ```bib
+  @book{kopka2004guide,
+    title     = {Guide to LATEX},
+    author    = {Kopka, Helmut and Daly, Patrick W},
+    year      = {2004},
+    publisher = {Addison-Wesley},
+    language  = {english}  // 显式指定为英文
+  }
+  ```,
+  caption: "在 .bib 文件中指定语言",
+)
+
+=== 高级用法
+
+如果需要使用其他引用样式（如 APA、IEEE 等），可以设置 `override-bib: true`，然后自行调用 `bibliography()` 函数：
+
+#codeblock(
+  ```typ
+  #show: doc => conf(
+    override-bib: true,  // 禁用 gb7714-bilingual
+    doc,
+  )
+
+  // ... 正文内容 ...
+
+  #bibliography("ref.bib", style: "ieee")
+  ```,
+  caption: "使用其他引用样式",
+)
+
+模板已预设参考文献的排版样式（五号字、悬挂缩进 1.66 字符、行距 16pt、段前 3pt），以匹配 Word 模板规范。设置 `override-bib: true` 时，模板仍会应用这些默认格式。如需进一步自定义排版，可以添加自己的 `show bibliography` 规则来覆盖模板设置。
 
 == 交叉引用
 
