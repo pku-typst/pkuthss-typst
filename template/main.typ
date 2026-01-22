@@ -49,6 +49,12 @@
     在此处填写致谢内容。
   ],
 
+  // ========== 参考文献 ==========
+  bibfiles: "ref.bib", // 参考文献文件
+  bibstyle: "numeric", // 引用风格："numeric" 或 "author-date"
+  bibversion: "2015", // GB/T 7714 版本："2015" 或 "2025"
+  // override-bib: false,        // 自定义引用样式时设为 true
+
   // ========== 可选参数 ==========
   // first-line-indent: 2em,     // 首行缩进
   // outlinedepth: 3,            // 目录深度
@@ -97,6 +103,3 @@
 = 附录
 
 在此处添加附录内容...
-
-// ========== 参考文献 ==========
-#bibliography("ref.bib", style: "gb-7714-2015-numeric")
