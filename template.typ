@@ -98,10 +98,11 @@
   // 引用记号自定义（图、表、代码、公式、节）
   // 示例：supplements: (图: "Figure", 表: "Table")
   supplements: (:),
-  // 完全自定义参考文献样式，忽略 bibfiles、bibstyle、bibversion 参数
+  // 完全自定义参考文献样式，忽略以下参数
   override-bib: false,
-  // 引用文件列表（可以是单个文件名或文件名列表）
-  bibfiles: (),
+  // 参考文献文件内容（需使用 read() 读取）
+  // 示例：bibcontent: read("ref.bib")
+  bibcontent: none,
   // 引用风格（默认为 "numeric"，可选 "author-date"）
   bibstyle: "numeric",
   // 引用版本（默认为 "2015"，可选 "2025"。注意 GB/T 7714-2025 标准从 2026 年 7 月 1 日开始实施）
@@ -295,17 +296,10 @@
   )
 
   smartpagebreak()
-  let bibfiles = if type(bibfiles) == array {
-    bibfiles
-  } else if type(bibfiles) == str and bibfiles != "" {
-    (bibfiles,)
-  } else {
-    ()
-  }
-  let use-gb7714 = not override-bib and bibfiles != ()
+  let use-gb7714 = not override-bib and bibcontent != none
   if use-gb7714 {
     init-gb7714.with(
-      bibfiles.map(read).join(),
+      bibcontent,
       style: bibstyle,
       version: bibversion,
     )(doc)
