@@ -14,10 +14,10 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
-== 2026-01-22 #contributors.lucifer1004 #pr(32)
+== 2026-01-22 #contributors.lucifer1004 #pr(32) #pr(33) #pr(34)
 
 + 集成 #link("https://github.com/pku-typst/gb7714-bilingual")[gb7714-bilingual] 包：
-  - 新增 `bibfiles`、`bibstyle`、`bibversion` 配置项，简化参考文献配置。
+  - 新增 `bibcontent`、`bibstyle`、`bibversion` 配置项，简化参考文献配置。
   - 支持 GB/T 7714-2015 和 GB/T 7714-2025 标准。
   - 支持"顺序编码制"（`numeric`）和"著者—出版年制"（`author-date`）两种引用风格。
   - 自动根据文献语言切换中英文术语（如 "et al." / "等"）（#issue(31)）。

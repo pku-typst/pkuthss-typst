@@ -330,12 +330,11 @@ Typst 支持 BibLaTeX 格式的 `.bib` 文件。在文档中引用文献使用 `
 #codeblock(
   ```typ
   #show: doc => conf(
-    bibfiles: "ref.bib",        // 单个文件
-    // bibfiles: ("ref.bib", "extra.bib"),  // 多个文件
-    bibstyle: "numeric",        // 顺序编码制（默认）
-    // bibstyle: "author-date", // 著者—出版年制
-    bibversion: "2015",         // GB/T 7714-2015（默认）
-    // bibversion: "2025",      // GB/T 7714-2025（2026年7月1日起实施）
+    bibcontent: read("ref.bib"), // 参考文献文件内容
+    bibstyle: "numeric",         // 顺序编码制（默认）
+    // bibstyle: "author-date",  // 著者—出版年制
+    bibversion: "2015",          // GB/T 7714-2015（默认）
+    // bibversion: "2025",       // GB/T 7714-2025（2026年7月1日起实施）
     doc,
   )
   ```,

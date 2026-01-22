@@ -111,12 +111,12 @@ heading(
 
 ### 配置参数
 
-| 参数           | 类型                | 默认值      | 说明                                                |
-| -------------- | ------------------- | ----------- | --------------------------------------------------- |
-| `bibfiles`     | `str \| array<str>` | `()`        | 参考文献文件路径                                    |
-| `bibstyle`     | `str`               | `"numeric"` | 引用风格：`"numeric"` 或 `"author-date"`            |
-| `bibversion`   | `str`               | `"2015"`    | GB/T 7714 版本：`"2015"` 或 `"2025"`                |
-| `override-bib` | `bool`              | `false`     | 是否自定义引用样式（用户自行调用 `bibliography()`） |
+| 参数           | 类型   | 默认值      | 说明                                       |
+| -------------- | ------ | ----------- | ------------------------------------------ |
+| `bibcontent`   | `str`  | `none`      | 参考文献文件内容（需使用 `read()` 读取）   |
+| `bibstyle`     | `str`  | `"numeric"` | 引用风格：`"numeric"` 或 `"author-date"`   |
+| `bibversion`   | `str`  | `"2015"`    | GB/T 7714 版本：`"2015"` 或 `"2025"`       |
+| `override-bib` | `bool` | `false`     | 是否自定义引用样式（用户自行处理参考文献） |
 
 ### override-bib 行为
 
@@ -130,19 +130,18 @@ heading(
 
 ```typst
 // template.typ 中的处理流程
-let bibfiles = if type(bibfiles) == array { bibfiles } else { (bibfiles,) }
-init-gb7714.with(
-  bibfiles.map(read).join(),
-  style: bibstyle,
-  version: bibversion,
-)(doc)
-
-
-// 使用 full-control 自定义渲染
-gb7714-bibliography(
-  title: heading(numbering: none)[参考文献],
-  full-control: entries => { ... },
-)
+let use-gb7714 = not override-bib and bibcontent != none
+if use-gb7714 {
+  init-gb7714.with(
+    bibcontent,
+    style: bibstyle,
+    version: bibversion,
+  )(doc)
+  gb7714-bibliography(
+    title: heading(numbering: none)[参考文献],
+    full-control: entries => { ... },
+  )
+}
 ```
 
 ### 关键点
