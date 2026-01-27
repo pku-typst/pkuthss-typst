@@ -14,6 +14,11 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
+== 2026-01-27 #contributors.lucifer1004 #pr(36)
+
++ 更新 #link("https://github.com/pku-typst/gb7714-bilingual")[gb7714-bilingual] 包到 `v0.2.1`：
+  - 修复了目录部分额外空白页的问题（#issue(35)）。
+
 == 2026-01-22 #contributors.lucifer1004 #pr(32) #pr(33) #pr(34)
 
 + 集成 #link("https://github.com/pku-typst/gb7714-bilingual")[gb7714-bilingual] 包：
