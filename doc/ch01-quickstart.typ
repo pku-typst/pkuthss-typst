@@ -22,7 +22,7 @@ Typst 是一个现代化的排版系统，可以通过以下方式使用：
 模板已发布到 Typst Universe，可以直接创建新项目：
 
 ```bash
-typst init @preview/modern-pku-thesis:0.2.0 my-thesis
+typst init @preview/modern-pku-thesis:0.2.1 my-thesis
 cd my-thesis
 ```
 
