@@ -1,6 +1,6 @@
 [package]
 name = "modern-pku-thesis"
-version = "0.2.1"
+version = "0.2.2"
 entrypoint = "template.typ"
 authors = ["Gabriel Wu <@lucifer1004>"]
 license = "MIT"
