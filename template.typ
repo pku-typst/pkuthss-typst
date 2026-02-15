@@ -30,7 +30,7 @@
 #import "@preview/cuti:0.4.0": show-cn-fakebold
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.10": *
-#import "@preview/gb7714-bilingual:0.2.1": *
+#import "@preview/gb7714-bilingual:0.2.2": *
 
 // 导入并重导出所有公共符号
 #import "lib/config.typ": appendix, 字体, 字号, 引用记号
