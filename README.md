@@ -11,7 +11,7 @@
 ### 方式一：通过 Typst Universe（推荐）
 
 ```bash
-typst init @preview/modern-pku-thesis:0.2.1 my-thesis
+typst init @preview/modern-pku-thesis:0.2.2 my-thesis
 cd my-thesis
 ```
 
