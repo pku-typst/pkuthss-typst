@@ -14,6 +14,13 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
+== 2026-02-16 #contributors.lucifer1004 #pr(38)
+
++ 修复 `booktab` 无法被 `@label` 引用（"cannot reference styled"）的问题（#issue(37)）：
+  - 将表格字号设置移入块内部，避免返回的 `figure` 被包裹为 styled 导致不可引用。
+  - 明确了只有 `outlined = true` 时的 `booktab` 才能被引用，同时 `caption` 生效。
++ 取消了表格内部的 `top-edge: "ascender"` 设置，修复了表格内中英文字体对齐的问题（#issue(37)）。
+
 == 2026-01-27 #contributors.lucifer1004 #pr(36)
 
 + 更新 #link("https://github.com/pku-typst/gb7714-bilingual")[gb7714-bilingual] 包到 `v0.2.1`：

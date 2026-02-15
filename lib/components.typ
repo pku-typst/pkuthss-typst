@@ -4,7 +4,7 @@
 #import "config.typ": (
   appendixcounter, chaptercounter, front-heading, partcounter, 字号, 引用记号,
 )
-#import "utils.typ": bodytotextwithtrim, chinesenumbering
+#import "utils.typ": caption-to-text, chinesenumbering
 
 // 中文目录
 // 使用 Typst 原生 outline + show rule 实现
@@ -126,7 +126,7 @@
     link(el_loc, maybe_number)
 
     // Caption 文本
-    link(el_loc, bodytotextwithtrim(el.caption.body))
+    link(el_loc, caption-to-text(el.caption))
 
     // 填充点
     box(width: 1fr, [#h(2pt) #box(width: 1fr, repeat[.]) #h(2pt)])
@@ -160,22 +160,22 @@
 //
 // booktab 专用参数:
 //   width: 表格外层容器宽度，默认 auto
-//   caption: 表格标题（设为 none 且 outlined 为 false 时不使用 figure）
-//   outlined: 是否包装在 figure 中（默认 true），设为 false 时生成纯表格
+//   outlined: 是否包装在 figure 中（默认 true）。仅当 outlined = true 时 caption 生效，且表格可被 @label 引用；设为 false 时生成纯表格，无标题、不可引用。
+//   caption: 表格标题，仅在 outlined = true 时生效（出现在表格列表、可作为引用目标）
 //
 // 必须指定 columns 参数（用于分离表头行），其他参数直接传递给 table
 // stroke 参数会被忽略（三线表有固定的线条样式）
 //
 // 用法:
-//   // 带标题的表格（出现在表格列表中）
+//   // 带标题的表格（outlined 默认 true，出现在表格列表中，可被 @label 引用）
 //   #booktab(
 //     columns: 3,
-//     caption: "示例表格",
+//     caption: [示例表格],
 //     [表头1], [表头2], [表头3],
 //     [内容1], [内容2], [内容3],
-//   )
+//   ) <tab-label>
 //
-//   // 纯表格（不带标题和编号）
+//   // 纯表格（outlined: false，不带标题和编号，不可引用）
 //   #booktab(
 //     columns: 2,
 //     outlined: false,
@@ -203,26 +203,27 @@
   // 移除 stroke（三线表固定样式）
   let _ = table-args.remove("stroke", default: none)
 
-  set text(字号.表文, top-edge: "ascender")
-
   let the-table = block(
     width: width,
     breakable: true,
-    table(
-      stroke: none,
-      ..table-args,
-      // 表头行
-      table.hline(stroke: 1.5pt),
-      ..headers.map(strong),
-      table.hline(stroke: 0.75pt),
-      // 内容行
-      ..contents,
-      table.hline(stroke: 1.5pt),
-    ),
+    {
+      set text(字号.表文)
+      table(
+        stroke: none,
+        ..table-args,
+        // 表头行
+        table.hline(stroke: 1.5pt),
+        ..headers.map(strong),
+        table.hline(stroke: 0.75pt),
+        // 内容行
+        ..contents,
+        table.hline(stroke: 1.5pt),
+      )
+    },
   )
 
   if outlined {
-    figure(the-table, caption: caption, kind: table)
+    figure(the-table, caption: caption, outlined: outlined, kind: table)
   } else {
     the-table
   }

@@ -178,9 +178,11 @@ Typst 中定义表格使用 `table` 函数。如需标题和引用功能，同�
 
 本模板提供了 `booktab` 函数用于生成更美观的三线表。`booktab` 基于原生 `table` 实现，支持大部分 `table` 参数（`stroke` 除外），第一行自动作为表头。
 
+*引用规则*：仅当 `outlined = true`（默认）时，`booktab` 才会包装为 `figure`，此时 `caption` 生效、表格可被 `@label` 引用。设 `outlined: false` 时为纯表格，`caption` 不生效，且不能使用 `@` 引用。
+
 *注意*：本模板默认允许表格跨页显示（`show figure: set block(breakable: true)`）。如果不希望某个表格被分割，可以在表格前手动插入 `#pagebreak()` 进行调整。
 
-三线表示例：
+@booktab-example 展示了 `booktab` 的示例效果：
 
 #code-preview(
   ```typ
@@ -383,6 +385,8 @@ gb7714-bilingual 会自动检测文献语言。如果自动检测不准确，可
 == 交叉引用
 
 Typst 使用标签 `<label>`（或`label(...)`）和引用 `@label`（或`link(dst, src)`）实现交叉引用。当原始标签引用的对象是章节、图表等时，`@label` 会自动转换为链接文本。对于一般的引用，则需要通过 `link` 函数手动创建链接文本。
+
+*图表与表格*：图片需放在 `figure` 中；`booktab` 表格需要使用 `outlined: true`（默认），才能用 `<label>` 配合 `@label` 引用。`outlined: false` 的纯表格不能作为引用目标。
 
 #code-preview(
   ```typ

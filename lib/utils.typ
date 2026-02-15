@@ -72,11 +72,20 @@
   }
 }
 
-// 从 figure caption body 中提取文本
-#let bodytotextwithtrim(a) = {
-  if a.has("children") {
-    let found = a.children.find(it => it.has("text") and it.text.len() > 0)
-    if found != none { found } else { a }
+// 从 figure caption 中提取用于列表条目链接的显示内容。
+// 输入为 str 时返回 trim 后的字符串；为 content 时先按 .body 递归解包，再若有 .children 则取第一个含非空 .text 的子节点，否则返回原 content。供 listoffigures 等用作 link 的显示文本。
+#let caption-to-text(a) = {
+  if type(a) == str {
+    a.trim()
+  } else if type(a) == content {
+    if a.has("body") {
+      caption-to-text(a.body)
+    } else if a.has("children") {
+      let found = a.children.find(it => it.has("text") and it.text.len() > 0)
+      if found != none { found } else { a }
+    } else {
+      a
+    }
   } else {
     a
   }
