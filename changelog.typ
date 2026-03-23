@@ -14,6 +14,11 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
+== 2026-03-23 #contributors.lucifer1004 #pr(42)
+
++ 根据#link("https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc", "北京大学博士研究生学位论文格式模板（2024）") 调整了封面页的样式：
+  - 将"学院"改为"院系"（#issue(41)）。
+
 == 2026-02-16 #contributors.lucifer1004 #pr(38)
 
 + 修复 `booktab` 无法被 `@label` 引用（"cannot reference styled"）的问题（#issue(37)）：
