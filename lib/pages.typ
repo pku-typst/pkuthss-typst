@@ -157,7 +157,7 @@
     (
       (text("姓") + h(2em) + text("名："), cauthor),
       (text("学") + h(2em) + text("号："), studentid),
-      (text("学") + h(2em) + text("院："), school),
+      (text("院") + h(2em) + text("系："), school),
       (text("专") + h(2em) + text("业："), cmajor),
       ("研究方向：", direction),
       ("导师姓名：", csupervisor),
