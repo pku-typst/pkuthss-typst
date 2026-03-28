@@ -71,6 +71,7 @@
 
 // 附录切换函数
 #let appendix() = {
+  metadata("pkuthss-appendix")
   appendixcounter.update(10)
   chaptercounter.update(0)
   counter(heading).update(0)
