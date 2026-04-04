@@ -74,13 +74,12 @@ typst watch main.typ
 
   这里是第二章内容...
 
+  // 参考文献会自动排版在附录之前
   #appendix()
 
   = 附录 A 补充材料
 
   这里是附录内容...
-
-  #bibliography("ref.bib", style: "gb-7714-2015-numeric")
   ```,
   caption: "论文文件基本结构",
 )

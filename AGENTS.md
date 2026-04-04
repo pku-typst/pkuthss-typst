@@ -132,15 +132,24 @@ heading(
 // template.typ 中的处理流程
 let use-gb7714 = not override-bib and bibcontent != none
 if use-gb7714 {
+  let make-bib = () => gb7714-bibliography(
+    title: heading(numbering: none)[参考文献],
+    full-control: entries => { ... },
+  )
+  // appendix() 会 emit metadata("pkuthss-appendix")，
+  // 通过 show rule 将其替换为参考文献，确保参考文献在附录之前
+  show metadata.where(value: "pkuthss-appendix"): _ => make-bib()
   init-gb7714.with(
     bibcontent,
     style: bibstyle,
     version: bibversion,
   )(doc)
-  gb7714-bibliography(
-    title: heading(numbering: none)[参考文献],
-    full-control: entries => { ... },
-  )
+  // 用户未调用 appendix() 时，参考文献出现在文末
+  context {
+    if query(metadata.where(value: "pkuthss-appendix")).len() == 0 {
+      make-bib()
+    }
+  }
 }
 ```
 
@@ -150,6 +159,7 @@ if use-gb7714 {
 2. **隐藏 bibliography**：需要一个隐藏的 `bibliography` 调用让 `@key` 语法生效
 3. **full-control 模式**：使用 `gb7714-bibliography` 的 `full-control` 参数完全控制渲染样式
 4. **语言检测**：gb7714-bilingual 自动检测文献语言，可通过 `.bib` 文件的 `language` 字段覆盖
+5. **参考文献位置**：`appendix()` emit `metadata("pkuthss-appendix")` 作为标记，show rule 在该位置注入参考文献，确保参考文献排在附录之前（符合研究生院模板要求）
 
 ## 6. 命令行参数
 

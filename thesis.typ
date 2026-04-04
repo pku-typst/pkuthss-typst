@@ -74,5 +74,3 @@
 = 更新日志 <changelog>
 
 #include "changelog.typ"
-
-#pagebreak()

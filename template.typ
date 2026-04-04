@@ -30,7 +30,7 @@
 #import "@preview/cuti:0.4.0": show-cn-fakebold
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.10": *
-#import "@preview/gb7714-bilingual:0.2.1": *
+#import "@preview/gb7714-bilingual:0.2.3": *
 
 // 导入并重导出所有公共符号
 #import "lib/config.typ": appendix, 字体, 字号, 引用记号
@@ -298,12 +298,7 @@
   smartpagebreak()
   let use-gb7714 = not override-bib and bibcontent != none
   if use-gb7714 {
-    init-gb7714.with(
-      bibcontent,
-      style: bibstyle,
-      version: bibversion,
-    )(doc)
-    gb7714-bibliography(
+    let make-bib = () => gb7714-bibliography(
       title: heading(numbering: none)[参考文献],
       full-control: entries => {
         set text(字号.五号)
@@ -329,6 +324,17 @@
         }
       },
     )
+    show metadata.where(value: "pkuthss-appendix"): _ => make-bib()
+    init-gb7714.with(
+      bibcontent,
+      style: bibstyle,
+      version: bibversion,
+    )(doc)
+    context {
+      if query(metadata.where(value: "pkuthss-appendix")).len() == 0 {
+        make-bib()
+      }
+    }
   } else {
     show bibliography: it => styles.bibliography-show-rule(it)
     doc

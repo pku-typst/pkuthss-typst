@@ -9,14 +9,23 @@
   "https://github.com/pku-typst/pkuthss-typst/pull/" + str(id),
   text(fill: green.lighten(20%))[\##id],
 )
+#let pku-spec = link(
+  "https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc",
+  "北京大学博士研究生学位论文格式模板（2024）",
+)
 
 #set enum(indent: 0em)
 #set list(indent: 0em)
 #set heading(numbering: none)
 
+== 2026-04-04 #contributors.lucifer1004 #pr(45)
+
++ 根据#pku-spec 调整了附录和参考文献的顺序：
+  - 将附录移至参考文献之后（#issue(44)）。
+
 == 2026-03-23 #contributors.lucifer1004 #pr(42)
 
-+ 根据#link("https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc", "北京大学博士研究生学位论文格式模板（2024）") 调整了封面页的样式：
++ 根据#pku-spec 调整了封面页的样式：
   - 将"学院"改为"院系"（#issue(41)）。
 
 == 2026-02-16 #contributors.lucifer1004 #pr(38)
@@ -99,7 +108,7 @@
 
 + 引入 #link("https://typst.app/universe/package/itemize/", `itemize`) 包，修复了列表编号和文本内容衬线不对齐的问题。
 + 引入 #link("https://typst.app/universe/package/cuti/", `cuti`) 包，对部分需要加粗的中文文本进行了处理。
-+ 对照 #link("https://grs.pku.edu.cn/docs/2024-02/20240229092001843564.doc", "北京大学博士研究生学位论文格式模板（2024）") 进行了若干调整：
++ 对照 #pku-spec 进行了若干调整：
   - 调整了全局的行距。
   - 调整了封面样式（#pr(19)）。
   - 调整了英文摘要的样式（#issue(20)）。
