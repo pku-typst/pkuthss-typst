@@ -107,6 +107,11 @@
   bibstyle: "numeric",
   // 引用版本（默认为 "2015"，可选 "2025"。注意 GB/T 7714-2025 标准从 2026 年 7 月 1 日开始实施）
   bibversion: "2015",
+  // 仅 bibstyle: "author-date"。true（默认）时中文条目排在外文之前；false 时外文在前（传给 gb7714-bilingual 的 cn-first）
+  bib-cn-first: true,
+  // 仅 author-date 且中文作者：多音字校正，传给 auto-pinyin 的 to-pinyin(..., override: ...)
+  // 键为汉字（字符串），值为 tone-num-end 音节串，如 ("重": "chong2")
+  bib-pinyin-override: (:),
   doc,
 ) = {
   // 命令行参数覆盖配置文件中的值
@@ -329,6 +334,8 @@
       bibcontent,
       style: bibstyle,
       version: bibversion,
+      cn-first: bib-cn-first,
+      pinyin-override: bib-pinyin-override,
     )(doc)
     context {
       if query(metadata.where(value: "pkuthss-appendix")).len() == 0 {
