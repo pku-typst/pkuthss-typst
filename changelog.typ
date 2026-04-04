@@ -18,7 +18,7 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
-== 2026-04-04 #contributors.lucifer1004 #pr(45) #pr(46)
+== 2026-04-04 #contributors.lucifer1004 #pr(45) #pr(46) #pr(47)
 
 + 根据#pku-spec 调整了附录和参考文献的顺序：
   - 将附录移至参考文献之后（#issue(44)）。
@@ -26,6 +26,9 @@
   - 与 #link("https://github.com/pku-typst/gb7714-bilingual")[gb7714-bilingual] `v0.2.3` 一致：默认中文条目在外文之前，中文按作者姓氏汉语拼音排序。
   - `conf` 新增 `bib-cn-first`、`bib-pinyin-override`，分别对应上游 `cn-first` 与多音字 `pinyin-override`。
   - 用户指南中补充上述配置说明，并修正参考文献示例里误写的 `bibfiles`（应为 `bibcontent`）。
++ 新增 `as-booktab` 装饰函数（#issue(40)）：
+  - 可将原生 `table` 装饰为三线表样式，更适合与原生 `figure` 组合使用。
+  - 用户指南补充了 `as-booktab` 的示例与适用场景说明。
 
 == 2026-03-23 #contributors.lucifer1004 #pr(42)
 

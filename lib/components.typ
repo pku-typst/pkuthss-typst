@@ -157,6 +157,55 @@
 
 // 三线表组件
 // 基于 Typst 原生 table，支持所有 table 参数（stroke 除外）
+// 也提供 as-booktab(table) 将现有 table 装饰为三线表样式
+#let _booktab-column-count(columns) = if type(columns) == int {
+  columns
+} else if (
+  type(columns) == array
+) { columns.len() } else { 1 }
+
+#let _booktab-header-cell(cell) = {
+  if cell.func() != table.cell {
+    cell
+  } else {
+    let cell-args = cell.fields()
+    let body = cell-args.remove("body")
+    table.cell(..cell-args)[#strong(body)]
+  }
+}
+
+#let _booktab-block(
+  table-args,
+  header,
+  body,
+  width: auto,
+  footer: none,
+) = block(
+  width: width,
+  breakable: true,
+  {
+    set text(字号.表文)
+    table(
+      stroke: none,
+      ..table-args,
+      table.hline(stroke: 1.5pt),
+      header,
+      table.hline(stroke: 0.75pt),
+      ..body,
+      ..if footer != none { (footer,) } else { () },
+      table.hline(stroke: 1.5pt),
+    )
+  },
+)
+
+#let _booktab-unstyled(it, width: auto) = block(
+  width: width,
+  breakable: true,
+  {
+    set text(字号.表文)
+    it
+  },
+)
 //
 // booktab 专用参数:
 //   width: 表格外层容器宽度，默认 auto
@@ -188,9 +237,7 @@
 
   // 从 columns 推断列数（必须指定）
   let columns = table-args.at("columns", default: 1)
-  let col-count = if type(columns) == int { columns } else if (
-    type(columns) == array
-  ) { columns.len() } else { 1 }
+  let col-count = _booktab-column-count(columns)
 
   if all-cells.len() < col-count {
     panic("booktab: not enough cells for header row")
@@ -203,23 +250,11 @@
   // 移除 stroke（三线表固定样式）
   let _ = table-args.remove("stroke", default: none)
 
-  let the-table = block(
+  let the-table = _booktab-block(
+    table-args,
+    table.header(..headers.map(cell => table.cell[#strong(cell)])),
+    contents,
     width: width,
-    breakable: true,
-    {
-      set text(字号.表文)
-      table(
-        stroke: none,
-        ..table-args,
-        // 表头行
-        table.hline(stroke: 1.5pt),
-        ..headers.map(strong),
-        table.hline(stroke: 0.75pt),
-        // 内容行
-        ..contents,
-        table.hline(stroke: 1.5pt),
-      )
-    },
   )
 
   if outlined {
@@ -227,4 +262,58 @@
   } else {
     the-table
   }
+}
+
+// 将现有 table 装饰为三线表样式，便于与 figure 组合使用
+#let as-booktab(it, width: auto) = {
+  if it.func() != table {
+    panic("as-booktab: expected a table")
+  }
+
+  let table-args = it.fields()
+  let children = table-args.remove("children")
+
+  if children.any(child => child.func() == table.hline) {
+    return _booktab-unstyled(it, width: width)
+  }
+
+  let _ = table-args.remove("stroke", default: none)
+  let header = children.find(child => child.func() == table.header)
+  let footer = children.find(child => child.func() == table.footer)
+
+  if header != none {
+    let body = children.filter(child => (
+      child.func() != table.header and child.func() != table.footer
+    ))
+    return _booktab-block(
+      table-args,
+      table.header(..header.children.map(_booktab-header-cell)),
+      body,
+      width: width,
+      footer: footer,
+    )
+  }
+
+  let col-count = _booktab-column-count(table-args.at("columns", default: 1))
+  let header-cells = ()
+  let body = ()
+
+  for child in children {
+    if child.func() == table.cell and header-cells.len() < col-count {
+      header-cells.push(_booktab-header-cell(child))
+    } else {
+      body.push(child)
+    }
+  }
+
+  if header-cells.len() < col-count {
+    panic("as-booktab: not enough cells for header row")
+  }
+
+  _booktab-block(
+    table-args,
+    table.header(..header-cells),
+    body,
+    width: width,
+  )
 }

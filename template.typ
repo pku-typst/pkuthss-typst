@@ -35,7 +35,9 @@
 // 导入并重导出所有公共符号
 #import "lib/config.typ": appendix, 字体, 字号, 引用记号
 #import "lib/utils.typ": chinesenumbering
-#import "lib/components.typ": booktab, chineseoutline, codeblock, listoffigures
+#import "lib/components.typ": (
+  as-booktab, booktab, chineseoutline, codeblock, listoffigures,
+)
 #import "lib/styles.typ": (
   sym-bullet, sym-square-filled, sym-square-filled-rotated,
 )
