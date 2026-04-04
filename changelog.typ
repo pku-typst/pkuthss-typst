@@ -29,6 +29,7 @@
 + 新增 `as-booktab` 装饰函数（#issue(40)）：
   - 可将原生 `table` 装饰为三线表样式，更适合与原生 `figure` 组合使用。
   - 用户指南补充了 `as-booktab` 的示例与适用场景说明。
++ 移除了正文开始前的冗余 `smartpagebreak` 调用。
 
 == 2026-03-23 #contributors.lucifer1004 #pr(42)
 

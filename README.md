@@ -2,7 +2,7 @@
 
 北京大学学位论文 Typst 模板 / Typst template for dissertations in Peking University (PKU).
 
-![cover](./images/cover.png)
+![Cover of an example thesis](./images/cover.png)
 
 📄 **[在线预览 PDF](https://pku-typst.github.io/pkuthss-typst/thesis.pdf)** | **[盲审版本](https://pku-typst.github.io/pkuthss-typst/thesis-blind.pdf)**
 
@@ -11,7 +11,7 @@
 ### 方式一：通过 Typst Universe（推荐）
 
 ```bash
-typst init @preview/modern-pku-thesis:0.2.2 my-thesis
+typst init @preview/modern-pku-thesis:0.2.3 my-thesis
 cd my-thesis
 ```
 

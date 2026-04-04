@@ -302,7 +302,6 @@
     spacing: 10.5pt,
   )
 
-  smartpagebreak()
   let use-gb7714 = not override-bib and bibcontent != none
   if use-gb7714 {
     let make-bib = () => gb7714-bibliography(
