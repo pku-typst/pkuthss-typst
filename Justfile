@@ -23,13 +23,13 @@ publish:
     exit 1
   fi
   echo "Publishing $name v$version -> $dest"
-  mkdir -p "$dest/lib" "$dest/template" "$dest/images"
-  cp typst.toml template.typ README.md LICENSE "$dest/"
-  cp pkulogo.svg pkuword.svg "$dest/"
+  mkdir -p "$dest/lib" "$dest/template" "$dest/images" "$dest/assets"
+  cp typst.toml export.typ README.md LICENSE "$dest/"
+  cp assets/pkulogo.svg assets/pkuword.svg "$dest/assets/"
   cp lib/*.typ "$dest/lib/"
   cp template/main.typ template/ref.bib "$dest/template/"
   echo "Generating thumbnail..."
-  typst compile --root . --font-path fonts thesis.typ images/cover.png --format png --pages 1
+  typst compile --root . --font-path fonts doc/guide.typ images/cover.png --format png --pages 1
   oxipng images/cover.png
   cp images/cover.png "$dest/images/"
   echo "Done. Next:"

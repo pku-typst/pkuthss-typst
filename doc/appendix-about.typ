@@ -1,4 +1,4 @@
-#import "../template.typ": codeblock
+#import "../export.typ": codeblock
 
 Typst 是一个现代化的排版系统，由 Martin Haug 和 Laurenz Mädje 于 2019 年开始开发。它的设计目标是成为 LaTeX 的现代替代品，同时保持简洁易学。
 

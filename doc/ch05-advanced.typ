@@ -1,4 +1,4 @@
-#import "../template.typ": booktab
+#import "../export.typ": booktab
 
 == 自定义页眉页脚
 

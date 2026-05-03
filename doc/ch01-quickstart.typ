@@ -1,4 +1,4 @@
-#import "../template.typ": codeblock
+#import "../export.typ": codeblock
 
 == 安装与环境配置
 

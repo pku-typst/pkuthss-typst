@@ -1,7 +1,7 @@
 [package]
 name = "modern-pku-thesis"
 version = "0.2.3"
-entrypoint = "template.typ"
+entrypoint = "export.typ"
 authors = ["Gabriel Wu <@lucifer1004>"]
 license = "MIT"
 description = "Dissertation template for Peking University (PKU)."

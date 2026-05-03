@@ -119,8 +119,8 @@
     grid(
       columns: (auto, auto),
       gutter: 0.4em,
-      image("../pkulogo.svg", height: 2.4em, fit: "contain"),
-      image("../pkuword.svg", height: 1.6em, fit: "contain"),
+      image("../assets/pkulogo.svg", height: 2.4em, fit: "contain"),
+      image("../assets/pkuword.svg", height: 1.6em, fit: "contain"),
     ),
   )
   linebreak()

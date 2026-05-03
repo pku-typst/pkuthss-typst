@@ -1,4 +1,4 @@
-#import "../template.typ": booktab
+#import "../export.typ": booktab
 
 本模板提供了丰富的配置选项，可以在 `conf` 函数中进行设置。下面详细介绍各个配置项的含义和用法。
 

@@ -1,4 +1,4 @@
-#import "../template.typ": as-booktab, booktab, codeblock
+#import "../export.typ": as-booktab, booktab, codeblock
 
 #let code-preview(code, result) = {
   booktab(

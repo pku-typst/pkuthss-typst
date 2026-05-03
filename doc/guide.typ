@@ -1,4 +1,4 @@
-#import "template.typ": *
+#import "../export.typ": *
 
 #show: doc => conf(
   cauthor: "张三",
@@ -20,16 +20,16 @@
   esupervisor: "Prof. Si Li",
   date: (year: 2026, month: 6),
   degree-type: "academic",
-  cabstract: include "doc/cabstract.typ",
+  cabstract: include "cabstract.typ",
   ckeywords: ("Typst", "学位论文", "排版模板", "北京大学"),
-  eabstract: include "doc/eabstract.typ",
+  eabstract: include "eabstract.typ",
   ekeywords: (
     "Typst",
     "Dissertation",
     "Template",
     "Peking University",
   ),
-  acknowledgements: include "doc/acknowledgements.typ",
+  acknowledgements: include "acknowledgements.typ",
   outlinedepth: 3,
   blind: false,
   listofimage: true,
@@ -45,31 +45,31 @@
 
 = 快速开始 <quickstart>
 
-#include "doc/ch01-quickstart.typ"
+#include "ch01-quickstart.typ"
 
 = 模板配置选项 <config>
 
-#include "doc/ch02-config.typ"
+#include "ch02-config.typ"
 
 = Typst 基本功能 <typst-basics>
 
 本章介绍 Typst 的基本语法和功能，帮助用户快速上手。
 
-#include "doc/ch03-basics.typ"
+#include "ch03-basics.typ"
 
 = 常见问题与解决方案 <faq>
 
-#include "doc/ch04-faq.typ"
+#include "ch04-faq.typ"
 
 = 进阶使用技巧 <advanced>
 
-#include "doc/ch05-advanced.typ"
+#include "ch05-advanced.typ"
 
 #appendix()
 
 = 关于 Typst <about>
 
-#include "doc/appendix-about.typ"
+#include "appendix-about.typ"
 
 = 更新日志 <changelog>
 

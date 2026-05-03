@@ -1,4 +1,4 @@
-#import "template.typ": *
+#import "../export.typ": *
 #import "contributors.typ": *
 
 #let issue(id) = link(
