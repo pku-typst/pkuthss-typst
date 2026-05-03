@@ -415,3 +415,95 @@
   }
   it
 }
+
+
+#let style-config(
+  first-line-indent: 2em,
+  preview: true,
+  supplements: (:),
+  cheader: [北京大学学位论文],
+  codly-args: (:),
+  doc,
+) = {
+  // 合并用户自定义引用记号与默认值
+  let merged-supplements = 引用记号
+  for (key, value) in supplements {
+    merged-supplements.insert(key, value)
+  }
+
+  // ========== 页面设置 ==========
+  set page(
+    "a4",
+    margin: (top: 3cm, bottom: 2.5cm, left: 2.6cm, right: 2.6cm),
+    header: make-header(cheader: cheader),
+    footer: make-footer(),
+  )
+
+  set text(字号.正文, font: 字体.宋体, lang: "zh")
+  set heading(numbering: chinesenumbering)
+  set figure(
+    numbering: (..nums) => context {
+      if appendixcounter.at(here()).first() < 10 {
+        numbering("1.1", chaptercounter.at(here()).first(), ..nums)
+      } else {
+        numbering("A.1", chaptercounter.at(here()).first(), ..nums)
+      }
+    },
+  )
+  set math.equation(
+    numbering: (..nums) => context {
+      set text(font: 字体.宋体)
+      if appendixcounter.at(here()).first() < 10 {
+        numbering("(1.1)", chaptercounter.at(here()).first(), ..nums)
+      } else {
+        numbering("(A.1)", chaptercounter.at(here()).first(), ..nums)
+      }
+    },
+  )
+  set footnote(numbering: "①")
+  show footnote.entry: it => {
+    let loc = it.note.location()
+    numbering(it.note.numbering, ..counter(footnote).at(loc))
+    h(0.5em)
+    it.note.body
+  }
+
+  // ========== show 规则 ==========
+  // show: itemize.default-enum-list.with(
+  //   indent: (first-line-indent, 0.5em),
+  //   label-baseline: "center",
+  //   list-config: (
+  //     label-format: it => [#(
+  //       sym-bullet(6pt),
+  //       sym-square-filled(6pt),
+  //       sym-square-filled-rotated(6pt),
+  //     ).at(calc.rem(it.level - 1, 3))],
+  //   ),
+  // )
+  let alwaysstartodd = false
+  show strong: it => text(font: 字体.黑体, weight: "bold", it.body)
+  show emph: it => text(font: 字体.楷体, style: "italic", it.body)
+  show raw: set text(font: 字体.代码, size: 字号.五号, top-edge: "ascender")
+  show link: it => if type(it.dest) == str and preview {
+    text(fill: blue)[#it]
+  } else { it }
+  show heading: it => heading-show-rule(it, () => {
+    if alwaysstartodd {
+      skippedstate.update(false)
+      pagebreak(weak: true)
+      skippedstate.update(true)
+      pagebreak(to: "odd", weak: true)
+      skippedstate.update(false)
+    } else {
+      pagebreak(weak: true)
+    }
+  })
+  show figure: set block(breakable: true)
+  show figure: it => figure-show-rule(
+    it,
+    supplements: merged-supplements,
+  )
+  show ref: it => ref-show-rule(it, supplements: merged-supplements)
+
+  doc
+}

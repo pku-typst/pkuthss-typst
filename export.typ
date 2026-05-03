@@ -39,7 +39,10 @@
   as-booktab, booktab, chineseoutline, codeblock, listoffigures,
 )
 #import "lib/styles.typ": (
-  sym-bullet, sym-square-filled, sym-square-filled-rotated,
+  style-config, sym-bullet, sym-square-filled, sym-square-filled-rotated,
+)
+#import "lib/pages.typ": (
+  abstract-page-en, abstract-page-zh, copyright-page, cover-page,
 )
 
 // 高级用户 API：导出内部计数器和状态，用于自定义章节编号等场景

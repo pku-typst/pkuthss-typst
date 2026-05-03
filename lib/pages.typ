@@ -6,6 +6,10 @@
 #import "utils.typ": chinesenumber, chineseyear, split-text-by-width
 #import "styles.typ": sym-box-checked, sym-box-unchecked
 
+#import "pages/abstract.typ": abstract-page-en, abstract-page-zh
+#import "pages/copyright.typ": copyright-page
+#import "pages/cover.typ": cover-page
+
 // 构建带自动换行的字段 grid
 #let build-field-grid(fields, name-width, value-width, row-height) = context {
   let grid-contents = ()
@@ -202,80 +206,6 @@
   [
     任何收存和保管本论文各种版本的单位和个人未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。
   ]
-}
-
-// 中文摘要页
-#let abstract-page-zh(
-  ckeywords: (),
-  first-line-indent: 2em,
-  cabstract,
-) = {
-  // Word 模板中默认为 20pt 行距
-  // 调整 text(top-edge:, bottom-edge:) 的方式可以更完美地匹配行距
-  // 但是会导致列表编号和列表内容无法对齐
-  // 这里选择基于经验的配置
-  set par(leading: 10.5pt, spacing: 10.5pt, justify: true)
-  front-heading("摘要", enter-front: true, header: "摘要")
-  set par(first-line-indent: first-line-indent)
-  cabstract
-  // 如果发现关键词和内容挤到一起，或者关键词在下一页顶部
-  // 可以插入 pagebreak() 手动分页
-  v(1fr)
-  [关键词：]
-  ckeywords.join("，")
-  v(1em)
-}
-
-// 英文摘要页
-#let abstract-page-en(
-  etitle: none,
-  eauthor: none,
-  emajor: none,
-  esupervisor: none,
-  ekeywords: (),
-  blind: false,
-  eabstract,
-) = {
-  // 英文摘要标题，页眉为 ABSTRACT
-  heading(
-    numbering: none,
-    outlined: false,
-    supplement: [#metadata((
-      pagebreak: true,
-      show-header: true,
-      header: "ABSTRACT",
-      spacing-before: 24pt,
-      spacing-after: 8pt,
-      linespacing: 2em,
-      font: (size: 字号.小二, font: "Arial", weight: "regular"),
-    ))],
-  )[#upper(etitle)]
-
-  // Word 模板中正文仍然是 20pt 行距
-  // 对于纯英文字体，测试下来 12.5pt 的匹配效果较好
-  set par(spacing: 12.5pt, leading: 12.5pt, justify: true)
-  if not blind {
-    [
-      #set align(center)
-      #eauthor \(#emajor\) \
-      Supervised by #esupervisor
-    ]
-  }
-  // Word 模板中英文摘要的首行缩进固定为 0.74cm
-  set par(first-line-indent: 0.74cm, justify: true)
-  v(8pt)
-  align(center)[#text(font: "Arial", weight: "bold")[ABSTRACT]]
-  v(6pt)
-  eabstract
-  v(1fr)
-  let keyword-prefix = if ekeywords.len() == 1 {
-    "KEY WORD: "
-  } else {
-    "KEY WORDS: "
-  }
-  [#keyword-prefix]
-  ekeywords.join(", ")
-  v(1em)
 }
 
 // 致谢页

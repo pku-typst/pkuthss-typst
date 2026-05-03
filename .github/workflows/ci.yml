@@ -30,14 +30,14 @@ jobs:
       - name: Setup Typst
         uses: typst-community/setup-typst@v4
 
-      - name: Compile thesis.typ
+      - name: Compile doc/guide.typ
         run: |
           mkdir -p build
           typst compile thesis.typ build/thesis.pdf --font-path fonts
 
-      - name: Compile thesis.typ (blind mode)
+      - name: Compile doc/guide.typ (blind mode)
         run: |
-          typst compile thesis.typ build/thesis-blind.pdf --font-path fonts --input blind=true
+          typst compile doc/guide.typ build/guide-blind.pdf --font-path fonts --input blind=true
 
       - name: Install pdfcpu
         run: |
