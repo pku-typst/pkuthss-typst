@@ -2,9 +2,8 @@
 // 页眉页脚、heading、figure、ref 等 show/set 规则
 
 #import "config.typ": (
-  appendixcounter, chaptercounter, equationcounter, footnotecounter,
-  imagecounter, partcounter, rawcounter, skippedstate, tablecounter, 字体, 字号,
-  引用记号,
+  appendixcounter, chaptercounter, equationcounter, footnotecounter, imagecounter, partcounter, rawcounter,
+  skippedstate, tablecounter, 字体, 字号, 引用记号,
 )
 #import "utils.typ": chinesenumbering
 
@@ -76,9 +75,7 @@
 
   // 检查当前页面是否是正文第一页（包含第一个带编号的一级标题）
   let is-body-first-page = (
-    current-page-heading != none
-      and current-page-heading.numbering != none
-      and part < 2
+    current-page-heading != none and current-page-heading.numbering != none and part < 2
   )
 
   // 封面区域无页眉（但如果当前页是前置部分第一页则显示）
@@ -161,8 +158,7 @@
 
   // 当存在 <__clean_declaration__> 元素时，不显示原创性声明页的页码
   if (
-    query(selector(heading).after(here())).len() == 0
-      and query(selector(<__clean_declaration__>)).len() > 0
+    query(selector(heading).after(here())).len() == 0 and query(selector(<__clean_declaration__>)).len() > 0
   ) { return }
 
   set text(字号.页码)
@@ -175,7 +171,7 @@
     #if part == 1 {
       numbering("I", page-num)
     } else {
-      str(page-num)
+      "第" + str(page-num) + "页"
     }
     // 对应 Word 模板中页脚下边距
     #v(1.75cm)
@@ -438,6 +434,7 @@
     header: make-header(cheader: cheader),
     footer: make-footer(),
   )
+  set par(first-line-indent: first-line-indent)
 
   set text(字号.正文, font: 字体.宋体, lang: "zh")
   set heading(numbering: chinesenumbering)

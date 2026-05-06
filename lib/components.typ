@@ -1,9 +1,7 @@
 // lib/components.typ - UI 组件
 // 目录、图表列表、代码块、三线表等可复用组件
 
-#import "config.typ": (
-  appendixcounter, chaptercounter, front-heading, partcounter, 字号, 引用记号,
-)
+#import "config.typ": appendixcounter, chaptercounter, front-heading, partcounter, 字号, 引用记号
 #import "utils.typ": caption-to-text, chinesenumbering
 
 // 中文目录
@@ -44,6 +42,8 @@
     // Word 模板中目录中一级标题的段前间距为 6pt
     if el.level == 1 {
       v(6pt)
+    } else if el.level == 2 {
+      h(3em)
     }
 
     // 编号
@@ -73,10 +73,7 @@
     let heading_counter = counter(heading).at(el_loc)
     let is-appendix = appendixcounter.at(el_loc).first() >= 10
     let is-first-body-chapter = (
-      el.level == 1
-        and el.numbering != none
-        and heading_counter == (1,)
-        and not is-appendix
+      el.level == 1 and el.numbering != none and heading_counter == (1,) and not is-appendix
     )
 
     // 页码可点击跳转
