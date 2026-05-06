@@ -20,7 +20,7 @@
   v(1fr)
   [关键词：]
   keywords.join("，")
-  v(1em)
+  v(1fr)
 }
 
 /// 英文摘要页
@@ -72,5 +72,5 @@
   }
   [#keyword-prefix]
   keywords.join(", ")
-  v(1em)
+  v(1fr)
 }

@@ -35,21 +35,13 @@
 // 导入并重导出所有公共符号
 #import "lib/config.typ": appendix, 字体, 字号, 引用记号
 #import "lib/utils.typ": chinesenumbering
-#import "lib/components.typ": (
-  as-booktab, booktab, chineseoutline, codeblock, listoffigures,
-)
-#import "lib/styles.typ": (
-  style-config, sym-bullet, sym-square-filled, sym-square-filled-rotated,
-)
-#import "lib/pages.typ": (
-  abstract-page-en, abstract-page-zh, copyright-page, cover-page,
-)
+#import "lib/components.typ": as-booktab, booktab, chineseoutline, codeblock, listoffigures
+#import "lib/styles.typ": style-config, sym-bullet, sym-square-filled, sym-square-filled-rotated
+#import "lib/pages.typ": *
 
 // 高级用户 API：导出内部计数器和状态，用于自定义章节编号等场景
 // 注意：这些是内部实现细节，未来版本可能会有变化
-#import "lib/config.typ": (
-  appendixcounter, chaptercounter, partcounter, skippedstate,
-)
+#import "lib/config.typ": appendixcounter, chaptercounter, partcounter, skippedstate
 
 // 内部使用的模块
 #import "lib/pages.typ"
@@ -250,7 +242,7 @@
   // ========== 中文摘要 ==========
   set align(left + top)
   pages.abstract-page-zh(
-    ckeywords: ckeywords,
+    keywords: ckeywords,
     first-line-indent: first-line-indent,
   )[#cabstract]
 
@@ -358,4 +350,104 @@
     )[#acknowledgements]
     pages.declaration-page(cleandeclaration: cleandeclaration)
   }
+}
+
+
+
+// 致谢页
+#let acknowledgements-page(first-line-indent: 2em, acknowledgements) = {
+  back-heading("致谢")
+  set par(
+    first-line-indent: first-line-indent,
+    leading: 10.5pt,
+    spacing: 10.5pt,
+  )
+  acknowledgements
+}
+
+// 原创性声明和授权说明页
+#let declaration-page(cleandeclaration: false) = {
+  // Word 模板中首行缩进固定为 2em
+  set par(first-line-indent: 2em)
+  back-heading(
+    "北京大学学位论文原创性声明和使用授权说明",
+    pagebreak: true,
+    // Word 模板中原创性声明页有页眉，如果不想要，可以在这里手动关闭
+    show-header: not cleandeclaration,
+  )
+
+  // 放置一个占位元素，用于清除页码
+  if cleandeclaration {
+    [#[]<__clean_declaration__>]
+  }
+
+  align(center)[#text(
+    字号.四号,
+    weight: "bold",
+    show-cn-fakebold[原创性声明],
+  )]
+  v(1fr)
+  [
+    #set par(leading: 0.95em, spacing: 0.95em)
+    本人郑重声明：所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品或成果。对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式标明。本声明的法律结果由本人承担。
+
+    #v(1fr)
+
+    #align(right)[
+      论文作者签名：#h(10em)
+      #v(1em)
+      #h(5em)
+      日期：
+      #h(2em)
+      年
+      #h(2em)
+      月
+      #h(2em)
+      日
+    ]
+
+    #v(1fr)
+    #align(center)[#text(
+      字号.四号,
+      weight: "bold",
+      show-cn-fakebold[学位论文使用授权说明],
+    )]
+    // #align(center)[#text(字号.五号)[（必须装订在提交学校图书馆的印刷本）]]
+    #v(1fr)
+
+    #set par(leading: 0.95em, spacing: 0.95em)
+    本人完全了解北京大学关于收集、保存、使用学位论文的规定，即：
+    #[
+      #set list(
+        marker: [#grid(
+          columns: (auto, 1em),
+          circle(radius: 0.3em, fill: black, stroke: none), [],
+        )],
+        indent: 1.5em,
+      )
+      - 按照学校要求提交学位论文的印刷本和电子版本；
+      - 学校有权保存学位论文的印刷本和电子版，并提供目录检索与阅览服务，在校园网上提供服务；
+      - 学校可以采用影印、缩印、数字化或其它复制手段保存论文；
+      // - 因某种特殊原因须要延迟发布学位论文电子版，授权学校#box(width: 12pt, align(center, square(size: 9pt)))一年/#box(width: 12pt, align(center, square(size: 9pt)))两年/#box(width: 12pt, align(center, square(size: 9pt)))三年以后，在校园网上全文发布。
+    ]
+    // #v(4em)
+    // #align(center)[（保密论文在解密后遵守此规定）]
+    #v(2fr)
+    #align(right)[
+      论文作者签名：
+      #h(5em)
+      导师签名：
+      #h(5em)
+      #v(1em)
+      日期：
+      #h(2em)
+      年
+      #h(2em)
+      月
+      #h(2em)
+      日
+      #h(5em)
+    ]
+    #v(2fr)
+  ]
 }
