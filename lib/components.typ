@@ -12,7 +12,12 @@
   front-heading(title)
 
   // Word 模板中目录的行距为 20pt
-  set par(leading: 10.5pt, spacing: 10.5pt, justify: true)
+  set par(
+    first-line-indent: 0pt,
+    leading: 10.5pt,
+    spacing: 10.5pt,
+    justify: true,
+  )
 
   show outline.entry: it => context {
     let el = it.element
