@@ -50,7 +50,7 @@
 
   // Word 模板中正文仍然是 20pt 行距
   // 对于纯英文字体，测试下来 12.5pt 的匹配效果较好
-  // set par(spacing: 12.5pt, leading: 12.5pt, justify: true)
+  set par(spacing: 12.5pt, leading: 12.5pt, justify: true)
   // if not blind {
   //   [
   //     #set align(center)
@@ -58,11 +58,8 @@
   //     Supervised by #supervisor
   //   ]
   // }
-  // v(8pt)
   // Word 模板中英文摘要的首行缩进固定为 0.74cm
-  // set par(first-line-indent: 0.74cm, justify: true)
-  // align(center)[#text(font: "Arial", weight: "bold")[ABSTRACT]]
-  // v(6pt)
+  set par(first-line-indent: 0.74cm, justify: true)
   en-abstract
   v(1fr)
   let keyword-prefix = if keywords.len() == 1 {

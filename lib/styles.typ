@@ -1,3 +1,5 @@
+#import "@preview/itemize:0.2.0" as itemize
+
 // lib/styles.typ - 样式规则
 // 页眉页脚、heading、figure、ref 等 show/set 规则
 
@@ -235,12 +237,15 @@
 
 // heading 样式规则
 #let heading-show-rule(it, smartpagebreak) = {
+  if it.level != 1 {
+    return {
+      set par(first-line-indent: 0em)
+      sizedheading(it, get-heading-size(it.level))
+    }
+  }
+
   // 取消标题的首行缩进
   set par(first-line-indent: 0em)
-
-  if it.level != 1 {
-    return sizedheading(it, get-heading-size(it.level))
-  }
 
   // 提取元数据
   let meta = get-heading-meta(it)
@@ -291,25 +296,13 @@
   #set align(center)
   #if not it.has("kind") {
     it
-  } else if it.kind == image {
-    it.body
-    [
-      #set text(字号.五号)
-      #it.caption
-    ]
-  } else if it.kind == table {
-    [
-      #set text(字号.五号)
-      #it.caption
-    ]
-    it.body
-  } else if it.kind == "code" {
-    [
-      #set text(字号.五号)
-      #context { supplements.代码 + it.counter.display(it.numbering) + "   " }
-      #it.caption.body
-    ]
-    it.body
+  } else if it.kind in (image, table, raw) {
+    stack(
+      dir: if it.kind == table { btt } else { ttb },
+      spacing: 8pt,
+      it.body,
+      text(字号.五号, it.caption),
+    )
   } else {
     // 未知类型的 figure 保持原样
     it
@@ -359,7 +352,7 @@
             location: el_loc,
           )
         ])
-      } else if el.kind == "code" {
+      } else if el.kind == raw {
         link(el_loc, [
           #supplements.代码
           #chinesenumbering(
@@ -441,6 +434,7 @@
 
   set text(字号.正文, font: 字体.宋体, lang: "zh")
   set heading(numbering: chinesenumbering)
+  set par(first-line-indent: (all: true, amount: 2em))
   set figure(
     numbering: (..nums) => context {
       if appendixcounter.at(here()).first() < 10 {
@@ -469,17 +463,17 @@
   }
 
   // ========== show 规则 ==========
-  // show: itemize.default-enum-list.with(
-  //   indent: (first-line-indent, 0.5em),
-  //   label-baseline: "center",
-  //   list-config: (
-  //     label-format: it => [#(
-  //       sym-bullet(6pt),
-  //       sym-square-filled(6pt),
-  //       sym-square-filled-rotated(6pt),
-  //     ).at(calc.rem(it.level - 1, 3))],
-  //   ),
-  // )
+  show: itemize.default-enum-list.with(
+    indent: (first-line-indent, 0.5em),
+    label-baseline: "center",
+    list-config: (
+      label-format: it => [#(
+        sym-bullet(6pt),
+        sym-square-filled(6pt),
+        sym-square-filled-rotated(6pt),
+      ).at(calc.rem(it.level - 1, 3))],
+    ),
+  )
   let alwaysstartodd = false
   show strong: it => text(font: 字体.黑体, weight: "bold", it.body)
   show emph: it => text(font: 字体.楷体, style: "italic", it.body)
