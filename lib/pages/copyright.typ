@@ -1,4 +1,5 @@
 #import "../components/heading.typ": front-heading
+#import "../config.typ": 字号
 
 /// 版权声明页
 #let copyright-page(linespacing: 10pt) = {
