@@ -174,8 +174,16 @@
     },
   )
   set footnote(numbering: "①")
+  show footnote: set super(size: 0.65em)
   show footnote.entry: it => {
     let loc = it.note.location()
+    set text(font: 字体.宋体, size: 字号.脚注)
+    set par(
+      justify: true,
+      leading: 字号.脚注,
+      spacing: 0pt,
+      hanging-indent: 1.5em,
+    )
     numbering(it.note.numbering, ..counter(footnote).at(loc))
     h(0.5em)
     it.note.body
