@@ -180,9 +180,10 @@
     set text(font: 字体.宋体, size: 字号.脚注)
     set par(
       justify: true,
-      leading: 字号.脚注,
+      leading: 1.2em,  // 模拟单倍行距
       spacing: 0pt,
       hanging-indent: 1.5em,
+      first-line-indent: 0pt,
     )
     numbering(it.note.numbering, ..counter(footnote).at(loc))
     h(0.5em)
