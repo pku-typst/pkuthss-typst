@@ -143,16 +143,21 @@
 
 // 代码块组件
 // 用法: #codeblock(```python ... ```, caption: "示例代码")
+// 省略 caption 时仅显示代码，不编号、不入代码列表、不可引用
 #let codeblock(raw, caption: none) = {
-  figure(
-    {
-      set align(left)
-      raw
-    },
-    caption: caption,
-    kind: "code",
-    supplement: "",
-  )
+  if caption != none {
+    figure(
+      {
+        set align(left)
+        raw
+      },
+      caption: caption,
+      kind: "code",
+      supplement: "",
+    )
+  } else {
+    raw
+  }
 }
 
 // 三线表组件
