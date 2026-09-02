@@ -18,6 +18,13 @@
 #set list(indent: 0em)
 #set heading(numbering: none)
 
+== 2026-09-03 #contributors.chuxinyuan #contributors.at("1195343015") #pr(50) #pr(52) #pr(54) #pr(55)
+
++ 修复 `codeblock` 不传 `caption` 时的报错：无标题的代码块不再包装为 `figure`（不编号、不进代码列表）。
++ 调整脚注样式：显式设置字号与段落格式。
++ 修正版权页与授权页的两处文案（标点与错别字）。
++ CI 升级 GitHub Actions 至支持 Node.js 24 的版本：`setup-typst` v5、`upload-artifact` v7、`configure-pages` v6、`upload-pages-artifact` v5、`deploy-pages` v5。
+
 == 2026-04-04 #contributors.lucifer1004 #pr(45) #pr(46) #pr(47)
 
 + 根据#pku-spec 调整了附录和参考文献的顺序：

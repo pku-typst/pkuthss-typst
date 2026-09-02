@@ -7,6 +7,8 @@
   "gzz2000",
   "yefan-zhi",
   "TOMATOFQY",
+  "chuxinyuan",
+  "1195343015",
 )
 
 #let contributors = (:)
