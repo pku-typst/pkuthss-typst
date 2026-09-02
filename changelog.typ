@@ -24,6 +24,10 @@
 + 调整脚注样式：显式设置字号与段落格式。
 + 修正版权页与授权页的两处文案（标点与错别字）。
 + CI 升级 GitHub Actions 至支持 Node.js 24 的版本：`setup-typst` v5、`upload-artifact` v7、`configure-pages` v6、`upload-pages-artifact` v5、`deploy-pages` v5。
++ 字体调整（#issue(51)）：
+  - 出于版权合规考虑，仓库不再随附中易（宋体/黑体/楷体/仿宋）、Times New Roman、Arial 等商业字体；`fonts/` 目录仅保留 GFL 许可的 New Computer Modern Mono。
+  - 宋体、黑体字体链新增开源回退：思源宋体/黑体（Source Han Serif/Sans）与 Noto Serif/Sans CJK SC；Windows、macOS 用户仍优先使用系统字体，不受影响。
+  - CI 改用 `fonts-noto-cjk` 提供中文字体。
 
 == 2026-04-04 #contributors.lucifer1004 #pr(45) #pr(46) #pr(47)
 

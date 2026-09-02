@@ -46,10 +46,10 @@
 
 #let 字体 = (
   仿宋: ("Times New Roman", "FangSong", "STFangsong"),
-  宋体: ("Times New Roman", "SimSun", "STSong"),
-  黑体: ("Times New Roman", "SimHei", "STHeiti"),
+  宋体: ("Times New Roman", "SimSun", "STSong", "Source Han Serif SC", "Noto Serif CJK SC"),
+  黑体: ("Times New Roman", "SimHei", "STHeiti", "Source Han Sans SC", "Noto Sans CJK SC"),
   楷体: ("Times New Roman", "KaiTi_GB2312", "STKaiti"),
-  代码: ("New Computer Modern Mono", "Times New Roman", "SimSun"),
+  代码: ("New Computer Modern Mono", "Times New Roman", "SimSun", "Source Han Serif SC", "Noto Serif CJK SC"),
 )
 
 // 计数器定义

@@ -30,6 +30,9 @@ jobs:
       - name: Setup Typst
         uses: typst-community/setup-typst@v5
 
+      - name: Install CJK fonts
+        run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
+
       - name: Compile thesis.typ
         run: |
           mkdir -p build

@@ -16,13 +16,13 @@ $ "基线间距" = "top-edge" - "bottom-edge" + "leading" $
 
 本模板的字体配置在 `lib/config.typ` 中定义。默认使用以下字体：
 
-- *宋体*：Times New Roman, SimSun, STSong
-- *黑体*：Times New Roman, SimHei, STHeiti
+- *宋体*：Times New Roman, SimSun, STSong, Source Han Serif SC, Noto Serif CJK SC
+- *黑体*：Times New Roman, SimHei, STHeiti, Source Han Sans SC, Noto Sans CJK SC
 - *楷体*：Times New Roman, KaiTi_GB2312, STKaiti
 - *仿宋*：Times New Roman, FangSong, STFangsong
-- *代码*：New Computer Modern Mono, Times New Roman, SimSun
+- *代码*：New Computer Modern Mono, Times New Roman, SimSun, Source Han Serif SC, Noto Serif CJK SC
 
-每种字体配置中，英文优先使用 Times New Roman，中文则按 Windows (SimXxx) → macOS (STXxx) 顺序回退。使用 `--font-path fonts` 参数可加载模板自带的字体文件。
+每种字体配置中，英文优先使用 Times New Roman，中文按 Windows (SimXxx) → macOS (STXxx) → 开源字体（思源/Noto）顺序回退。仓库 `fonts/` 目录仅包含开源的代码字体 New Computer Modern Mono（商业字体因版权原因不随仓库分发），使用 `--font-path fonts` 参数可加载。
 
 如需修改字体，可以编辑 `lib/config.typ` 中的 `字体` 字典。
 
