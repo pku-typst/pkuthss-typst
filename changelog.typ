@@ -29,7 +29,8 @@
 + 字体调整（#issue(51)）：
   - 出于版权合规考虑，仓库不再随附中易（宋体/黑体/楷体/仿宋）、Times New Roman、Arial 等商业字体；`fonts/` 目录仅保留 GFL 许可的 New Computer Modern Mono。
   - 宋体、黑体字体链新增开源回退：思源宋体/黑体（Source Han Serif/Sans）与 Noto Serif/Sans CJK SC；Windows、macOS 用户仍优先使用系统字体，不受影响。
-  - CI 改用 `fonts-noto-cjk` 提供中文字体。
+  - 西文新增 Liberation Serif/Sans（Times New Roman / Arial 的度量兼容替代）回退；仿宋新增 FandolFang、楷体新增 LXGW 文楷回退；macOS 回退补充 Songti SC、Heiti SC、Kaiti SC。
+  - CI 使用 `fonts-noto-cjk`、`fonts-liberation` 及缓存下载的 FandolFang，缩小 Pages 预览与正式模板的字体差异。
 + 本附录的二级标题由日期改为版本号，日期移至各条目内；发布到 Typst Universe 之前的记录归入"历史变更"（#issue(51)）。
 + 用户指南新增从数据生成图表的示例：表格用 `csv()` 读取数据，图用 `lilaq` 包绘制（#issue(51)）。
 

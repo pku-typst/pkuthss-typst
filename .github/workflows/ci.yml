@@ -31,16 +31,29 @@ jobs:
         uses: typst-community/setup-typst@v5
 
       - name: Install CJK fonts
-        run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
+        run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk fonts-liberation
+
+      - name: Cache FandolFang
+        id: cache-fandol
+        uses: actions/cache@v6
+        with:
+          path: ci-fonts
+          key: ci-fonts-fandolfang-v1
+
+      - name: Download FandolFang
+        if: steps.cache-fandol.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ci-fonts
+          curl -sL -o ci-fonts/FandolFang-Regular.otf "https://mirrors.ctan.org/fonts/fandol/FandolFang-Regular.otf"
 
       - name: Compile thesis.typ
         run: |
           mkdir -p build
-          typst compile thesis.typ build/thesis.pdf --font-path fonts
+          typst compile thesis.typ build/thesis.pdf --font-path fonts --font-path ci-fonts
 
       - name: Compile thesis.typ (blind mode)
         run: |
-          typst compile thesis.typ build/thesis-blind.pdf --font-path fonts --input blind=true
+          typst compile thesis.typ build/thesis-blind.pdf --font-path fonts --font-path ci-fonts --input blind=true
 
       - name: Install pdfcpu
         run: |

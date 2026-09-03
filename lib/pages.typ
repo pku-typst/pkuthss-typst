@@ -247,7 +247,7 @@
       spacing-before: 24pt,
       spacing-after: 8pt,
       linespacing: 2em,
-      font: (size: 字号.小二, font: "Arial", weight: "regular"),
+      font: (size: 字号.小二, font: ("Arial", "Liberation Sans"), weight: "regular"),
     ))],
   )[#upper(etitle)]
 
@@ -264,7 +264,7 @@
   // Word 模板中英文摘要的首行缩进固定为 0.74cm
   set par(first-line-indent: 0.74cm, justify: true)
   v(8pt)
-  align(center)[#text(font: "Arial", weight: "bold")[ABSTRACT]]
+  align(center)[#text(font: ("Arial", "Liberation Sans"), weight: "bold")[ABSTRACT]]
   v(6pt)
   eabstract
   v(1fr)
