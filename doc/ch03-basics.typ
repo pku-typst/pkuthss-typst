@@ -1,4 +1,5 @@
 #import "../template.typ": as-booktab, booktab, codeblock
+#import "@preview/lilaq:0.6.0" as lq
 
 #let code-preview(code, result) = {
   booktab(
@@ -172,6 +173,45 @@ Typst 支持无序列表和有序列表：
 
 @web 展示了 Typst 网页版的界面。代码中的 `<web>` 是图片的标签，可以在文中通过 `@web` 来引用。
 
+论文中的图通常由实验数据直接生成。常用的绘图包是 #link("https://typst.app/universe/package/lilaq")[`lilaq`]，配合 `csv` 函数读取数据文件即可绘图，@convergence 展示了一个例子：
+
+#code-preview(
+  ```typ
+  #import "@preview/lilaq:0.6.0" as lq
+
+  #let data = csv("data/convergence.csv").slice(1)
+  #let epoch = data.map(row => int(row.at(0)))
+  #let train = data.map(row => float(row.at(1)))
+  #let val = data.map(row => float(row.at(2)))
+
+  #figure(
+    lq.diagram(
+      width: 8cm, height: 5cm,
+      xlabel: [迭代次数], ylabel: [损失],
+      lq.plot(epoch, train, label: [训练损失]),
+      lq.plot(epoch, val, label: [验证损失]),
+    ),
+    caption: [从 CSV 数据绘制的收敛曲线],
+  ) <convergence>
+  ```,
+  [
+    #let data = csv("data/convergence.csv").slice(1)
+    #let epoch = data.map(row => int(row.at(0)))
+    #let train = data.map(row => float(row.at(1)))
+    #let val = data.map(row => float(row.at(2)))
+
+    #figure(
+      lq.diagram(
+        width: 8cm, height: 5cm,
+        xlabel: [迭代次数], ylabel: [损失],
+        lq.plot(epoch, train, label: [训练损失]),
+        lq.plot(epoch, val, label: [验证损失]),
+      ),
+      caption: [从 CSV 数据绘制的收敛曲线],
+    ) <convergence>
+  ],
+)
+
 == 表格
 
 Typst 中定义表格使用 `table` 函数。如需标题和引用功能，同样需要将其放置在 `figure` 中。
@@ -241,6 +281,31 @@ Typst 中定义表格使用 `table` 函数。如需标题和引用功能，同�
       caption: [三线表示例（as-booktab）],
       kind: table,
     ) <as-booktab-example>
+  ],
+)
+
+表格数据通常存放在 CSV 等数据文件中，可以用 `csv` 函数读取后直接生成表格，@experiment 展示了一个例子：
+
+#code-preview(
+  ```typ
+  #let data = csv("data/experiment.csv")
+
+  #booktab(
+    columns: data.first().len(),
+    align: (left, center, center, center),
+    caption: [从 CSV 数据生成的表格],
+    ..data.flatten(),
+  ) <experiment>
+  ```,
+  [
+    #let data = csv("data/experiment.csv")
+
+    #booktab(
+      columns: data.first().len(),
+      align: (left, center, center, center),
+      caption: [从 CSV 数据生成的表格],
+      ..data.flatten(),
+    ) <experiment>
   ],
 )
 
