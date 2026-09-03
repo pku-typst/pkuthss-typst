@@ -35,11 +35,12 @@ jobs:
       - name: Setup Typst
         uses: typst-community/setup-typst@v5
 
-      - name: Ensure Simplified Chinese fonts
+      # SimHei / FangSong / KaiTi 属于简体中文补充字体（FoD），安装约需 15 分钟，
+      # 仅在 main 分支构建（生成 Pages 预览）时安装；PR 构建跳过（缺失字体只有警告）
+      - name: Install Simplified Chinese supplemental fonts
+        if: github.event_name == 'push'
         shell: pwsh
-        run: |
-          typst fonts | Select-String -Pattern "SimSun|SimHei|FangSong|KaiTi|Times|Arial"
-          Get-WindowsCapability -Online -Name "Language.Fonts.*" | Where-Object { $_.Name -match "Hans|Cnsc|und-CN" } | Select-Object Name, State | Format-Table
+        run: Add-WindowsCapability -Online -Name "Language.Fonts.Hans~~~und-HANS~0.0.1.0" | Out-Null
 
       - name: Compile thesis.typ
         run: |
