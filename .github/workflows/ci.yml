@@ -53,8 +53,10 @@ jobs:
 
       - name: Install pdfcpu
         run: |
-          curl -L -o pdfcpu.zip "https://github.com/pdfcpu/pdfcpu/releases/download/v${PDFCPU_VERSION}/pdfcpu_${PDFCPU_VERSION}_Windows_x86_64.zip"
-          unzip pdfcpu.zip
+          curl -L -o "pdfcpu_${PDFCPU_VERSION}_Windows_x86_64.zip" "https://github.com/pdfcpu/pdfcpu/releases/download/v${PDFCPU_VERSION}/pdfcpu_${PDFCPU_VERSION}_Windows_x86_64.zip"
+          curl -L -o checksums.txt "https://github.com/pdfcpu/pdfcpu/releases/download/v${PDFCPU_VERSION}/checksums.txt"
+          grep "pdfcpu_${PDFCPU_VERSION}_Windows_x86_64.zip" checksums.txt | sha256sum -c -
+          unzip "pdfcpu_${PDFCPU_VERSION}_Windows_x86_64.zip"
           mv "pdfcpu_${PDFCPU_VERSION}_Windows_x86_64/pdfcpu.exe" pdfcpu.exe
 
       - name: Optimize PDFs with pdfcpu

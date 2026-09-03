@@ -18,7 +18,7 @@ $ "基线间距" = "top-edge" - "bottom-edge" + "leading" $
 
 - *宋体*：Times New Roman, Liberation Serif, SimSun, STSong, Songti SC, Source Han Serif SC, Noto Serif CJK SC
 - *黑体*：Times New Roman, Liberation Serif, SimHei, STHeiti, Heiti SC, Source Han Sans SC, Noto Sans CJK SC
-- *楷体*：Times New Roman, Liberation Serif, KaiTi_GB2312, STKaiti, Kaiti SC, LXGW WenKai
+- *楷体*：Times New Roman, Liberation Serif, KaiTi_GB2312, KaiTi, STKaiti, Kaiti SC, LXGW WenKai
 - *仿宋*：Times New Roman, Liberation Serif, FangSong, STFangsong, FandolFang R
 - *代码*：New Computer Modern Mono, Times New Roman, Liberation Serif, SimSun, Source Han Serif SC, Noto Serif CJK SC
 

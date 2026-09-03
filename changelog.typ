@@ -29,7 +29,7 @@
 + 字体调整（#issue(51)）：
   - 出于版权合规考虑，仓库不再随附中易（宋体/黑体/楷体/仿宋）、Times New Roman、Arial 等商业字体；`fonts/` 目录仅保留 GFL 许可的 New Computer Modern Mono。
   - 宋体、黑体字体链新增开源回退：思源宋体/黑体（Source Han Serif/Sans）与 Noto Serif/Sans CJK SC；Windows、macOS 用户仍优先使用系统字体，不受影响。
-  - 西文新增 Liberation Serif/Sans（Times New Roman / Arial 的度量兼容替代）回退；仿宋新增 FandolFang、楷体新增 KaiTi 与 LXGW 文楷回退；macOS 回退补充 Songti SC、Heiti SC、Kaiti SC。
+  - 西文回退：字体链新增 Liberation Serif（Times New Roman 的度量兼容替代），封面两处 Arial 新增 Liberation Sans 回退；仿宋新增 FandolFang、楷体新增 KaiTi 与 LXGW 文楷回退；macOS 回退补充 Songti SC、Heiti SC、Kaiti SC。
   - CI 迁移到 Windows runner：预览 PDF 直接使用系统自带的 SimSun、SimHei、FangSong、KaiTi、Times New Roman、Arial，与官方 Word 模板观感一致（补充字体经 Windows 按需功能安装，无任何字体文件的再分发）。
 + 本附录的二级标题由日期改为版本号，日期移至各条目内；发布到 Typst Universe 之前的记录归入"历史变更"（#issue(51)）。
 + 用户指南新增从数据生成图表的示例：表格用 `csv()` 读取数据，图用 `lilaq` 包绘制（#issue(51)）。
