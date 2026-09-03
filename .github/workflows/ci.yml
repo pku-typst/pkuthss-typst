@@ -35,19 +35,11 @@ jobs:
       - name: Setup Typst
         uses: typst-community/setup-typst@v5
 
-      # SimHei / FangSong / KaiTi 在 Win10+ 是按需功能（FoD），按需安装
       - name: Ensure Simplified Chinese fonts
         shell: pwsh
         run: |
-          $caps = Get-WindowsCapability -Online | Where-Object {
-            $_.Name -like "Language.Fonts.*" -and
-            $_.Name -match "Hans|Cnsc|und-CN" -and
-            $_.State -ne "Installed"
-          }
-          foreach ($c in $caps) {
-            Add-WindowsCapability -Online -Name $c.Name | Out-Null
-          }
-          typst fonts | Select-String -Pattern "SimSun|SimHei|FangSong|KaiTi|Times New Roman|Arial"
+          typst fonts | Select-String -Pattern "SimSun|SimHei|FangSong|KaiTi|Times|Arial"
+          Get-WindowsCapability -Online -Name "Language.Fonts.*" | Where-Object { $_.Name -match "Hans|Cnsc|und-CN" } | Select-Object Name, State | Format-Table
 
       - name: Compile thesis.typ
         run: |
